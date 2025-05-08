@@ -31,29 +31,87 @@ namespace ChiringuitoCH_Data.DAO
             return await _context.Usuarios.FindAsync(id);
         }
 
+        // Obtener un usuario por correo
+        public async Task<Usuario> ObtenerUsuarioPorCorreoAsync(string correo)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Correo == correo);
+        }
+
         // Agregar un nuevo usuario
         public async Task AgregarUsuarioAsync(Usuario usuario)
         {
             _context.Usuarios.Add(usuario);
             await _context.SaveChangesAsync();
+
+            //Si el usuario es Vendedor, se registra en la tabla Vendedore**
+            if (usuario.Rol == "Vendedor")
+            {
+                var nuevoVendedor = new Vendedore
+                {
+                    IdUsuario = usuario.IdUsuario, 
+                    FechaInicio = DateOnly.FromDateTime(DateTime.UtcNow), 
+                    Rfc = null 
+                };
+
+                _context.Vendedores.Add(nuevoVendedor);
+                await _context.SaveChangesAsync(); 
+            }
         }
+
 
         // Actualizar un usuario existente
         public async Task ActualizarUsuarioAsync(Usuario usuario)
         {
-            _context.Entry(usuario).State = EntityState.Modified;
+            var usuarioExistente = await _context.Usuarios.FindAsync(usuario.IdUsuario);
+            if (usuarioExistente == null)
+            {
+                throw new KeyNotFoundException("El usuario no existe.");
+            }
+
             await _context.SaveChangesAsync();
         }
 
+
+
+
         // Eliminar un usuario
-        public async Task EliminarUsuarioAsync(int id)
+        public async Task<bool> EliminarUsuarioAsync(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario != null)
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
+                
+                var vendedor = await _context.Vendedores.FirstOrDefaultAsync(v => v.IdUsuario == id);
+                if (vendedor != null)
+                {
+                    _context.Vendedores.Remove(vendedor);
+                    await _context.SaveChangesAsync();
+                }
+
+                
+                var usuario = await _context.Usuarios.FindAsync(id);
+                if (usuario == null) return false;
+
                 _context.Usuarios.Remove(usuario);
                 await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return true;
             }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error al eliminar usuario: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        // autenticacion
+        public Usuario VerificarCredenciales(string correo, string clave)
+        {
+            // Busca en la base de datos un usuario con las credenciales proporcionadas
+            return _context.Usuarios.SingleOrDefault(u => u.Correo == correo && u.Clave == clave);
         }
     }
 }

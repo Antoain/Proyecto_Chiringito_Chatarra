@@ -1,5 +1,6 @@
 using ChiringuitoCH_Data.Context;
 using ChiringuitoCH_Data.DAO;
+using ChiringuitoCH_Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("https://localhost:7242") // Dirección del frontend 
+        builder.WithOrigins("http://localhost:5173") // Dirección del frontend 
                .AllowAnyMethod() // Permitir todos los métodos HTTP (GET, POST, etc.)
                .AllowAnyHeader(); // Permitir todos los encabezados HTTP
     });
@@ -25,6 +26,20 @@ builder.Services.AddDbContext<ChChatarra40Context>(options =>
 builder.Services.AddScoped<UsuarioDAO>();
 builder.Services.AddScoped<CategoriaDAO>();
 builder.Services.AddScoped<ProductosDAO>();
+builder.Services.AddScoped<TiendaDAO>();
+builder.Services.AddScoped<VendedorDAO>();
+builder.Services.AddScoped<FavoritosDAO>();
+builder.Services.AddScoped<CarritoDAO>();
+builder.Services.AddScoped<RenseniaProductoDAO>();
+builder.Services.AddScoped<VentaDAO>();
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

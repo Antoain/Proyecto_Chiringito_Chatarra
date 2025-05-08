@@ -54,5 +54,27 @@ namespace ChiringuitoCH_Data.DAO
                 await _context.SaveChangesAsync();
             }
         }
+        // ObtenerProductoPorVendedor
+        public async Task<Vendedore?> ObtenerVendedorPorProductoAsync(int idProducto)
+        {
+            var producto = await _context.Productos
+                .Include(p => p.IdTiendaNavigation)
+                .ThenInclude(t => t.IdVendedorNavigation) // ✅ Cargar tienda y vendedor
+                .FirstOrDefaultAsync(p => p.IdProducto == idProducto);
+
+            return producto?.IdTiendaNavigation?.IdVendedorNavigation; // ✅ Retornar el vendedor
+        }
+
+        public async Task<IEnumerable<Producto>> ObtenerProductosPorVendedorAsync(int idVendedor)
+        {
+            return await _context.Productos
+                .Include(p => p.IdTiendaNavigation) // ✅ Aseguramos que obtenemos la tienda
+                .Where(p => p.IdTiendaNavigation.IdVendedor == idVendedor) // ✅ Filtrar por vendedor
+                .ToListAsync();
+        }
+
+
+
+
     }
 }

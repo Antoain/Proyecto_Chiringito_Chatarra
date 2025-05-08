@@ -33,9 +33,9 @@ public partial class Producto
 
     public virtual ICollection<Favorito> Favoritos { get; set; } = new List<Favorito>();
 
-    public virtual Categorium IdCategoriaNavigation { get; set; } = null!;
+    public virtual Categorium? IdCategoriaNavigation { get; set; } = null!;
 
-    public virtual Tienda IdTiendaNavigation { get; set; } = null!;
+    public virtual Tienda? IdTiendaNavigation { get; set; } = null!;
 
     public virtual ICollection<Promocione> Promociones { get; set; } = new List<Promocione>();
 

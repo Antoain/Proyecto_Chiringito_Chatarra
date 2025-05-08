@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChiringuitoCH_Data", "Chiri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPICh", "WebAPICh\WebAPICh.csproj", "{EA1909C7-8EA3-42EC-817E-AADB2B11415E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapaPresentacion", "CapaPresentacion\CapaPresentacion.csproj", "{210C84AA-92E0-44F9-B12E-4F0EEC6EE8D2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EA1909C7-8EA3-42EC-817E-AADB2B11415E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA1909C7-8EA3-42EC-817E-AADB2B11415E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA1909C7-8EA3-42EC-817E-AADB2B11415E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{210C84AA-92E0-44F9-B12E-4F0EEC6EE8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{210C84AA-92E0-44F9-B12E-4F0EEC6EE8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{210C84AA-92E0-44F9-B12E-4F0EEC6EE8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{210C84AA-92E0-44F9-B12E-4F0EEC6EE8D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

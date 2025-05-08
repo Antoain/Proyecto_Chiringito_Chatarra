@@ -27,9 +27,9 @@ public partial class Ventum
 
     public virtual ICollection<DetalleVentum> DetalleVenta { get; set; } = new List<DetalleVentum>();
 
-    public virtual Distrito IdDistritoNavigation { get; set; } = null!;
+    public virtual Distrito? IdDistritoNavigation { get; set; } = null!;
 
-    public virtual Tienda IdTiendaNavigation { get; set; } = null!;
+    public virtual Tienda? IdTiendaNavigation { get; set; } = null!;
 
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario? IdUsuarioNavigation { get; set; } = null!;
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 
 namespace ChiringuitoCH_Data.Models;
@@ -29,11 +29,11 @@ public partial class Tienda
 
     public bool? CuentaEnvio { get; set; }
 
-    public DateOnly? FechaRegistro { get; set; }
+    public DateOnly? FechaRegistro { get; set; } 
 
-    public virtual Categorium IdCategoriaNavigation { get; set; } = null!;
+    public virtual Categorium? IdCategoriaNavigation { get; set; } = null!;
 
-    public virtual Vendedore IdVendedorNavigation { get; set; } = null!;
+    public virtual Vendedore? IdVendedorNavigation { get; set; } = null!;
 
     public virtual ICollection<Producto> Productos { get; set; } = new List<Producto>();
 

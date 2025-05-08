@@ -11,7 +11,7 @@ public partial class Carrito
 
     public int? IdProducto { get; set; }
 
-    public int? Cantidad { get; set; }
+    public int Cantidad { get; set; }
 
     public virtual Producto? IdProductoNavigation { get; set; }
 

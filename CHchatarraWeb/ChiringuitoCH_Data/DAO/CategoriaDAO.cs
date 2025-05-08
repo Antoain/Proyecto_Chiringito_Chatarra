@@ -38,11 +38,18 @@ namespace ChiringuitoCH_Data.DAO
         }
 
         // Actualizar una categoría
-        public async Task ActualizarCategoriaAsync(Categorium categorium)
+        public async Task ActualizarCategoriaAsync(Categorium categoria)
         {
-            _context.Entry(categorium).State = EntityState.Modified;
+            var categoriaExistente = await _context.Categoria.FindAsync(categoria.IdCategoria);
+            if (categoriaExistente == null)
+            {
+                throw new KeyNotFoundException("La categoría no existe.");
+            }
+
+            _context.Entry(categoriaExistente).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
 
         // Eliminar una categoría por ID
         public async Task EliminarCategoriaAsync(int id)
@@ -54,5 +61,14 @@ namespace ChiringuitoCH_Data.DAO
                 await _context.SaveChangesAsync();
             }
         }
+
+        // Obtener productos de una categoría específica
+        public async Task<IEnumerable<Producto>> ObtenerProductosPorCategoriaAsync(int idCategoria)
+        {
+            return await _context.Productos
+                .Where(p => p.IdCategoria == idCategoria)
+                .ToListAsync();
+        }
+
     }
 }

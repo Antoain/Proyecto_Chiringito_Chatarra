@@ -11,7 +11,7 @@ public partial class Vendedore
 
     public string? Rfc { get; set; }
 
-    public virtual Usuario IdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario? IdUsuarioNavigation { get; set; } 
 
     public virtual ICollection<Tienda> Tienda { get; set; } = new List<Tienda>();
 }
