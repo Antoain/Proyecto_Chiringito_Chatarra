@@ -1,0 +1,198 @@
+
+.administrar-background {
+    background-image: url('https://i.postimg.cc/KzCVyWDj/image.png'); /* Ruta de tu imagen */
+    background-size: cover; /* Ajusta la imagen para cubrir todo el contenedor */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    padding: 40px 0; /* Espaciado vertical para separar contenido del borde */
+    min-height: 94vh; /* Ocupa toda la altura de la ventana */
+    display: flex; /* Flexbox para centrar verticalmente */
+
+}
+
+/* =================== TABLA en USUARIOS ===============================*/
+
+.administrar-container {
+    height: auto;
+    padding: 20px; /* Espaciado interno ajustado */
+    max-width: 1200px; /* Limita el ancho del contenedor */
+    margin-top: 1px; 
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #d8c8c8; /* Fondo claro para contraste */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+
+}
+
+h1 {
+    text-align: center; /* Centra el título */
+    color: #333; /* Color oscuro */
+    margin-bottom: 20px; /* Espaciado debajo del título */
+}
+
+.administrar-table {
+    width: 100%; /* Ocupa el ancho completo del contenedor */
+    border-collapse: collapse; /* Evita bordes dobles */
+    margin-top: 10px; /* Espaciado superior */
+    color: #000000; /* Texto claro */
+    font-weight: bold; /* Negrita para el texto */
+}
+
+.administrar-table th, .administrar-table td {
+    border: 2px solid #000000; /* Bordes ligeros */
+    padding: 10px; /* Espaciado interno */
+    text-align: center; /* Centra el contenido */
+}
+
+.administrar-table th {
+    background-color: #0c0c0c; 
+    color: white; /* Texto blanco para contraste */
+}
+
+/* =================== BOTONES Y MENSAJES en USUARIOS ===============================*/
+
+.mensaje-exito {
+    color: green; /* Texto verde para mensajes de éxito */
+    text-align: center; /* Centra el mensaje */
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+.mensaje-error {
+    color: red; /* Texto rojo para mensajes de error */
+    text-align: center; /* Centra el mensaje */
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+.btn-eliminar {
+    color: white; /* Texto blanco */
+    background-color: red; /* Fondo rojo */
+    border: none; /* Sin bordes adicionales */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 5px 10px; /* Tamaño del botón */
+    margin-right: 5px; /* Espaciado derecho */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.btn-editar {
+    color: white; /* Texto blanco */
+    background-color: #007bff; /* Fondo azul */
+    border: none; /* Sin bordes adicionales */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 5px 10px; /* Tamaño del botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.btn-eliminar:hover {
+    background-color: darkred; /* Fondo más oscuro al pasar el cursor */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); /* Incrementar sombra */
+    transform: scale(1.05); /* Efecto de crecimiento */
+}
+
+.btn-editar:hover {
+    background-color: #0056b3; /* Fondo más oscuro al pasar el cursor */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); /* Incrementar sombra */
+    transform: scale(1.05); /* Efecto de crecimiento */
+}
+
+/* =================== Parte del modal en USUARIOS ===============================*/
+
+
+.modal {
+    position: fixed ; /* Fuerza la posición fija */
+    top: 50% !important; /* Asegura que esté centrado verticalmente */
+    left: 50% !important; /* Asegura que esté centrado horizontalmente */
+    transform: translate(-50%, -50%) !important; /* Centrado perfecto */
+    background-color: rgba(0, 0, 0, 0.6) !important; /* Fondo semitransparente */
+    max-width: 2000px !important; /* Ocupa todo el ancho disponible */
+    max-height: 2000px ; /* Ocupa toda la altura disponible */
+    display: flex !important; /* Usamos flexbox para centrar */
+    justify-content: center ; /* Centrar en eje horizontal */
+    align-items: center ; /* Centrar en eje vertical */
+    z-index: 1000 ; /* Asegura que esté por encima de otros elementos */
+}
+
+.modal-content {
+    width: 90% !important; /* Ajuste adaptable */
+    max-width: 500px !important; /* Máximo ancho */
+    padding: 20px !important; /* Espaciado interno */
+    background-color: #ffffff !important; /* Fondo blanco */
+    border-radius: 10px !important; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important; /* Sombra suave */
+    overflow-y: auto !important; /* Permitir desplazamiento si es necesario */
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 24px; /* Tamaño de fuente más grande */
+    color: #333; /* Color oscuro */
+}
+
+.modal-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555; /* Color para los labels */
+}
+
+.modal-content input, .modal-content select {
+    width: 100%; /* Ajusta al ancho del modal */
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Pequeña sombra interna */
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Separación entre botones */
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-actions button:first-child {
+    background-color: #4caf50; /* Verde */
+    color: white;
+}
+
+.modal-actions button:last-child {
+    background-color: #f44336; /* Rojo */
+    color: white;
+}
+
+
+/*  ============= Botón para Crear Usuario ================*/
+.btn-crear {
+    background-color: #30ac34; /* Verde fresco */
+    color: white; /* Texto en blanco */
+    border: none; /* Sin bordes */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 20px; /* Espaciado interno */
+    cursor: pointer; /* Cambiar cursor a puntero */
+    font-size: 16px; /* Tamaño de fuente */
+    font-weight: bold; /* Texto en negrita */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    transition: all 0.3s ease; /* Transición suave al pasar el ratón */
+}
+
+.btn-crear:hover {
+    background-color: #56c025; /* Color ligeramente más oscuro al pasar el ratón */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); /* Incrementar sombra */
+    transform: scale(1.05); /* Efecto de crecimiento */
+}
+
+.btn-crear:active {
+    background-color: #3e8e41; /* Color más oscuro al presionar */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra más reducida */
+    transform: scale(0.95); /* Efecto de reducción */
+}
+

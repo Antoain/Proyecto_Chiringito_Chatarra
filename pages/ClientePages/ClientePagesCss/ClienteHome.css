@@ -1,0 +1,27 @@
+/* ClienteHome.css */
+  
+  /* Mensaje de bienvenida */
+  .welcome-message h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+  
+  .welcome-message p {
+    font-size: 1.2rem;
+    color: #ffffff;
+  }
+  
+  /* Badge de descuento posicionada sobre la imagen */
+  .discount-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 0.9rem;
+    padding: 0.4em 0.6em;
+  }
+  
+  /* Grupo de botones dentro de la tarjeta */
+  .button-group button {
+    margin-left: 5px;
+  }
+  

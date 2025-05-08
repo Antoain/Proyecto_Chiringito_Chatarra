@@ -1,0 +1,22 @@
+
+/* Aumenta la altura del Navbar */
+.navbar-custom {
+    min-height: 80px;
+  }
+  
+  /* Tamaño del logo */
+  .logo-image {
+    height: 100px;
+    width: 100px;
+  }
+  
+  /* Ajusta el contenedor de la barra de búsqueda para que ocupe el 60% del ancho */
+  .search-container {
+    width: 60%;
+  }
+  
+  /* Quita la flechita del dropdown */
+  .no-caret::after {
+    display: none !important;
+  }
+  

@@ -1,0 +1,119 @@
+/* Contenedor principal */
+.login-container {
+    height: 100vh; /* Ocupa toda la pantalla */
+    display: flex; /* Centra el contenido con flexbox */
+    justify-content: center;
+    align-items: center;
+    background-image: url('https://i.postimg.cc/Cxm5ddG8/image.png'); /* URL de la imagen */
+    background-size: cover; /* Escala la imagen para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+}
+
+.login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Capa negra semi-transparente */
+    z-index: 0;
+}
+
+.login-box {
+    position: relative;
+    z-index: 1; /* Asegura que el formulario esté por encima del filtro */
+}
+
+
+/* Caja del formulario */
+.login-box {
+    background: white; /* Fondo blanco */
+    padding: 30px 40px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    width: 400px; /* Ancho fijo para la caja */
+    text-align: center;
+}
+
+/* Título */
+.login-box h1 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #333; /* Texto oscuro */
+}
+
+/* Grupo de formulario */
+.form-group {
+    margin-bottom: 15px; /* Espaciado entre campos */
+    text-align: left; /* Alinear etiquetas a la izquierda */
+}
+
+/* Etiquetas */
+.form-group label {
+    display: block; /* Formato de bloque */
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Campos de entrada */
+.form-group input {
+    width: 100%; /* Ocupa todo el ancho */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Botón de inicio de sesión */
+.btn-login {
+    background-color: #4caf50; /* Verde */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%; /* Botón amplio */
+    transition: background-color 0.3s ease;
+}
+
+.btn-login:hover {
+    background-color: #45a049; /* Verde más oscuro */
+}
+
+/* Mensaje de error o éxito */
+.message {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #d32f2f; /* Rojo para error */
+}
+
+
+
+
+
+
+
+
+
+
+/* Enlace de registro */
+.register-link {
+    margin-top: 15px;
+    font-size: 0.9rem;
+    color: #555; /* Gris claro */
+}
+
+.register-link a {
+    color: #007bff; /* Azul Bootstrap */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline; /* Subrayado al pasar el ratón */
+}
+

@@ -1,0 +1,51 @@
+.carrito-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%; /* Hace que los elementos ocupen todo el ancho disponible */
+    max-width: 800px; /* Limita el ancho para evitar que se vea desordenado */
+    margin: 0 auto; /* Centra el bloque */
+  }
+  
+  
+  .carrito-img {
+    width: 200px; /* Reducir tamaño de imagen */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  
+  .carrito-info {
+    flex: 1;
+    padding-left: 10px;
+    text-align: left;
+  }
+  
+  .carrito-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .carrito-actions button {
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+  
+  .resumen-compra {
+    margin-top: 60px;
+    max-width: 300px;
+    padding: 20px;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+  }
+  h2 {
+    text-align: left;
+    margin-left: 30px; /* Alinea mejor con la lista */
+  }
+
+  

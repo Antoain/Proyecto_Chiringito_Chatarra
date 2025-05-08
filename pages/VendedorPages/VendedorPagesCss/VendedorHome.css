@@ -1,0 +1,32 @@
+.Vendedor-home {
+    height: 94vh; /* Ocupa toda la altura de la pantalla */
+    background-image: url('https://i.postimg.cc/2Sj1nhsC/image.png'); /* URL de la imagen de fondo */
+    background-size: cover; /* Escala la imagen para que cubra todo el fondo */
+    background-position: center; /* Centra la imagen */
+    display: flex; /* Habilita el uso de flexbox para centrar el contenido */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    color: white; /* Texto blanco para resaltar sobre el fondo */
+    text-align: center; /* Centra el texto */
+    overflow: hidden; /* Asegura que no haya desbordamiento */
+  }
+  
+  .welcome-message {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo negro con 70% de opacidad */
+    padding: 20px 40px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    z-index: 1; /* Asegura que el texto esté encima */
+  }
+  
+  .welcome-message h1 {
+    font-size: 3rem; /* Tamaño del título */
+    margin-bottom: 1rem; /* Espaciado inferior */
+    color: white; /* Texto blanco para resaltar sobre el fondo */
+  }
+  
+  .welcome-message p {
+    font-size: 1.5rem; /* Tamaño del subtítulo */
+    margin: 0; /* Remover márgenes predeterminados */
+  }
+  

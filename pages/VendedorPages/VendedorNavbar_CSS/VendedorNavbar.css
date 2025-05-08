@@ -1,0 +1,13 @@
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .btn-outline-light {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaciado entre el texto y el ícono */
+    transition: all 0.3s ease; /* Transición suave al pasar el ratón */
+  }
+  
+    

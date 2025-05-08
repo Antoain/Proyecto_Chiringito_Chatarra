@@ -1,0 +1,26 @@
+/* Clase para envolver secciones con borde */
+.mi-borde {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Clase para cada reseña individual, con línea divisoria excepto la última */
+  .resena-item:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  /* Opcional: estilos para el contenedor de reseñas */
+  .resenas-contenedor {
+    /* Aquí puedes personalizar más, por ejemplo: */
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+  }
+  
