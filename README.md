@@ -1,6 +1,5 @@
 # CHchatarra4_0
-// Documentacion de FrontEnd
-Para la visualizacion del codigo de las vistas se debe utilizar este linl: https://drive.google.com/drive/folders/1748rejatKW6ObKcXTZtm3JYcJ33e7fEU?usp=sharing
+**Documentacion de FrontEnd**
 - Se debe descargar todo el contenido de la carpta
 - Una vez descargado se abre la carpeta en visual studio code
 - Puedes darle a correr y te redireccionara a las paginas( debe usarse una extension de visual para correrlo como un host)
@@ -11,17 +10,8 @@ La estructura es la siguinente:
 
 En cada carpeta se encuentra su HTML y CSS respectivo, los cuales puedes editar
 
-Se puede acceder al Documento:
-https://docs.google.com/document/d/19FjNrLASl4tFo6Nc35SaAy20tbswwVxNKo6-S8qOvZI/edit?usp=sharing
-En el se econtrara mas informacion sobre el uso y detalles de las vistas
 
-
-
-
-//Documentacion para Backend
-Para la visualizacion de el backen y sobre su uso y detalles puedes acceder a este documento: https://docs.google.com/document/d/19FjNrLASl4tFo6Nc35SaAy20tbswwVxNKo6-S8qOvZI/edit?usp=sharing
-En el encontraras pruebas del funcionamiento de los endpoints.
-
+**Documentacion para Backend**
 Consideraciones:
 Para este proyecto se necesita descargar algunas dependencias para su buen funcionamiento
 - Para la biblioteca de Datos se requiere instalar los siguientes paquetes: Microsoft.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer y Microsoft.EntityFrameworkCore.Tools
@@ -33,3 +23,6 @@ Para este proyecto se necesita descargar algunas dependencias para su buen funci
 Esto permitira que si lo que desea es ver el funcionamiento de la pagina, esto pueda ser posible, ya que se esta utilizando CORS para manejar fetch, esto se debe a que la pagina y la Api poseen un puerto diferente.
 
 Si usted desea probar individualmete la Api y la Pagina no realice los pasos anteriores, importante mencionar que si se abre unicamente la pagina puddan aparecer advertencias de google, esto porque no se esta recibiendo las solicitudes de http de la Api. En caso que no realice los pasos anteriores.
+
+
+Para visualizar información sobre las vistas, backend, sobre su uso y funcionamieto de los endpoints puede acceder al siguiente enlace: https://www.notion.so/Documentaci-n-1ed27d98582d801297aaf3e89e005f4c?pvs=4
