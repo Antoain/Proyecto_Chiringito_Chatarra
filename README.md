@@ -6,7 +6,7 @@
 
 La estructura es la siguinente:
 
-![image](https://github.com/user-attachments/assets/bf3ae2f5-20c3-4541-aada-9a75948df1bc)
+![image](https://github.com/user-attachments/assets/58d2abd0-e32b-4f08-ab08-0777708c0147)
 
 En cada carpeta se encuentra su HTML y CSS respectivo, los cuales puedes editar
 
