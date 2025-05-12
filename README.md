@@ -6,7 +6,9 @@ Para la visualizacion del codigo de las vistas se debe utilizar este linl: https
 - Puedes darle a correr y te redireccionara a las paginas( debe usarse una extension de visual para correrlo como un host)
 
 La estructura es la siguinente:
+
 ![image](https://github.com/user-attachments/assets/bf3ae2f5-20c3-4541-aada-9a75948df1bc)
+
 En cada carpeta se encuentra su HTML y CSS respectivo, los cuales puedes editar
 
 Se puede acceder al Documento:
