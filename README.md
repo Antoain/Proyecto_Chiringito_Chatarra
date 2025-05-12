@@ -8,7 +8,7 @@ La estructura es la siguinente:
 
 ![image](https://github.com/user-attachments/assets/58d2abd0-e32b-4f08-ab08-0777708c0147)
 
-En cada carpeta se encuentra su HTML y CSS respectivo, los cuales puedes editar
+En cada carpeta se encuentra su JSX y CSS respectivo, los cuales puedes editar
 
 
 **Documentacion para Backend**  
