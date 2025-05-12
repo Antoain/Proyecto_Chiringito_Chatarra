@@ -1,6 +1,6 @@
 # CHchatarra4_0
 **Documentacion de FrontEnd**
-- Se debe descargar todo el contenido de la carpta
+- Se debe descargar todo el contenido de la carpeta "pages"
 - Una vez descargado se abre la carpeta en visual studio code
 - Puedes darle a correr y te redireccionara a las paginas( debe usarse una extension de visual para correrlo como un host)
 
@@ -11,8 +11,8 @@ La estructura es la siguinente:
 En cada carpeta se encuentra su HTML y CSS respectivo, los cuales puedes editar
 
 
-**Documentacion para Backend**
-Consideraciones:
+**Documentacion para Backend**  
+Consideraciones:  
 Para este proyecto se necesita descargar algunas dependencias para su buen funcionamiento
 - Para la biblioteca de Datos se requiere instalar los siguientes paquetes: Microsoft.EntityFrameworkCore, Microsoft.EntityFrameworkCore.Design, Microsoft.EntityFrameworkCore.SqlServer y Microsoft.EntityFrameworkCore.Tools
 - Para que pueda funcionar correctamente la pagina web, debe tener en cuenta que en visual studio debe poder configurar que si inicien 2 proyectos a la vez:
