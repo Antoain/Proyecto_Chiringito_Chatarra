@@ -1,11 +1,6 @@
 ﻿using ChiringuitoCH_Data.Context;
 using ChiringuitoCH_Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChiringuitoCH_Data.DAO
 {
@@ -18,8 +13,13 @@ namespace ChiringuitoCH_Data.DAO
             _context = context;
         }
 
-        // 🔹 Obtener productos en el carrito de un usuario
-        public async Task<List<Carrito>> ObtenerCarritoPorUsuario(int idUsuario)
+
+        // ==========================================
+        // OBTENER CARRITO DE UN USUARIO
+        // ==========================================
+
+        public async Task<List<Carrito>> ObtenerCarritoPorUsuario(
+            int idUsuario)
         {
             return await _context.Carritos
                 .Where(c => c.IdUsuario == idUsuario)
@@ -27,42 +27,127 @@ namespace ChiringuitoCH_Data.DAO
                 .ToListAsync();
         }
 
-        // 🔹 Agregar producto al carrito
-        public async Task<bool> AgregarAlCarrito(Carrito carrito)
+
+        // ==========================================
+        // OBTENER CARRITO POR ID
+        // ==========================================
+
+        public async Task<Carrito?> ObtenerCarritoPorIdAsync(
+            int idCarrito)
         {
-            if (!_context.Productos.Any(p => p.IdProducto == carrito.IdProducto))
-                return false; // Producto no existe
+            return await _context.Carritos
+                .Include(c => c.IdProductoNavigation)
+                .FirstOrDefaultAsync(
+                    c => c.IdCarrito == idCarrito
+                );
+        }
+
+
+        // ==========================================
+        // AGREGAR PRODUCTO AL CARRITO
+        // ==========================================
+
+        public async Task<bool> AgregarAlCarrito(
+            Carrito carrito)
+        {
+            var productoExiste =
+                await _context.Productos
+                    .AnyAsync(
+                        p => p.IdProducto == carrito.IdProducto
+                    );
+
+            if (!productoExiste)
+            {
+                return false;
+            }
+
+
+            // Comprobar si ya existe el mismo producto
+            // en el carrito del usuario
+            var carritoExistente =
+                await _context.Carritos
+                    .FirstOrDefaultAsync(c =>
+                        c.IdUsuario == carrito.IdUsuario &&
+                        c.IdProducto == carrito.IdProducto
+                    );
+
+
+            if (carritoExistente != null)
+            {
+                // Si ya estaba, sumamos la cantidad
+                carritoExistente.Cantidad += carrito.Cantidad;
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+
 
             _context.Carritos.Add(carrito);
+
             await _context.SaveChangesAsync();
+
             return true;
         }
-        // 🔹 Actualizar cantidad de un producto en el carrito
-        public async Task<bool> ActualizarCantidadCarrito(int idCarrito, int nuevaCantidad)
+
+
+        // ==========================================
+        // ACTUALIZAR CANTIDAD
+        // ==========================================
+
+        public async Task<bool> ActualizarCantidadCarrito(
+            int idCarrito,
+            int nuevaCantidad)
         {
-            var carrito = await _context.Carritos.FirstOrDefaultAsync(c => c.IdCarrito == idCarrito);
+            var carrito =
+                await _context.Carritos
+                    .FirstOrDefaultAsync(
+                        c => c.IdCarrito == idCarrito
+                    );
+
 
             if (carrito == null)
-                return false; // ✅ Si el producto no está en el carrito, retorna falso
+            {
+                return false;
+            }
 
-            // ✅ Asegurar que la cantidad nunca sea menor a 1
-            carrito.Cantidad = nuevaCantidad > 0 ? nuevaCantidad : 1;
 
-            _context.Carritos.Update(carrito); // ✅ Marca el objeto como modificado
-            await _context.SaveChangesAsync(); // ✅ Guarda los cambios en la base de datos
+            carrito.Cantidad =
+                nuevaCantidad > 0
+                    ? nuevaCantidad
+                    : 1;
+
+
+            await _context.SaveChangesAsync();
+
             return true;
         }
 
 
+        // ==========================================
+        // ELIMINAR PRODUCTO DEL CARRITO
+        // ==========================================
 
-        // 🔹 Eliminar producto del carrito
-        public async Task<bool> EliminarDelCarrito(int idCarrito)
+        public async Task<bool> EliminarDelCarrito(
+            int idCarrito)
         {
-            var carrito = await _context.Carritos.FindAsync(idCarrito);
-            if (carrito == null) return false;
+            var carrito =
+                await _context.Carritos
+                    .FirstOrDefaultAsync(
+                        c => c.IdCarrito == idCarrito
+                    );
+
+
+            if (carrito == null)
+            {
+                return false;
+            }
+
 
             _context.Carritos.Remove(carrito);
+
             await _context.SaveChangesAsync();
+
             return true;
         }
     }

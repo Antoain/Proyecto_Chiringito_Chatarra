@@ -14,4 +14,7 @@ public partial class Distrito
     public virtual Provincium? IdProvinciaNavigation { get; set; }
 
     public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
+
+    public virtual ICollection<Pedido> Pedidos { get; set; }
+    = new List<Pedido>();
 }

@@ -18,6 +18,7 @@ public partial class Producto
     public decimal Precio { get; set; }
 
     public int Stock { get; set; }
+    public virtual Inventario? Inventario { get; set; }
 
     public string? Sku { get; set; }
 
@@ -40,4 +41,7 @@ public partial class Producto
     public virtual ICollection<Promocione> Promociones { get; set; } = new List<Promocione>();
 
     public virtual ICollection<ResenasProducto> ResenasProductos { get; set; } = new List<ResenasProducto>();
+
+    public virtual ICollection<DetalleSubPedido> DetalleSubPedidos { get; set; }
+    = new List<DetalleSubPedido>();
 }

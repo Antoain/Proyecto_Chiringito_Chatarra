@@ -16,6 +16,12 @@ public partial class ChChatarra40Context : DbContext
     {
     }
 
+    public virtual DbSet<Pedido> Pedidos { get; set; }
+
+    public virtual DbSet<SubPedido> SubPedidos { get; set; }
+
+    public virtual DbSet<DetalleSubPedido> DetalleSubPedidos { get; set; }
+
     public virtual DbSet<Administradore> Administradores { get; set; }
 
     public virtual DbSet<Carrito> Carritos { get; set; }
@@ -50,11 +56,16 @@ public partial class ChChatarra40Context : DbContext
 
     public virtual DbSet<Vendedore> Vendedores { get; set; }
 
-    public virtual DbSet<Ventum> Venta { get; set; }
+    public virtual DbSet<CoberturaTienda> CoberturasTienda { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Ch_Chatarra4_0;User ID=antonio;Password=contra1234;Encrypt=False");
+    public virtual DbSet<EntregaSubPedido> EntregasSubPedido { get; set; }
+
+    public virtual DbSet<Ventum> Venta { get; set; }
+    public virtual DbSet<Inventario> Inventarios { get; set; }
+    public virtual DbSet<MovimientoInventario> MovimientosInventario { get; set; }
+
+    public virtual DbSet<MetodoEntregaTienda> MetodosEntregaTienda { get; set; }
+    public virtual DbSet<HistorialEntrega> HistorialEntregas { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -517,6 +528,426 @@ public partial class ChChatarra40Context : DbContext
                 .HasForeignKey(d => d.IdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Venta_Usuario");
+        });
+
+        modelBuilder.Entity<Pedido>(entity =>
+        {
+            entity.HasKey(e => e.IdPedido);
+
+            entity.ToTable("PEDIDO");
+
+            entity.Property(e => e.IdPedido)
+                .HasColumnName("IdPedido");
+
+            entity.Property(e => e.IdUsuario)
+                .HasColumnName("id_usuario");
+
+            entity.Property(e => e.IdDistrito)
+                .HasColumnName("IdDistrito");
+
+            entity.Property(e => e.Subtotal)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.Property(e => e.CostoEnvio)
+                .HasColumnType("decimal(12, 2)")
+                .HasDefaultValue(0m);
+
+            entity.Property(e => e.Total)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.Property(e => e.DireccionEntrega)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+
+            entity.Property(e => e.Telefono)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.Property(e => e.MetodoPago)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+
+            entity.Property(e => e.Estado)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasDefaultValue("PENDIENTE");
+
+            entity.Property(e => e.FechaPedido)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysdatetime())");
+
+            entity.HasOne(d => d.IdUsuarioNavigation)
+                .WithMany(p => p.Pedidos)
+                .HasForeignKey(d => d.IdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Pedido_Usuario");
+
+            entity.HasOne(d => d.IdDistritoNavigation)
+                .WithMany(p => p.Pedidos)
+                .HasForeignKey(d => d.IdDistrito)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Pedido_Distrito");
+        });
+
+        modelBuilder.Entity<SubPedido>(entity =>
+        {
+            entity.HasKey(e => e.IdSubPedido);
+
+            entity.ToTable("SUB_PEDIDO");
+
+            entity.Property(e => e.IdSubPedido)
+                .HasColumnName("IdSubPedido");
+
+            entity.Property(e => e.IdPedido)
+                .HasColumnName("IdPedido");
+
+            entity.Property(e => e.IdTienda)
+                .HasColumnName("id_tienda");
+
+            entity.Property(e => e.Subtotal)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.Property(e => e.CostoEnvio)
+                .HasColumnType("decimal(12, 2)")
+                .HasDefaultValue(0m);
+
+            entity.Property(e => e.ComisionPlataforma)
+                .HasColumnType("decimal(12, 2)")
+                .HasDefaultValue(0m);
+
+            entity.Property(e => e.TotalVendedor)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.Property(e => e.Estado)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasDefaultValue("PENDIENTE");
+
+            entity.Property(e => e.FechaActualizacion)
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysdatetime())");
+
+            entity.Property(e => e.MetodoEntrega)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("MetodoEntrega");
+
+            entity.HasOne(e => e.IdPedidoNavigation)
+                .WithMany(p => p.SubPedidos)
+                .HasForeignKey(e => e.IdPedido)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SubPedido_Pedido");
+
+            entity.HasOne(e => e.IdTiendaNavigation)
+                .WithMany(t => t.SubPedidos)
+                .HasForeignKey(e => e.IdTienda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_SubPedido_Tienda");
+        });
+
+        modelBuilder.Entity<DetalleSubPedido>(entity =>
+        {
+            entity.HasKey(e => e.IdDetalleSubPedido);
+
+            entity.ToTable("DETALLE_SUBPEDIDO");
+
+            entity.Property(e => e.IdDetalleSubPedido)
+                .HasColumnName("IdDetalleSubPedido");
+
+            entity.Property(e => e.IdSubPedido)
+                .HasColumnName("IdSubPedido");
+
+            entity.Property(e => e.IdProducto)
+                .HasColumnName("IdProducto");
+
+            entity.Property(e => e.Cantidad);
+
+            entity.Property(e => e.PrecioUnitario)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.Property(e => e.Descuento)
+                .HasColumnType("decimal(12, 2)")
+                .HasDefaultValue(0m);
+
+            entity.Property(e => e.Subtotal)
+                .HasColumnType("decimal(12, 2)");
+
+            entity.HasOne(d => d.IdSubPedidoNavigation)
+                .WithMany(p => p.Detalles)
+                .HasForeignKey(d => d.IdSubPedido)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DetalleSubPedido_SubPedido");
+
+            entity.HasOne(d => d.IdProductoNavigation)
+                .WithMany(p => p.DetalleSubPedidos)
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_DetalleSubPedido_Producto");
+        });
+
+        modelBuilder.Entity<Inventario>(entity =>
+        {
+            entity.HasKey(e => e.IdInventario);
+
+            entity.ToTable("INVENTARIO");
+
+            entity.HasIndex(e => e.IdProducto)
+                .IsUnique();
+
+            entity.Property(e => e.IdInventario)
+                .HasColumnName("IdInventario");
+
+            entity.Property(e => e.IdProducto)
+                .HasColumnName("IdProducto");
+
+            entity.Property(e => e.StockActual)
+                .HasColumnName("StockActual")
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.StockMinimo)
+                .HasColumnName("StockMinimo")
+                .HasDefaultValue(5);
+
+            entity.Property(e => e.StockMaximo)
+                .HasColumnName("StockMaximo");
+
+            entity.Property(e => e.FechaActualizacion)
+                .HasColumnName("FechaActualizacion")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysdatetime())");
+
+            entity.HasOne(e => e.IdProductoNavigation)
+                .WithOne(p => p.Inventario)
+                .HasForeignKey<Inventario>(e => e.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Inventario_Producto");
+        });
+
+        modelBuilder.Entity<MovimientoInventario>(entity =>
+        {
+            entity.HasKey(e => e.IdMovimiento);
+
+            entity.ToTable("MOVIMIENTO_INVENTARIO");
+
+            entity.Property(e => e.IdMovimiento)
+                .HasColumnName("IdMovimiento");
+
+            entity.Property(e => e.IdInventario)
+                .HasColumnName("IdInventario");
+
+            entity.Property(e => e.TipoMovimiento)
+                .HasColumnName("TipoMovimiento")
+                .HasMaxLength(30)
+                .IsUnicode(false);
+
+            entity.Property(e => e.Cantidad)
+                .HasColumnName("Cantidad");
+
+            entity.Property(e => e.StockAnterior)
+                .HasColumnName("StockAnterior");
+
+            entity.Property(e => e.StockNuevo)
+                .HasColumnName("StockNuevo");
+
+            entity.Property(e => e.Motivo)
+                .HasColumnName("Motivo")
+                .HasMaxLength(255)
+                .IsUnicode(false);
+
+            entity.Property(e => e.Referencia)
+                .HasColumnName("Referencia")
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.Property(e => e.FechaMovimiento)
+                .HasColumnName("FechaMovimiento")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysdatetime())");
+
+            entity.HasOne(e => e.IdInventarioNavigation)
+                .WithMany(i => i.MovimientosInventario)
+                .HasForeignKey(e => e.IdInventario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Movimiento_Inventario");
+        });
+
+        modelBuilder.Entity<CoberturaTienda>(entity =>
+        {
+            entity.HasKey(e => e.IdCobertura);
+
+            entity.ToTable("COBERTURA_TIENDA");
+
+            entity.HasIndex(
+                e => new { e.IdTienda, e.IdDistrito }
+            ).IsUnique();
+
+            entity.Property(e => e.IdCobertura)
+                .HasColumnName("IdCobertura");
+
+            entity.Property(e => e.IdTienda)
+                .HasColumnName("IdTienda");
+
+            entity.Property(e => e.IdDistrito)
+                .HasColumnName("IdDistrito");
+
+            entity.Property(e => e.CostoEnvio)
+                .HasColumnName("CostoEnvio")
+                .HasColumnType("decimal(10,2)")
+                .HasDefaultValue(0m);
+
+            entity.Property(e => e.Activo)
+                .HasColumnName("Activo")
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.FechaRegistro)
+                .HasColumnName("FechaRegistro")
+                .HasColumnType("datetime2")
+                .HasDefaultValueSql("(sysdatetime())");
+
+            entity.HasOne(e => e.IdTiendaNavigation)
+                .WithMany()
+                .HasForeignKey(e => e.IdTienda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cobertura_Tienda");
+
+            entity.HasOne(e => e.IdDistritoNavigation)
+                .WithMany()
+                .HasForeignKey(e => e.IdDistrito)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cobertura_Distrito");
+        });
+
+        modelBuilder.Entity<MetodoEntregaTienda>(entity =>
+        {
+            entity.HasKey(e => e.IdMetodoEntrega);
+
+            entity.ToTable("METODO_ENTREGA_TIENDA");
+
+            entity.HasIndex(
+                e => new
+                {
+                    e.IdTienda,
+                    e.TipoMetodo
+                })
+                .IsUnique();
+
+            entity.Property(e => e.IdMetodoEntrega)
+                .HasColumnName("IdMetodoEntrega");
+
+            entity.Property(e => e.IdTienda)
+                .HasColumnName("IdTienda");
+
+            entity.Property(e => e.TipoMetodo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("TipoMetodo");
+
+            entity.Property(e => e.Activo)
+                .HasDefaultValue(true)
+                .HasColumnName("Activo");
+
+            entity.Property(e => e.FechaRegistro)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasColumnName("FechaRegistro");
+
+            entity.HasOne(d => d.IdTiendaNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdTienda)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName(
+                    "FK_MetodoEntrega_Tienda");
+        });
+
+        modelBuilder.Entity<EntregaSubPedido>(entity =>
+        {
+            entity.HasKey(e => e.IdEntrega);
+
+            entity.ToTable("ENTREGA_SUBPEDIDO");
+
+            entity.HasIndex(e => e.IdSubPedido)
+                .IsUnique();
+
+            entity.Property(e => e.IdEntrega)
+                .HasColumnName("IdEntrega");
+
+            entity.Property(e => e.IdSubPedido)
+                .HasColumnName("IdSubPedido");
+
+            entity.Property(e => e.MetodoEntrega)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("MetodoEntrega");
+
+            entity.Property(e => e.EstadoEntrega)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasDefaultValue("PENDIENTE")
+                .HasColumnName("EstadoEntrega");
+
+            entity.Property(e => e.ProveedorEntrega)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("ProveedorEntrega");
+
+            entity.Property(e => e.CodigoSeguimiento)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("CodigoSeguimiento");
+
+            entity.Property(e => e.FechaCreacion)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasColumnName("FechaCreacion");
+
+            entity.Property(e => e.FechaActualizacion)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasColumnName("FechaActualizacion");
+
+            entity.Property(e => e.FechaEntrega)
+                .HasColumnName("FechaEntrega");
+
+            entity.HasOne(d => d.IdSubPedidoNavigation)
+                .WithOne(sp => sp.EntregaSubPedido)
+                .HasForeignKey<EntregaSubPedido>(d => d.IdSubPedido)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Entrega_SubPedido");
+        });
+
+        modelBuilder.Entity<HistorialEntrega>(entity =>
+        {
+            entity.HasKey(e => e.IdHistorial);
+
+            entity.ToTable("HISTORIAL_ENTREGA");
+
+            entity.Property(e => e.IdHistorial)
+                .HasColumnName("IdHistorial");
+
+            entity.Property(e => e.IdEntrega)
+                .HasColumnName("IdEntrega");
+
+            entity.Property(e => e.EstadoAnterior)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("EstadoAnterior");
+
+            entity.Property(e => e.EstadoNuevo)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("EstadoNuevo");
+
+            entity.Property(e => e.FechaCambio)
+                .HasDefaultValueSql("(sysdatetime())")
+                .HasColumnName("FechaCambio");
+
+            entity.Property(e => e.Observacion)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Observacion");
+
+            entity.HasOne(d => d.IdEntregaNavigation)
+                .WithMany(p => p.HistorialEntregas)
+                .HasForeignKey(d => d.IdEntrega)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Historial_Entrega");
         });
 
         OnModelCreatingPartial(modelBuilder);

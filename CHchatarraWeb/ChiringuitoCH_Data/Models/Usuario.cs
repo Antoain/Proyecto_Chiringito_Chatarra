@@ -32,4 +32,7 @@ public partial class Usuario
     public virtual Vendedore? Vendedore { get; set; }
 
     public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
+
+    public virtual ICollection<Pedido> Pedidos { get; set; }
+    = new List<Pedido>();
 }

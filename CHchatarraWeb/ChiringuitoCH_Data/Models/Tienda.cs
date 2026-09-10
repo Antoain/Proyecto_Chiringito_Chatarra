@@ -44,4 +44,7 @@ public partial class Tienda
     public virtual ICollection<Servicio> Servicios { get; set; } = new List<Servicio>();
 
     public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
+
+    public virtual ICollection<SubPedido> SubPedidos { get; set; }
+    = new List<SubPedido>();
 }
