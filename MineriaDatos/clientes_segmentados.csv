@@ -1,0 +1,301 @@
+IdRegistro,TotalGastado,TicketPromedio,CantidadProductosComprados,CantidadTiendasDiferentes,PorcentajeCancelacion,AntiguedadClienteDias,DiasDesdeUltimaCompra,FrecuenciaCompraDias,IdCategoriaFavorita,MetodoEntregaMasUsado,ClienteRecurrente,Cluster,Segmento
+1,129.95,32.76,13,2,0.38,674,14,35.88,1,TIENDA,1,2,Alto valor
+2,150.88,12.71,22,5,1.92,47,35,30.87,4,TIENDA,1,0,Activo y diversificado
+3,19.59,4.92,13,3,28.28,364,13,29.65,5,TIENDA,0,0,Activo y diversificado
+4,158.04,34.71,14,2,5.44,390,73,26.02,3,TIENDA,0,2,Alto valor
+5,16.98,20.41,1,1,11.87,706,34,17.22,5,TIENDA,1,1,Ocasional de bajo valor
+6,31.81,26.77,1,1,7.87,77,29,35.83,4,ALIADO,0,1,Ocasional de bajo valor
+7,146.75,26.3,22,5,11.97,166,33,39.85,5,TIENDA,1,0,Activo y diversificado
+8,14.8,15.04,1,1,6.64,132,19,5.49,1,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+9,431.57,25.47,23,1,11.66,569,96,21.73,2,TIENDA,1,2,Alto valor
+10,69.68,43.55,4,1,0.01,660,38,33.73,3,TIENDA,1,1,Ocasional de bajo valor
+11,120.28,58.67,10,1,0.83,391,112,51.08,5,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+12,142.65,18.22,20,5,3.74,506,70,33.34,3,TIENDA,1,0,Activo y diversificado
+13,109.02,7.89,19,5,0.81,143,31,26.16,1,ALIADO,1,0,Activo y diversificado
+14,46.64,22.48,7,1,4.88,263,35,18.92,1,TIENDA,0,1,Ocasional de bajo valor
+15,167.23,51.98,14,1,6.44,453,52,3.0,2,TIENDA,1,2,Alto valor
+16,206.6,85.83,7,1,48.49,275,111,38.38,2,TIENDA,0,3,En riesgo
+17,129.28,25.33,14,4,54.8,430,115,37.66,5,RECOGER_TIENDA,0,3,En riesgo
+18,132.27,27.93,14,1,18.77,214,37,25.05,5,TIENDA,1,1,Ocasional de bajo valor
+19,74.27,47.39,6,1,7.89,629,8,19.03,5,TIENDA,0,1,Ocasional de bajo valor
+20,120.43,43.68,6,2,12.4,229,85,21.66,5,ALIADO,0,1,Ocasional de bajo valor
+21,320.76,52.11,18,3,42.25,95,68,26.7,5,ALIADO,0,3,En riesgo
+22,48.48,35.97,3,1,3.27,561,1,14.59,5,TIENDA,1,1,Ocasional de bajo valor
+23,119.23,53.64,4,1,0.04,723,81,34.72,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+24,58.82,57.51,2,1,37.05,472,70,18.71,2,TIENDA,1,3,En riesgo
+25,41.71,36.85,3,1,50.02,393,115,60.66,4,ALIADO,0,3,En riesgo
+26,201.54,30.63,24,2,46.5,262,110,38.06,2,TIENDA,0,3,En riesgo
+27,45.44,39.16,1,1,21.59,130,48,44.6,2,TIENDA,1,1,Ocasional de bajo valor
+28,118.49,26.15,19,5,11.8,91,35,13.37,1,TIENDA,1,0,Activo y diversificado
+29,131.2,36.39,6,2,9.68,341,55,9.9,2,TIENDA,1,1,Ocasional de bajo valor
+30,192.29,25.45,18,1,3.55,700,117,17.71,2,TIENDA,0,2,Alto valor
+31,7.95,3.0,7,2,38.09,408,86,23.89,3,TIENDA,0,3,En riesgo
+32,98.22,20.92,14,2,11.42,238,65,3.0,2,RECOGER_TIENDA,1,0,Activo y diversificado
+33,38.25,7.05,12,4,8.62,223,18,35.11,4,TIENDA,1,0,Activo y diversificado
+34,112.6,30.0,12,1,6.69,691,88,49.0,1,TIENDA,0,1,Ocasional de bajo valor
+35,40.01,8.62,11,2,10.77,703,67,44.12,4,TIENDA,0,1,Ocasional de bajo valor
+36,23.93,27.01,2,1,6.48,672,35,25.81,2,TIENDA,1,1,Ocasional de bajo valor
+37,114.23,12.0,20,3,37.12,176,90,27.49,1,ALIADO,0,3,En riesgo
+38,275.15,51.98,12,4,7.24,409,61,37.96,2,TIENDA,0,2,Alto valor
+39,142.99,23.05,19,4,10.88,517,3,6.92,5,RECOGER_TIENDA,1,0,Activo y diversificado
+40,169.91,27.09,18,1,23.97,678,54,34.99,4,TIENDA,1,2,Alto valor
+41,75.33,11.62,18,2,20.57,39,34,58.99,1,RECOGER_TIENDA,0,0,Activo y diversificado
+42,256.5,19.47,24,4,1.37,504,85,51.43,2,ALIADO,0,2,Alto valor
+43,15.19,7.81,3,1,1.22,46,19,3.0,3,ALIADO,1,1,Ocasional de bajo valor
+44,31.78,4.95,10,2,5.04,143,101,50.07,4,TIENDA,0,1,Ocasional de bajo valor
+45,38.83,36.7,1,1,45.31,670,114,35.16,4,TIENDA,0,3,En riesgo
+46,25.7,24.83,1,1,4.04,294,41,40.86,4,ALIADO,1,1,Ocasional de bajo valor
+47,21.75,9.88,5,1,6.66,237,45,28.05,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+48,42.92,18.14,8,1,4.13,522,57,25.77,5,TIENDA,0,1,Ocasional de bajo valor
+49,78.81,17.44,16,2,8.86,297,39,23.93,3,RECOGER_TIENDA,0,0,Activo y diversificado
+50,173.7,23.66,15,2,0.55,557,76,22.58,1,RECOGER_TIENDA,0,2,Alto valor
+51,19.26,11.9,5,1,11.29,149,81,35.81,4,TIENDA,0,1,Ocasional de bajo valor
+52,133.04,40.18,6,1,9.17,523,9,3.78,5,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+53,105.78,20.4,14,4,20.93,555,48,8.56,2,TIENDA,1,0,Activo y diversificado
+54,29.34,7.55,10,2,8.44,265,22,15.71,4,TIENDA,1,0,Activo y diversificado
+55,12.17,10.11,1,1,15.07,290,100,29.13,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+56,93.46,16.12,16,3,0.48,602,117,22.14,4,RECOGER_TIENDA,0,0,Activo y diversificado
+57,197.18,25.2,23,5,9.16,46,5,26.97,2,TIENDA,1,0,Activo y diversificado
+58,181.53,45.69,11,2,1.93,304,23,40.05,4,RECOGER_TIENDA,1,2,Alto valor
+59,48.94,22.42,9,1,11.86,430,104,24.27,5,TIENDA,1,1,Ocasional de bajo valor
+60,60.59,28.68,5,1,8.38,550,46,11.35,1,TIENDA,0,1,Ocasional de bajo valor
+61,82.56,18.44,20,5,39.85,265,90,34.33,2,TIENDA,0,3,En riesgo
+62,382.93,28.8,27,4,10.55,541,90,19.83,1,TIENDA,0,2,Alto valor
+63,85.02,25.24,8,1,1.78,444,43,40.36,5,TIENDA,1,1,Ocasional de bajo valor
+64,247.59,39.73,13,2,3.82,576,48,11.3,4,RECOGER_TIENDA,0,2,Alto valor
+65,24.67,23.61,1,1,49.59,415,84,29.74,4,TIENDA,0,3,En riesgo
+66,467.27,52.88,18,2,0.96,35,9,5.53,3,ALIADO,1,2,Alto valor
+67,33.04,31.01,1,1,54.89,409,40,3.0,1,TIENDA,1,3,En riesgo
+68,41.14,32.03,5,1,1.75,668,90,35.31,5,TIENDA,0,1,Ocasional de bajo valor
+69,88.18,19.33,21,4,3.05,204,21,33.33,3,RECOGER_TIENDA,0,0,Activo y diversificado
+70,107.72,14.24,21,1,3.0,496,115,19.58,3,TIENDA,0,1,Ocasional de bajo valor
+71,345.34,20.95,22,5,0.1,514,13,25.57,1,ALIADO,1,0,Activo y diversificado
+72,33.84,30.01,1,1,8.17,313,99,30.2,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+73,108.37,22.39,20,5,2.41,681,5,18.15,5,ALIADO,1,0,Activo y diversificado
+74,206.1,41.1,16,4,0.9,533,116,22.73,2,ALIADO,0,2,Alto valor
+75,78.72,47.77,4,1,7.01,426,108,28.81,3,TIENDA,0,1,Ocasional de bajo valor
+76,29.72,14.37,5,1,1.4,45,39,38.38,1,ALIADO,0,1,Ocasional de bajo valor
+77,96.52,16.21,21,2,7.05,524,14,49.68,2,ALIADO,1,0,Activo y diversificado
+78,174.76,23.9,22,1,11.77,521,78,3.0,3,TIENDA,0,2,Alto valor
+79,418.23,56.32,15,1,11.65,387,7,16.19,1,RECOGER_TIENDA,1,2,Alto valor
+80,77.06,30.97,10,3,10.81,148,100,18.8,1,TIENDA,0,1,Ocasional de bajo valor
+81,183.86,38.19,16,1,3.18,153,69,23.96,2,RECOGER_TIENDA,0,2,Alto valor
+82,88.22,17.19,14,1,40.33,85,60,10.52,3,TIENDA,0,3,En riesgo
+83,7.04,3.0,5,1,0.79,82,61,33.08,3,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+84,28.15,11.04,11,2,10.53,352,48,42.44,5,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+85,54.27,7.19,19,4,11.44,482,113,25.84,4,TIENDA,0,0,Activo y diversificado
+86,48.24,8.06,19,2,4.24,115,55,44.19,4,ALIADO,0,0,Activo y diversificado
+87,195.68,33.43,15,5,27.81,314,76,21.32,3,RECOGER_TIENDA,0,0,Activo y diversificado
+88,7.53,9.85,1,1,9.15,594,98,32.62,3,TIENDA,0,1,Ocasional de bajo valor
+89,58.09,25.33,9,3,4.09,166,72,20.87,3,TIENDA,0,1,Ocasional de bajo valor
+90,208.58,28.14,13,2,7.28,601,76,28.25,4,TIENDA,0,2,Alto valor
+91,122.59,14.46,14,4,2.45,136,44,12.93,2,RECOGER_TIENDA,0,0,Activo y diversificado
+92,193.55,35.04,18,4,46.67,316,41,36.83,1,TIENDA,0,3,En riesgo
+93,33.18,9.44,12,3,0.25,466,2,18.15,3,TIENDA,0,0,Activo y diversificado
+94,47.23,34.68,4,1,3.72,491,106,18.73,3,TIENDA,0,1,Ocasional de bajo valor
+95,56.35,40.32,4,1,22.16,98,65,11.65,2,TIENDA,0,1,Ocasional de bajo valor
+96,23.43,7.92,8,2,39.65,176,97,24.34,5,TIENDA,0,3,En riesgo
+97,169.37,34.14,15,3,0.45,343,19,8.32,3,RECOGER_TIENDA,1,0,Activo y diversificado
+98,6.11,3.0,7,1,1.81,112,78,11.73,1,TIENDA,0,1,Ocasional de bajo valor
+99,186.85,28.24,17,1,4.47,371,91,42.66,3,TIENDA,0,2,Alto valor
+100,144.57,34.53,15,3,7.88,715,76,44.04,5,ALIADO,1,2,Alto valor
+101,463.44,45.33,17,4,3.94,616,84,32.78,2,RECOGER_TIENDA,0,2,Alto valor
+102,134.52,24.94,10,2,9.19,721,116,3.0,2,TIENDA,1,1,Ocasional de bajo valor
+103,29.78,10.81,8,1,2.17,99,37,27.87,5,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+104,301.35,49.57,18,2,2.87,468,5,4.91,4,ALIADO,1,2,Alto valor
+105,112.46,31.33,11,2,7.26,714,73,40.61,3,TIENDA,0,1,Ocasional de bajo valor
+106,72.99,22.07,6,1,5.25,400,70,45.66,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+107,152.33,23.02,15,2,8.58,47,26,40.73,3,RECOGER_TIENDA,1,0,Activo y diversificado
+108,34.88,29.0,1,1,2.59,313,117,35.12,2,TIENDA,0,1,Ocasional de bajo valor
+109,200.18,36.51,16,3,10.04,560,54,33.47,4,RECOGER_TIENDA,1,2,Alto valor
+110,198.0,42.93,16,4,6.28,547,73,24.42,3,TIENDA,0,2,Alto valor
+111,130.88,31.34,11,2,4.29,539,100,43.01,1,TIENDA,0,1,Ocasional de bajo valor
+112,40.68,37.97,1,1,41.44,663,13,27.29,4,RECOGER_TIENDA,0,3,En riesgo
+113,208.79,38.5,13,2,32.36,84,58,33.79,1,RECOGER_TIENDA,0,3,En riesgo
+114,22.64,23.83,1,1,11.48,385,110,29.79,3,ALIADO,0,1,Ocasional de bajo valor
+115,73.19,27.07,7,1,3.85,529,47,40.14,1,TIENDA,1,1,Ocasional de bajo valor
+116,44.46,25.2,7,2,23.81,476,77,22.17,1,TIENDA,0,1,Ocasional de bajo valor
+117,31.96,41.65,1,1,9.34,392,65,31.14,3,TIENDA,0,1,Ocasional de bajo valor
+118,60.18,9.16,19,3,7.79,53,38,33.35,2,ALIADO,1,0,Activo y diversificado
+119,129.22,27.08,10,1,11.0,210,63,3.0,4,TIENDA,1,1,Ocasional de bajo valor
+120,273.72,43.55,23,1,6.6,95,57,35.08,3,ALIADO,0,2,Alto valor
+121,56.06,56.23,2,1,6.87,673,22,28.85,4,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+122,9.95,3.0,15,4,39.62,646,113,35.06,4,TIENDA,0,3,En riesgo
+123,37.29,28.94,3,1,34.28,151,112,33.05,3,TIENDA,0,3,En riesgo
+124,92.7,34.89,8,2,3.63,250,44,41.17,5,TIENDA,0,1,Ocasional de bajo valor
+125,61.8,24.0,9,3,13.22,626,120,15.96,1,ALIADO,0,1,Ocasional de bajo valor
+126,102.22,15.93,22,5,32.77,291,83,28.76,4,TIENDA,1,0,Activo y diversificado
+127,86.72,23.22,15,2,26.85,81,20,7.97,4,TIENDA,1,0,Activo y diversificado
+128,294.98,19.62,20,3,29.98,595,13,16.93,2,RECOGER_TIENDA,0,0,Activo y diversificado
+129,22.38,14.26,2,1,11.6,340,24,25.45,2,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+130,38.16,27.54,3,1,4.39,308,63,3.0,4,TIENDA,0,1,Ocasional de bajo valor
+131,125.45,14.77,21,1,7.33,603,71,30.49,2,ALIADO,1,2,Alto valor
+132,43.38,15.04,6,1,9.65,367,71,47.33,5,TIENDA,0,1,Ocasional de bajo valor
+133,65.04,10.67,21,2,6.12,547,17,14.27,4,RECOGER_TIENDA,1,0,Activo y diversificado
+134,16.34,3.3,15,4,5.7,37,23,20.47,5,RECOGER_TIENDA,0,0,Activo y diversificado
+135,156.52,30.41,21,5,8.41,617,61,34.12,2,TIENDA,1,0,Activo y diversificado
+136,91.44,46.21,4,1,3.9,175,52,18.37,4,TIENDA,0,1,Ocasional de bajo valor
+137,39.0,13.55,8,2,5.81,197,58,35.69,2,TIENDA,0,1,Ocasional de bajo valor
+138,111.64,21.94,17,4,1.46,324,98,21.52,5,TIENDA,0,0,Activo y diversificado
+139,48.44,34.24,5,1,2.57,373,98,28.18,5,TIENDA,0,1,Ocasional de bajo valor
+140,220.25,29.13,20,2,4.96,298,17,43.07,4,TIENDA,1,2,Alto valor
+141,201.78,58.15,11,3,25.81,25,17,32.71,1,ALIADO,1,2,Alto valor
+142,74.26,36.49,9,1,54.88,607,29,3.0,4,RECOGER_TIENDA,1,3,En riesgo
+143,216.6,41.02,13,1,10.67,316,112,36.28,2,ALIADO,0,2,Alto valor
+144,114.88,12.8,15,4,8.09,217,103,30.79,2,TIENDA,0,0,Activo y diversificado
+145,170.12,23.03,15,4,3.13,435,105,11.98,2,TIENDA,0,0,Activo y diversificado
+146,41.12,14.02,6,2,4.86,357,38,7.0,5,ALIADO,0,1,Ocasional de bajo valor
+147,119.14,20.39,23,3,11.87,338,88,48.71,3,TIENDA,0,0,Activo y diversificado
+148,102.6,29.8,9,1,6.34,502,96,3.0,3,TIENDA,0,1,Ocasional de bajo valor
+149,147.56,44.07,8,1,5.87,83,70,32.26,5,TIENDA,1,1,Ocasional de bajo valor
+150,14.61,3.0,17,5,44.07,155,65,7.34,5,TIENDA,0,0,Activo y diversificado
+151,191.74,46.02,11,1,7.7,85,69,59.01,4,TIENDA,0,1,Ocasional de bajo valor
+152,55.47,18.34,8,1,2.14,479,111,36.67,5,TIENDA,0,1,Ocasional de bajo valor
+153,14.05,3.19,12,3,5.53,248,106,27.22,2,TIENDA,0,0,Activo y diversificado
+154,36.97,28.35,4,1,10.47,135,4,29.71,2,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+155,943.72,60.33,27,1,6.93,259,69,30.12,3,TIENDA,1,2,Alto valor
+156,35.82,7.93,18,1,6.67,696,66,26.29,1,ALIADO,0,1,Ocasional de bajo valor
+157,43.34,16.67,5,1,2.7,707,48,26.93,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+158,56.89,18.62,9,1,4.45,595,52,42.76,5,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+159,39.4,38.27,2,1,10.43,294,48,14.59,3,TIENDA,0,1,Ocasional de bajo valor
+160,343.55,49.2,24,4,3.86,236,119,33.08,3,TIENDA,0,2,Alto valor
+161,21.55,3.0,21,4,2.44,387,39,22.69,3,TIENDA,1,0,Activo y diversificado
+162,104.13,13.38,16,5,10.0,246,94,31.09,4,RECOGER_TIENDA,0,0,Activo y diversificado
+163,2.46,3.0,2,1,2.21,365,32,25.46,5,ALIADO,0,1,Ocasional de bajo valor
+164,154.61,29.73,9,3,1.81,556,4,27.13,2,TIENDA,1,0,Activo y diversificado
+165,25.29,26.46,2,1,8.67,652,81,13.63,5,ALIADO,1,1,Ocasional de bajo valor
+166,47.67,44.98,1,1,4.25,710,55,35.37,4,TIENDA,0,1,Ocasional de bajo valor
+167,139.94,15.5,24,3,1.12,490,72,24.99,4,TIENDA,0,0,Activo y diversificado
+168,48.18,19.2,8,2,51.52,672,1,22.18,2,TIENDA,0,3,En riesgo
+169,1027.15,44.61,30,3,11.54,600,60,19.5,5,TIENDA,0,2,Alto valor
+170,13.42,3.0,14,2,8.88,427,118,31.91,1,TIENDA,0,1,Ocasional de bajo valor
+171,74.21,10.57,17,3,7.61,74,12,3.0,4,TIENDA,1,0,Activo y diversificado
+172,312.95,47.07,21,4,1.85,404,55,31.83,2,RECOGER_TIENDA,1,2,Alto valor
+173,192.37,28.53,12,3,6.15,129,11,36.87,1,TIENDA,1,0,Activo y diversificado
+174,100.48,44.49,7,2,11.91,115,76,13.16,2,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+175,236.74,33.89,17,4,27.53,409,21,32.16,2,RECOGER_TIENDA,1,0,Activo y diversificado
+176,204.43,41.64,13,1,4.02,651,25,16.19,5,TIENDA,1,2,Alto valor
+177,255.4,21.65,31,3,4.51,225,61,8.79,4,TIENDA,0,0,Activo y diversificado
+178,130.22,53.42,11,3,47.75,224,75,33.45,1,RECOGER_TIENDA,0,3,En riesgo
+179,122.58,27.84,12,2,7.18,438,86,3.0,5,TIENDA,0,1,Ocasional de bajo valor
+180,62.26,19.24,8,2,2.98,728,53,3.0,3,TIENDA,0,1,Ocasional de bajo valor
+181,102.73,44.58,4,1,6.23,596,82,17.33,5,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+182,197.9,25.99,14,2,16.99,403,50,3.0,2,TIENDA,1,2,Alto valor
+183,138.53,24.93,12,4,0.27,231,66,7.04,3,RECOGER_TIENDA,0,0,Activo y diversificado
+184,60.6,14.41,11,1,39.08,188,119,35.16,2,RECOGER_TIENDA,0,3,En riesgo
+185,39.62,8.86,8,2,14.69,49,47,16.5,1,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+186,29.1,5.5,15,4,4.18,394,41,26.41,4,RECOGER_TIENDA,0,0,Activo y diversificado
+187,110.2,23.43,9,1,4.66,324,117,19.25,5,TIENDA,0,1,Ocasional de bajo valor
+188,10.33,10.54,2,1,0.64,210,62,8.8,3,ALIADO,0,1,Ocasional de bajo valor
+189,65.91,12.34,18,4,6.78,219,104,9.64,2,TIENDA,1,0,Activo y diversificado
+190,248.64,20.54,19,4,27.78,570,36,32.15,1,RECOGER_TIENDA,1,0,Activo y diversificado
+191,73.74,9.97,21,2,30.88,243,54,46.59,1,RECOGER_TIENDA,1,3,En riesgo
+192,301.77,32.41,22,4,4.21,622,88,10.04,3,RECOGER_TIENDA,1,2,Alto valor
+193,42.13,45.55,3,1,7.87,319,37,3.0,2,TIENDA,1,1,Ocasional de bajo valor
+194,32.35,16.81,5,1,10.56,273,97,32.31,1,TIENDA,0,1,Ocasional de bajo valor
+195,315.02,49.07,9,1,8.37,397,58,36.71,1,RECOGER_TIENDA,0,2,Alto valor
+196,104.13,16.99,18,3,8.19,459,105,26.82,1,TIENDA,0,0,Activo y diversificado
+197,33.51,3.0,23,4,49.93,490,2,45.04,3,TIENDA,0,3,En riesgo
+198,63.2,16.15,6,2,9.06,300,11,17.57,4,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+199,78.37,10.77,12,2,10.32,21,6,16.08,2,TIENDA,1,0,Activo y diversificado
+200,90.21,34.37,8,2,11.92,111,93,26.41,2,TIENDA,0,1,Ocasional de bajo valor
+201,168.37,21.64,18,2,15.73,644,83,31.17,1,TIENDA,1,2,Alto valor
+202,140.3,28.32,10,1,3.42,413,44,36.69,1,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+203,33.38,10.07,10,3,4.63,328,26,6.21,2,TIENDA,1,0,Activo y diversificado
+204,126.35,49.46,8,2,9.15,560,113,67.73,1,TIENDA,1,1,Ocasional de bajo valor
+205,22.96,5.5,12,4,0.99,288,27,29.13,5,TIENDA,1,0,Activo y diversificado
+206,94.49,12.49,20,2,0.79,105,39,53.71,4,RECOGER_TIENDA,0,0,Activo y diversificado
+207,130.36,23.9,16,4,0.15,79,31,37.72,2,RECOGER_TIENDA,1,0,Activo y diversificado
+208,82.35,32.15,10,2,45.17,375,66,3.0,1,TIENDA,0,3,En riesgo
+209,210.73,8.87,33,1,1.89,556,8,20.69,1,ALIADO,1,0,Activo y diversificado
+210,105.69,28.62,11,1,48.87,138,29,23.94,5,RECOGER_TIENDA,0,3,En riesgo
+211,189.9,27.14,17,3,19.71,691,53,25.81,5,ALIADO,0,2,Alto valor
+212,15.75,18.52,1,1,3.65,90,59,41.22,5,TIENDA,0,1,Ocasional de bajo valor
+213,50.75,49.72,1,1,8.32,525,98,27.94,1,ALIADO,1,1,Ocasional de bajo valor
+214,50.09,40.7,1,1,18.12,693,48,38.09,3,TIENDA,0,1,Ocasional de bajo valor
+215,13.98,11.41,4,1,0.75,552,52,19.6,2,TIENDA,1,1,Ocasional de bajo valor
+216,19.33,22.71,1,1,7.02,342,118,31.31,2,TIENDA,0,1,Ocasional de bajo valor
+217,40.8,10.96,17,2,25.08,341,52,34.25,5,TIENDA,0,0,Activo y diversificado
+218,185.61,23.97,15,3,11.43,355,18,33.52,4,RECOGER_TIENDA,1,0,Activo y diversificado
+219,239.26,58.05,20,1,28.01,116,59,45.38,1,RECOGER_TIENDA,0,2,Alto valor
+220,68.51,20.12,11,3,0.51,96,2,33.96,4,TIENDA,0,0,Activo y diversificado
+221,20.23,23.98,2,1,10.6,463,105,21.19,1,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+222,221.41,40.02,12,4,34.61,682,37,3.0,5,RECOGER_TIENDA,0,3,En riesgo
+223,50.97,12.14,9,3,10.75,387,61,7.4,3,TIENDA,0,0,Activo y diversificado
+224,54.34,46.92,1,1,14.4,562,45,30.27,2,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+225,41.32,37.6,2,1,13.21,417,45,66.56,3,ALIADO,0,1,Ocasional de bajo valor
+226,14.32,18.4,1,1,0.24,596,24,38.17,4,TIENDA,0,1,Ocasional de bajo valor
+227,192.47,36.42,21,3,6.32,226,103,40.26,3,ALIADO,0,2,Alto valor
+228,80.81,34.13,8,2,39.91,698,50,12.35,2,RECOGER_TIENDA,0,3,En riesgo
+229,72.47,9.2,21,2,8.42,648,100,10.19,5,TIENDA,0,0,Activo y diversificado
+230,122.07,31.76,18,5,2.86,601,4,29.43,3,TIENDA,1,0,Activo y diversificado
+231,12.65,16.14,1,1,1.3,110,105,18.54,1,TIENDA,0,1,Ocasional de bajo valor
+232,30.08,18.78,5,1,9.1,449,21,37.08,2,TIENDA,1,1,Ocasional de bajo valor
+233,201.7,36.73,12,1,10.78,54,18,35.58,1,TIENDA,0,1,Ocasional de bajo valor
+234,123.22,14.66,15,2,29.6,514,90,59.17,5,RECOGER_TIENDA,0,3,En riesgo
+235,59.11,12.2,17,1,1.05,291,84,21.83,5,TIENDA,1,1,Ocasional de bajo valor
+236,35.44,35.63,1,1,1.09,231,21,3.0,5,TIENDA,1,1,Ocasional de bajo valor
+237,84.68,16.82,14,4,8.01,410,47,25.76,1,RECOGER_TIENDA,0,0,Activo y diversificado
+238,87.4,34.94,6,2,10.58,443,96,7.9,4,TIENDA,0,1,Ocasional de bajo valor
+239,214.16,47.59,7,1,46.76,55,32,7.69,2,TIENDA,1,3,En riesgo
+240,284.43,34.23,26,2,4.66,719,55,32.3,4,RECOGER_TIENDA,0,2,Alto valor
+241,58.16,14.08,11,3,7.06,552,58,26.05,1,ALIADO,0,0,Activo y diversificado
+242,256.75,37.02,21,3,2.07,123,100,19.82,4,TIENDA,0,2,Alto valor
+243,137.59,26.14,16,3,4.05,730,51,54.56,3,TIENDA,0,2,Alto valor
+244,123.1,45.09,11,2,7.75,721,12,34.63,2,TIENDA,0,2,Alto valor
+245,207.95,36.31,12,3,1.63,436,94,6.0,5,ALIADO,1,2,Alto valor
+246,28.07,33.04,1,1,5.57,217,112,38.22,4,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+247,277.57,45.6,19,2,23.12,51,15,9.99,1,TIENDA,1,2,Alto valor
+248,12.92,13.53,2,1,9.36,186,109,3.0,1,TIENDA,0,1,Ocasional de bajo valor
+249,72.8,22.17,6,2,31.74,197,76,27.35,2,TIENDA,0,3,En riesgo
+250,229.71,57.92,11,3,8.21,658,50,22.43,4,TIENDA,0,2,Alto valor
+251,91.53,35.29,7,2,46.83,675,41,31.52,4,RECOGER_TIENDA,0,3,En riesgo
+252,32.49,6.42,12,4,26.76,46,41,11.44,2,RECOGER_TIENDA,1,0,Activo y diversificado
+253,92.84,45.3,9,2,1.54,507,116,37.16,3,RECOGER_TIENDA,0,1,Ocasional de bajo valor
+254,29.69,11.77,5,1,3.13,207,87,41.66,3,TIENDA,1,1,Ocasional de bajo valor
+255,65.36,42.48,6,2,0.65,74,74,5.72,2,TIENDA,0,1,Ocasional de bajo valor
+256,17.61,17.72,1,1,2.12,439,72,58.45,1,TIENDA,1,1,Ocasional de bajo valor
+257,38.32,39.73,2,1,0.06,192,73,25.58,5,TIENDA,0,1,Ocasional de bajo valor
+258,19.76,18.02,2,1,1.55,34,20,24.79,4,TIENDA,0,1,Ocasional de bajo valor
+259,96.9,16.05,18,5,10.82,86,5,20.29,3,RECOGER_TIENDA,1,0,Activo y diversificado
+260,203.2,28.81,24,2,9.51,433,2,27.27,4,ALIADO,1,2,Alto valor
+261,147.85,26.18,19,1,6.57,567,79,70.3,4,RECOGER_TIENDA,0,2,Alto valor
+262,69.65,21.37,12,1,16.51,722,80,39.65,5,TIENDA,0,1,Ocasional de bajo valor
+263,332.68,49.08,17,3,6.58,128,63,27.18,2,RECOGER_TIENDA,0,2,Alto valor
+264,204.48,40.14,12,1,8.68,260,0,30.46,1,ALIADO,0,2,Alto valor
+265,317.44,50.01,14,2,1.39,487,37,23.57,1,TIENDA,1,2,Alto valor
+266,246.49,25.02,26,5,4.8,682,21,8.91,4,TIENDA,1,0,Activo y diversificado
+267,658.36,46.72,19,2,4.99,509,102,3.0,5,TIENDA,1,2,Alto valor
+268,59.09,49.41,3,1,5.86,468,23,4.05,4,TIENDA,1,1,Ocasional de bajo valor
+269,289.21,51.59,13,2,1.14,690,40,54.11,2,TIENDA,0,2,Alto valor
+270,739.39,49.64,24,5,49.38,676,49,40.69,1,RECOGER_TIENDA,1,2,Alto valor
+271,103.89,18.39,13,4,10.28,358,35,34.12,4,TIENDA,0,0,Activo y diversificado
+272,16.99,3.0,16,5,10.68,689,2,36.36,5,TIENDA,1,0,Activo y diversificado
+273,16.12,14.54,1,1,5.43,369,46,36.59,1,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+274,15.83,13.21,1,1,9.86,369,45,42.64,4,TIENDA,0,1,Ocasional de bajo valor
+275,125.91,32.7,8,2,7.6,212,15,37.57,5,TIENDA,0,1,Ocasional de bajo valor
+276,108.83,54.11,6,2,11.09,488,84,8.96,2,RECOGER_TIENDA,1,1,Ocasional de bajo valor
+277,71.14,12.24,19,3,3.28,151,13,8.56,3,ALIADO,1,0,Activo y diversificado
+278,111.59,20.47,18,5,39.2,156,17,4.13,2,TIENDA,1,0,Activo y diversificado
+279,15.42,4.31,9,3,1.38,723,44,31.04,3,RECOGER_TIENDA,0,0,Activo y diversificado
+280,108.89,21.06,18,5,1.74,703,90,3.0,1,TIENDA,1,0,Activo y diversificado
+281,36.64,23.12,7,1,16.41,184,36,20.57,5,ALIADO,0,1,Ocasional de bajo valor
+282,256.37,26.26,25,3,41.46,594,49,26.05,5,TIENDA,0,3,En riesgo
+283,48.29,44.97,1,1,6.56,227,79,44.22,5,TIENDA,0,1,Ocasional de bajo valor
+284,203.72,31.81,19,1,6.68,218,37,3.0,2,TIENDA,0,2,Alto valor
+285,403.95,36.03,15,1,7.94,25,10,3.0,4,RECOGER_TIENDA,1,2,Alto valor
+286,27.44,3.0,17,2,4.19,94,90,19.63,2,RECOGER_TIENDA,0,0,Activo y diversificado
+287,88.25,57.8,8,2,5.35,320,27,43.81,5,ALIADO,1,1,Ocasional de bajo valor
+288,42.51,12.97,6,1,28.12,60,43,35.07,5,TIENDA,1,1,Ocasional de bajo valor
+289,177.5,47.86,14,1,8.04,687,24,21.34,2,ALIADO,1,2,Alto valor
+290,83.11,31.64,9,3,5.51,126,26,3.0,3,TIENDA,1,0,Activo y diversificado
+291,227.64,41.88,15,2,4.67,202,101,23.93,1,TIENDA,0,2,Alto valor
+292,17.65,16.15,1,1,3.38,653,8,24.75,4,TIENDA,1,1,Ocasional de bajo valor
+293,282.47,37.02,16,4,10.64,51,30,29.87,3,ALIADO,1,0,Activo y diversificado
+294,17.89,3.0,12,4,26.79,588,18,25.08,4,ALIADO,0,0,Activo y diversificado
+295,232.71,31.47,22,3,52.09,165,20,32.37,5,TIENDA,1,3,En riesgo
+296,150.23,42.35,13,4,0.84,317,85,30.22,2,TIENDA,0,2,Alto valor
+297,13.49,3.0,21,5,9.43,651,84,17.19,4,TIENDA,0,0,Activo y diversificado
+298,107.16,19.38,19,4,10.1,715,93,15.59,2,ALIADO,1,0,Activo y diversificado
+299,30.89,36.07,1,1,3.13,661,9,19.53,5,TIENDA,0,1,Ocasional de bajo valor
+300,547.64,40.58,25,3,2.87,394,50,28.31,5,RECOGER_TIENDA,1,2,Alto valor

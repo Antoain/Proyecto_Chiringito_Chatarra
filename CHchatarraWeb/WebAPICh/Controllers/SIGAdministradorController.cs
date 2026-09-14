@@ -212,6 +212,26 @@ namespace WebAPICh.Controllers
 
             return Ok(resultado);
         }
+
+        [HttpGet("DatasetRecomendaciones")]
+        public async Task<IActionResult> DatasetRecomendaciones()
+        {
+            var resultado =
+                await _sigAdministradorDAO
+                    .ObtenerDatasetRecomendacionesAsync();
+
+            return Ok(resultado);
+        }
+
+        [HttpGet("CatalogoDisponible")]
+        public async Task<IActionResult> CatalogoDisponible()
+        {
+            var resultado =
+                await _sigAdministradorDAO
+                    .ObtenerCatalogoDisponibleAsync();
+
+            return Ok(resultado);
+        }
     }
 
 }

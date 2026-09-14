@@ -56,6 +56,11 @@ export function AdminNavbar() {
                 Productos
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/admin/mineria">
+                Minería de Datos
+              </Link>
+            </li>
           </ul>
 
           <button

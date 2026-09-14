@@ -1,6 +1,7 @@
 ﻿using ChiringuitoCH_Data.Context;
 using ChiringuitoCH_Data.Models;
 using Microsoft.EntityFrameworkCore;
+using ChiringuitoCH_Data.DTOs;
 
 namespace ChiringuitoCH_Data.DAO
 {
@@ -1558,5 +1559,1106 @@ namespace ChiringuitoCH_Data.DAO
                     dataset
             };
         }
+
+        // ==========================================
+        // DATASET PARA RECOMENDACIONES
+        // ==========================================
+
+        public async Task<object> ObtenerDatasetRecomendacionesAsync()
+        {
+            var pedidos =
+                await _context.Pedidos
+                    .Where(p => p.Estado != "CANCELADO")
+                    .ToListAsync();
+
+            var subPedidos =
+                await _context.SubPedidos
+                    .Where(sp => sp.Estado != "CANCELADO")
+                    .ToListAsync();
+
+            var detalles =
+                await _context.DetalleSubPedidos
+                    .ToListAsync();
+
+            var productos =
+                await _context.Productos
+                    .ToListAsync();
+
+
+            var dataset =
+                pedidos
+                    .Join(
+                        subPedidos,
+                        pedido => pedido.IdPedido,
+                        subPedido => subPedido.IdPedido,
+                        (pedido, subPedido) => new
+                        {
+                            pedido,
+                            subPedido
+                        }
+                    )
+
+                    .Join(
+                        detalles,
+                        x => x.subPedido.IdSubPedido,
+                        detalle => detalle.IdSubPedido,
+                        (x, detalle) => new
+                        {
+                            x.pedido,
+                            x.subPedido,
+                            detalle
+                        }
+                    )
+
+                    .Join(
+                        productos,
+                        x => x.detalle.IdProducto,
+                        producto => producto.IdProducto,
+                        (x, producto) => new
+                        {
+                            IdCliente =
+                                x.pedido.IdUsuario,
+
+                            IdProducto =
+                                producto.IdProducto,
+
+                            NombreProducto =
+                                producto.Nombre,
+
+                            IdCategoria =
+                                producto.IdCategoria,
+
+                            IdTienda =
+                                producto.IdTienda,
+
+                            Cantidad =
+                                x.detalle.Cantidad,
+
+                            Subtotal =
+                                x.detalle.Subtotal,
+
+                            FechaCompra =
+                                x.pedido.FechaPedido
+                        }
+                    )
+
+                    .GroupBy(x => new
+                    {
+                        x.IdCliente,
+                        x.IdProducto,
+                        x.NombreProducto,
+                        x.IdCategoria,
+                        x.IdTienda
+                    })
+
+                    .Select(g => new
+                    {
+                        IdCliente =
+                            g.Key.IdCliente,
+
+                        IdProducto =
+                            g.Key.IdProducto,
+
+                        NombreProducto =
+                            g.Key.NombreProducto,
+
+                        IdCategoria =
+                            g.Key.IdCategoria,
+
+                        IdTienda =
+                            g.Key.IdTienda,
+
+                        CantidadComprada =
+                            g.Sum(x => x.Cantidad),
+
+                        NumeroCompras =
+                            g.Count(),
+
+                        TotalGastadoProducto =
+                            Math.Round(
+                                g.Sum(x => x.Subtotal),
+                                2
+                            ),
+
+                        UltimaCompra =
+                            g.Max(x => x.FechaCompra)
+                    })
+
+                    .OrderBy(x =>
+                        x.IdCliente)
+
+                    .ThenByDescending(x =>
+                        x.CantidadComprada)
+
+                    .ToList();
+
+
+            return new
+            {
+                TotalRegistros =
+                    dataset.Count,
+
+                Dataset =
+                    dataset
+            };
+        }
+
+
+        // ==========================================
+        // CATÁLOGO DISPONIBLE PARA RECOMENDACIONES
+        // ==========================================
+
+        public async Task<object> ObtenerCatalogoDisponibleAsync()
+        {
+            var productos =
+                await _context.Productos
+                    .Where(p =>
+                        p.Activo == true &&
+                        p.Stock > 0
+                    )
+                    .Select(p => new
+                    {
+                        IdProducto =
+                            p.IdProducto,
+
+                        NombreProducto =
+                            p.Nombre,
+
+                        IdCategoria =
+                            p.IdCategoria,
+
+                        IdTienda =
+                            p.IdTienda,
+
+                        Precio =
+                            p.Precio,
+
+                        Stock =
+                            p.Stock
+                    })
+                    .OrderBy(p =>
+                        p.IdCategoria)
+                    .ThenBy(p =>
+                        p.NombreProducto)
+                    .ToListAsync();
+
+
+            return new
+            {
+                TotalProductos =
+                    productos.Count,
+
+                Productos =
+                    productos
+            };
+        }
+
+        // ==========================================
+        // MINERÍA - DATOS DE UN CLIENTE
+        // ==========================================
+
+        public async Task<ClienteMineriaDTO?>
+            ObtenerClienteMineriaPorIdAsync(
+                int idCliente)
+        {
+            var cliente =
+                await _context.Usuarios
+                    .FirstOrDefaultAsync(u =>
+                        u.IdUsuario == idCliente &&
+                        u.Rol == "Cliente"
+                    );
+
+            if (cliente == null)
+            {
+                return null;
+            }
+
+
+            // ======================================
+            // PEDIDOS DEL CLIENTE
+            // ======================================
+
+            var todosPedidosCliente =
+                await _context.Pedidos
+                    .Where(p =>
+                        p.IdUsuario == idCliente
+                    )
+                    .ToListAsync();
+
+
+            var pedidosCliente =
+                todosPedidosCliente
+                    .Where(p =>
+                        p.Estado != "CANCELADO"
+                    )
+                    .OrderBy(p =>
+                        p.FechaPedido
+                    )
+                    .ToList();
+
+
+            var pedidosCanceladosCliente =
+                todosPedidosCliente
+                    .Where(p =>
+                        p.Estado == "CANCELADO"
+                    )
+                    .ToList();
+
+
+            var idsPedidosCliente =
+                pedidosCliente
+                    .Select(p =>
+                        p.IdPedido
+                    )
+                    .ToList();
+
+
+            // ======================================
+            // SUBPEDIDOS
+            // ======================================
+
+            var subPedidosCliente =
+                await _context.SubPedidos
+                    .Where(sp =>
+                        idsPedidosCliente.Contains(
+                            sp.IdPedido
+                        ) &&
+                        sp.Estado != "CANCELADO"
+                    )
+                    .ToListAsync();
+
+
+            var idsSubPedidosCliente =
+                subPedidosCliente
+                    .Select(sp =>
+                        sp.IdSubPedido
+                    )
+                    .ToList();
+
+
+            // ======================================
+            // DETALLES
+            // ======================================
+
+            var detallesCliente =
+                await _context.DetalleSubPedidos
+                    .Where(d =>
+                        idsSubPedidosCliente.Contains(
+                            d.IdSubPedido
+                        )
+                    )
+                    .ToListAsync();
+
+
+            // ======================================
+            // CANTIDADES GENERALES
+            // ======================================
+
+            int cantidadPedidos =
+                pedidosCliente.Count;
+
+
+            int cantidadSubPedidos =
+                subPedidosCliente.Count;
+
+
+            int cantidadPedidosCancelados =
+                pedidosCanceladosCliente.Count;
+
+
+            int cantidadPedidosTotales =
+                todosPedidosCliente.Count;
+
+
+            int cantidadProductosComprados =
+                detallesCliente.Sum(d =>
+                    d.Cantidad
+                );
+
+
+            int cantidadTiendasDiferentes =
+                subPedidosCliente
+                    .Select(sp =>
+                        sp.IdTienda
+                    )
+                    .Distinct()
+                    .Count();
+
+
+            // ======================================
+            // TOTAL GASTADO
+            // ======================================
+
+            decimal totalGastado =
+                pedidosCliente.Sum(p =>
+                    p.Total
+                );
+
+
+            decimal ticketPromedio =
+                cantidadPedidos > 0
+                    ? totalGastado /
+                      cantidadPedidos
+                    : 0;
+
+
+            // ======================================
+            // CANCELACIONES
+            // ======================================
+
+            decimal porcentajeCancelacion =
+                cantidadPedidosTotales > 0
+                    ? ((decimal)cantidadPedidosCancelados /
+                       cantidadPedidosTotales) * 100
+                    : 0;
+
+
+            // ======================================
+            // FECHAS
+            // ======================================
+
+            DateTime? fechaPrimeraCompra =
+                pedidosCliente.Count > 0
+                    ? pedidosCliente
+                        .First()
+                        .FechaPedido
+                    : null;
+
+
+            DateTime? fechaUltimaCompra =
+                pedidosCliente.Count > 0
+                    ? pedidosCliente
+                        .Last()
+                        .FechaPedido
+                    : null;
+
+
+            int? antiguedadClienteDias =
+                fechaPrimeraCompra.HasValue
+                    ? (
+                        DateTime.Now.Date -
+                        fechaPrimeraCompra.Value.Date
+                      ).Days
+                    : null;
+
+
+            int? diasDesdeUltimaCompra =
+                fechaUltimaCompra.HasValue
+                    ? (
+                        DateTime.Now.Date -
+                        fechaUltimaCompra.Value.Date
+                      ).Days
+                    : null;
+
+
+            // ======================================
+            // FRECUENCIA DE COMPRA
+            // ======================================
+
+            double? frecuenciaCompraDias = null;
+
+
+            if (cantidadPedidos >= 2 &&
+                fechaPrimeraCompra.HasValue &&
+                fechaUltimaCompra.HasValue)
+            {
+                double diasEntreCompras =
+                    (
+                        fechaUltimaCompra.Value -
+                        fechaPrimeraCompra.Value
+                    ).TotalDays;
+
+
+                frecuenciaCompraDias =
+                    Math.Round(
+                        diasEntreCompras /
+                        (cantidadPedidos - 1),
+                        2
+                    );
+            }
+
+
+            // ======================================
+            // CATEGORÍA FAVORITA
+            // ======================================
+
+            int? idCategoriaFavorita = null;
+
+
+            var categoriasCompradas =
+                detallesCliente
+                    .Join(
+                        _context.Productos,
+                        detalle =>
+                            detalle.IdProducto,
+                        producto =>
+                            producto.IdProducto,
+                        (detalle, producto) =>
+                            new
+                            {
+                                producto.IdCategoria,
+                                detalle.Cantidad
+                            }
+                    )
+                    .GroupBy(x =>
+                        x.IdCategoria
+                    )
+                    .Select(g =>
+                        new
+                        {
+                            IdCategoria =
+                                g.Key,
+
+                            CantidadComprada =
+                                g.Sum(x =>
+                                    x.Cantidad
+                                )
+                        }
+                    )
+                    .OrderByDescending(x =>
+                        x.CantidadComprada
+                    )
+                    .FirstOrDefault();
+
+
+            if (categoriasCompradas != null)
+            {
+                idCategoriaFavorita =
+                    categoriasCompradas.IdCategoria;
+            }
+
+
+            // ======================================
+            // MÉTODO DE ENTREGA MÁS USADO
+            // ======================================
+
+            string? metodoEntregaMasUsado =
+                subPedidosCliente
+                    .Where(sp =>
+                        !string.IsNullOrEmpty(
+                            sp.MetodoEntrega
+                        )
+                    )
+                    .GroupBy(sp =>
+                        sp.MetodoEntrega
+                    )
+                    .OrderByDescending(g =>
+                        g.Count()
+                    )
+                    .Select(g =>
+                        g.Key
+                    )
+                    .FirstOrDefault();
+
+
+            // ======================================
+            // RESULTADO
+            // ======================================
+
+            return new ClienteMineriaDTO
+            {
+                IdCliente =
+                    idCliente,
+
+                CantidadPedidos =
+                    cantidadPedidos,
+
+                CantidadSubPedidos =
+                    cantidadSubPedidos,
+
+                TotalGastado =
+                    Math.Round(
+                        totalGastado,
+                        2
+                    ),
+
+                TicketPromedio =
+                    Math.Round(
+                        ticketPromedio,
+                        2
+                    ),
+
+                CantidadProductosComprados =
+                    cantidadProductosComprados,
+
+                CantidadTiendasDiferentes =
+                    cantidadTiendasDiferentes,
+
+                CantidadPedidosCancelados =
+                    cantidadPedidosCancelados,
+
+                PorcentajeCancelacion =
+                    Math.Round(
+                        porcentajeCancelacion,
+                        2
+                    ),
+
+                FechaPrimeraCompra =
+                    fechaPrimeraCompra,
+
+                AntiguedadClienteDias =
+                    antiguedadClienteDias,
+
+                DiasDesdeUltimaCompra =
+                    diasDesdeUltimaCompra,
+
+                FrecuenciaCompraDias =
+                    frecuenciaCompraDias,
+
+                IdCategoriaFavorita =
+                    idCategoriaFavorita,
+
+                MetodoEntregaMasUsado =
+                    metodoEntregaMasUsado
+            };
+        }
+
+        // ==========================================
+        // MINERÍA - RECOMENDACIONES POR CLIENTE
+        // ==========================================
+
+        public async Task<object?>
+            ObtenerRecomendacionesClienteAsync(
+                int idCliente,
+                int limite = 5)
+        {
+            var cliente =
+                await ObtenerClienteMineriaPorIdAsync(
+                    idCliente
+                );
+
+            if (cliente == null)
+            {
+                return null;
+            }
+
+
+            // ======================================
+            // PRODUCTOS YA COMPRADOS POR EL CLIENTE
+            // ======================================
+
+            var idsProductosComprados =
+                await (
+                    from detalle in _context.DetalleSubPedidos
+                    join subPedido in _context.SubPedidos
+                        on detalle.IdSubPedido
+                        equals subPedido.IdSubPedido
+                    join pedido in _context.Pedidos
+                        on subPedido.IdPedido
+                        equals pedido.IdPedido
+                    where
+                        pedido.IdUsuario == idCliente &&
+                        pedido.Estado != "CANCELADO" &&
+                        subPedido.Estado != "CANCELADO"
+                    select detalle.IdProducto
+                )
+                .Distinct()
+                .ToListAsync();
+
+
+            // ======================================
+            // INTERACCIONES GLOBALES
+            // PARA CALCULAR POPULARIDAD
+            // ======================================
+
+            var interacciones =
+                await (
+                    from detalle in _context.DetalleSubPedidos
+                    join subPedido in _context.SubPedidos
+                        on detalle.IdSubPedido
+                        equals subPedido.IdSubPedido
+                    join pedido in _context.Pedidos
+                        on subPedido.IdPedido
+                        equals pedido.IdPedido
+                    where
+                        pedido.Estado != "CANCELADO" &&
+                        subPedido.Estado != "CANCELADO"
+                    select new
+                    {
+                        detalle.IdProducto,
+
+                        detalle.Cantidad,
+
+                        detalle.Subtotal,
+
+                        detalle.IdSubPedido,
+
+                        pedido.IdUsuario
+                    }
+                )
+                .ToListAsync();
+
+
+            // ======================================
+            // POPULARIDAD POR PRODUCTO
+            // ======================================
+
+            var popularidad =
+                interacciones
+                    .GroupBy(x =>
+                        x.IdProducto
+                    )
+                    .Select(g =>
+                        new
+                        {
+                            IdProducto =
+                                g.Key,
+
+                            CantidadComprada =
+                                g.Sum(x =>
+                                    x.Cantidad
+                                ),
+
+                            NumeroCompras =
+                                g.Select(x =>
+                                    x.IdSubPedido
+                                )
+                                .Distinct()
+                                .Count(),
+
+                            ClientesDiferentes =
+                                g.Select(x =>
+                                    x.IdUsuario
+                                )
+                                .Distinct()
+                                .Count(),
+
+                            TotalGastado =
+                                g.Sum(x =>
+                                    x.Subtotal
+                                )
+                        }
+                    )
+                    .ToList();
+
+
+            decimal maxCantidad =
+                popularidad.Count > 0
+                    ? popularidad.Max(x =>
+                        (decimal)x.CantidadComprada
+                    )
+                    : 0;
+
+
+            decimal maxCompras =
+                popularidad.Count > 0
+                    ? popularidad.Max(x =>
+                        (decimal)x.NumeroCompras
+                    )
+                    : 0;
+
+
+            decimal maxClientes =
+                popularidad.Count > 0
+                    ? popularidad.Max(x =>
+                        (decimal)x.ClientesDiferentes
+                    )
+                    : 0;
+
+
+            decimal maxGastado =
+                popularidad.Count > 0
+                    ? popularidad.Max(x =>
+                        x.TotalGastado
+                    )
+                    : 0;
+
+
+            var rankingPopularidad =
+                popularidad
+                    .Select(x =>
+                    {
+                        decimal cantidadNormalizada =
+                            maxCantidad > 0
+                                ? x.CantidadComprada /
+                                  maxCantidad
+                                : 0;
+
+
+                        decimal comprasNormalizadas =
+                            maxCompras > 0
+                                ? x.NumeroCompras /
+                                  maxCompras
+                                : 0;
+
+
+                        decimal clientesNormalizados =
+                            maxClientes > 0
+                                ? x.ClientesDiferentes /
+                                  maxClientes
+                                : 0;
+
+
+                        decimal gastadoNormalizado =
+                            maxGastado > 0
+                                ? x.TotalGastado /
+                                  maxGastado
+                                : 0;
+
+
+                        decimal puntaje =
+                            (
+                                cantidadNormalizada * 0.35m +
+                                comprasNormalizadas * 0.25m +
+                                clientesNormalizados * 0.25m +
+                                gastadoNormalizado * 0.15m
+                            ) * 100;
+
+
+                        return new
+                        {
+                            x.IdProducto,
+
+                            Puntaje =
+                                Math.Round(
+                                    puntaje,
+                                    2
+                                )
+                        };
+                    })
+                    .ToList();
+
+
+            // ======================================
+            // CATÁLOGO DISPONIBLE
+            // ======================================
+
+            var productos =
+                await _context.Productos
+                    .Where(p =>
+                        p.Activo == true &&
+                        p.Stock > 0 &&
+                        !idsProductosComprados
+                            .Contains(
+                                p.IdProducto
+                            )
+                    )
+                    .ToListAsync();
+
+
+            // ======================================
+            // PRIORIZAR CATEGORÍA FAVORITA
+            // ======================================
+
+            if (cliente.IdCategoriaFavorita.HasValue)
+            {
+                var productosCategoria =
+                    productos
+                        .Where(p =>
+                            p.IdCategoria ==
+                            cliente
+                                .IdCategoriaFavorita
+                                .Value
+                        )
+                        .ToList();
+
+                if (productosCategoria.Count > 0)
+                {
+                    productos =
+                        productosCategoria;
+                }
+            }
+
+
+            // ======================================
+            // CONSTRUIR RECOMENDACIONES
+            // ======================================
+
+            var recomendaciones =
+                productos
+                    .Select(p =>
+                    {
+                        var popular =
+                            rankingPopularidad
+                                .FirstOrDefault(x =>
+                                    x.IdProducto ==
+                                    p.IdProducto
+                                );
+
+
+                        decimal puntaje =
+                            popular?.Puntaje ?? 0;
+
+
+                        return new
+                        {
+                            p.IdProducto,
+
+                            NombreProducto =
+                                p.Nombre,
+
+                            p.IdCategoria,
+
+                            p.IdTienda,
+
+                            Precio =
+                                Math.Round(
+                                    p.Precio,
+                                    2
+                                ),
+
+                            p.Stock,
+
+                            PuntajePopularidad =
+                                puntaje
+                        };
+                    })
+                    .OrderByDescending(x =>
+                        x.PuntajePopularidad
+                    )
+                    .ThenByDescending(x =>
+                        x.Stock
+                    )
+                    .Take(limite)
+                    .ToList();
+
+
+            return new
+            {
+                IdCliente =
+                    cliente.IdCliente,
+
+                CategoriaFavorita =
+                    cliente.IdCategoriaFavorita,
+
+                ProductosYaComprados =
+                    idsProductosComprados.Count,
+
+                CantidadRecomendaciones =
+                    recomendaciones.Count,
+
+                Recomendaciones =
+                    recomendaciones
+            };
+        }
+
+
+        // ==========================================
+        // MINERÍA - COMPORTAMIENTO POR CLIENTE
+        // ==========================================
+
+        public async Task<object?>
+            ObtenerComportamientoClienteAsync(
+                int idCliente)
+        {
+            var cliente =
+                await ObtenerClienteMineriaPorIdAsync(
+                    idCliente
+                );
+
+            if (cliente == null)
+            {
+                return null;
+            }
+
+
+            // ======================================
+            // RECENCIA
+            // ======================================
+
+            string segmentoRecencia;
+
+            if (!cliente.DiasDesdeUltimaCompra.HasValue)
+            {
+                segmentoRecencia =
+                    "Sin compras";
+            }
+            else if (cliente.DiasDesdeUltimaCompra <= 7)
+            {
+                segmentoRecencia =
+                    "Muy reciente";
+            }
+            else if (cliente.DiasDesdeUltimaCompra <= 30)
+            {
+                segmentoRecencia =
+                    "Reciente";
+            }
+            else if (cliente.DiasDesdeUltimaCompra <= 90)
+            {
+                segmentoRecencia =
+                    "Inactivo reciente";
+            }
+            else
+            {
+                segmentoRecencia =
+                    "Inactivo";
+            }
+
+
+            // ======================================
+            // VALOR DEL CLIENTE
+            // ======================================
+
+            string segmentoValor;
+
+            if (cliente.TotalGastado <= 0)
+            {
+                segmentoValor =
+                    "Sin valor";
+            }
+            else if (cliente.TotalGastado < 50)
+            {
+                segmentoValor =
+                    "Bajo";
+            }
+            else if (cliente.TotalGastado < 200)
+            {
+                segmentoValor =
+                    "Medio";
+            }
+            else
+            {
+                segmentoValor =
+                    "Alto";
+            }
+
+
+            // ======================================
+            // CANCELACIONES
+            // ======================================
+
+            string riesgoCancelacion;
+
+            if (cliente.CantidadPedidos == 0 &&
+                cliente.CantidadPedidosCancelados == 0)
+            {
+                riesgoCancelacion =
+                    "Sin compras";
+            }
+            else if (cliente.PorcentajeCancelacion == 0)
+            {
+                riesgoCancelacion =
+                    "Sin cancelaciones";
+            }
+            else if (cliente.PorcentajeCancelacion <= 10)
+            {
+                riesgoCancelacion =
+                    "Bajo";
+            }
+            else if (cliente.PorcentajeCancelacion <= 30)
+            {
+                riesgoCancelacion =
+                    "Moderado";
+            }
+            else
+            {
+                riesgoCancelacion =
+                    "Alto";
+            }
+
+
+            // ======================================
+            // PATRÓN GENERAL
+            // ======================================
+
+            string patronComportamiento;
+
+
+            if (cliente.CantidadPedidos == 0)
+            {
+                patronComportamiento =
+                    "Sin historial";
+            }
+            else if (
+                cliente.CantidadPedidos >= 2 &&
+                cliente.TotalGastado >= 200 &&
+                segmentoRecencia == "Muy reciente")
+            {
+                patronComportamiento =
+                    "Cliente VIP";
+            }
+            else if (
+                cliente.CantidadPedidos >= 2 &&
+                (
+                    segmentoRecencia == "Muy reciente" ||
+                    segmentoRecencia == "Reciente"
+                ))
+            {
+                patronComportamiento =
+                    "Cliente recurrente frecuente";
+            }
+            else if (
+                cliente.CantidadPedidos == 1 &&
+                cliente.TotalGastado < 50)
+            {
+                patronComportamiento =
+                    "Cliente nuevo";
+            }
+            else if (
+                cliente.PorcentajeCancelacion > 30)
+            {
+                patronComportamiento =
+                    "Riesgo por cancelaciones";
+            }
+            else if (
+                segmentoRecencia == "Inactivo reciente" ||
+                segmentoRecencia == "Inactivo")
+            {
+                patronComportamiento =
+                    "Cliente inactivo";
+            }
+            else
+            {
+                patronComportamiento =
+                    "Cliente ocasional";
+            }
+
+
+            return new
+            {
+                IdCliente =
+                    cliente.IdCliente,
+
+                CantidadPedidos =
+                    cliente.CantidadPedidos,
+
+                TotalGastado =
+                    cliente.TotalGastado,
+
+                DiasDesdeUltimaCompra =
+                    cliente.DiasDesdeUltimaCompra,
+
+                FrecuenciaCompraDias =
+                    cliente.FrecuenciaCompraDias,
+
+                PorcentajeCancelacion =
+                    cliente.PorcentajeCancelacion,
+
+                SegmentoRecencia =
+                    segmentoRecencia,
+
+                SegmentoValor =
+                    segmentoValor,
+
+                RiesgoCancelacion =
+                    riesgoCancelacion,
+
+                PatronComportamiento =
+                    patronComportamiento
+            };
+        }
+
+        // ==========================================
+        // MINERÍA - LISTA DE CLIENTES
+        // ==========================================
+
+        public async Task<object> ObtenerClientesMineriaAsync()
+        {
+            var clientes = await _context.Usuarios
+                .Where(u => u.Rol == "Cliente")
+                .OrderBy(u => u.Nombres)
+                .ThenBy(u => u.Apellidos)
+                .Select(u => new
+                {
+                    IdCliente = u.IdUsuario,
+                    NombreCompleto =
+                        u.Nombres + " " + u.Apellidos,
+                    Correo = u.Correo
+                })
+                .ToListAsync();
+
+            return clientes;
+        }
+
     }
 }

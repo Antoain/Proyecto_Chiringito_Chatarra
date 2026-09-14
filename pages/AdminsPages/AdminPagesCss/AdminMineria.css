@@ -1,0 +1,173 @@
+.admin-mineria {
+  padding: 30px;
+  background-color: #f5f6f8;
+  min-height: 100vh;
+}
+
+.admin-mineria h1 {
+  margin-bottom: 5px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.admin-mineria > p {
+  margin-bottom: 25px;
+  color: #666;
+}
+
+.mineria-buscador {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mineria-buscador label {
+  font-weight: 600;
+}
+
+.mineria-buscador select {
+  min-width: 320px;
+  padding: 10px 12px;
+
+  border: 1px solid #ccc;
+  border-radius: 7px;
+
+  background-color: white;
+}
+
+.mineria-buscador button {
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 7px;
+
+  background-color: #212529;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mineria-buscador button:hover {
+  opacity: 0.9;
+}
+
+.mineria-buscador button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.mineria-error {
+  padding: 12px;
+  margin-bottom: 20px;
+
+  background-color: #ffe5e5;
+  color: #a40000;
+
+  border-radius: 8px;
+}
+
+.mineria-resultado {
+  margin-top: 20px;
+}
+
+.mineria-resultado h2 {
+  margin-bottom: 20px;
+}
+
+.mineria-tarjetas {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 18px;
+}
+
+.mineria-card {
+  background-color: white;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08);
+
+  min-height: 120px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mineria-card h3 {
+  font-size: 16px;
+  margin-bottom: 15px;
+
+  color: #555;
+}
+
+.mineria-card strong {
+  font-size: 24px;
+  color: #212529;
+}
+
+.mineria-recomendaciones {
+  margin-top: 25px;
+
+  background-color: white;
+
+  padding: 22px;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mineria-recomendaciones h3 {
+  margin-bottom: 18px;
+}
+
+.mineria-recomendaciones ul {
+  list-style: none;
+
+  padding: 0;
+  margin: 0;
+}
+
+.mineria-recomendaciones li {
+  padding: 13px 0;
+
+  border-bottom:
+    1px solid #eeeeee;
+}
+
+.mineria-recomendaciones li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 700px) {
+
+  .admin-mineria {
+    padding: 18px;
+  }
+
+  .mineria-buscador {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mineria-buscador select {
+    min-width: 100%;
+  }
+}

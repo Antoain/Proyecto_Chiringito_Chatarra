@@ -361,3 +361,22 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ==============================
+# Python / Minería de Datos
+# ==============================
+
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+
+# Entornos virtuales de Python
+.venv/
+venv/
+env/
+
+# Configuración local de VS Code
+.vscode/
+
+# Build de Vite
+dist/

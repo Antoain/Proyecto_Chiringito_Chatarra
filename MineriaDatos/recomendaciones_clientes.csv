@@ -1,0 +1,6 @@
+IdCliente,IdProducto,NombreProducto,IdCategoria,Precio,Stock,PuntajePopularidad
+1031,1015,Pink Moscato,1,15.0,6,0.0
+1031,1014,Pinot Noir,1,35.0,6,0.0
+1033,12,Chocolate Hershey Negro,4,11.0,10,0.0
+1033,13,Chcolate Torras Negro con Fresas,4,3.0,9,0.0
+1033,6,Chocolate Blanco Ferrero,4,3.0,9,0.0

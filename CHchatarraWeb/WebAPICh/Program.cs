@@ -1,11 +1,15 @@
 using ChiringuitoCH_Data.Context;
 using ChiringuitoCH_Data.DAO;
 using ChiringuitoCH_Data.Models;
-using Microsoft.EntityFrameworkCore;
-using WebAPICh.Services;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+
 using System.Text;
+
+using WebAPICh.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +22,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -31,8 +36,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddDbContext<ChChatarra40Context>(options =>
     options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+        builder.Configuration.GetConnectionString(
+            "DefaultConnection"
+        )
+    )
+);
 
 
 // ==========================================
@@ -48,27 +56,27 @@ builder.Services.AddScoped<FavoritosDAO>();
 builder.Services.AddScoped<CarritoDAO>();
 builder.Services.AddScoped<RenseniaProductoDAO>();
 builder.Services.AddScoped<VentaDAO>();
+builder.Services.AddScoped<PedidoDAO>();
 
-builder.Services.AddScoped<PedidoDAO>();
-builder.Services.AddScoped<PedidoDAO>();
 
 // ==========================================
-// REGISTRO DE ENVIO
+// REGISTRO DE ENVÍO
 // ==========================================
 
 builder.Services.AddScoped<CoberturaTiendaDAO>();
 builder.Services.AddScoped<MetodoEntregaTiendaDAO>();
 
+
 // ==========================================
-// REGISTRO DE inventario
+// REGISTRO DE INVENTARIO
 // ==========================================
 
 builder.Services.AddScoped<InventarioDAO>();
 
-// ==========================================
-// Control SIG
-// ==========================================
 
+// ==========================================
+// CONTROL SIG
+// ==========================================
 
 builder.Services.AddScoped<SIGVendedorDAO>();
 builder.Services.AddScoped<SIGAdministradorDAO>();
@@ -82,12 +90,41 @@ builder.Services.AddScoped<AuthService>();
 
 
 // ==========================================
+// MINERÍA DE DATOS
+// ==========================================
+
+builder.Services.AddHttpClient(
+    "MineriaAPI",
+    client =>
+    {
+        client.BaseAddress =
+            new Uri("http://127.0.0.1:8000");
+
+        client.Timeout =
+            TimeSpan.FromSeconds(10);
+    }
+);
+
+builder.Services.AddScoped<MineriaService>();
+
+builder.Services.AddHostedService<
+    MineriaPythonService
+>();
+
+
+// ==========================================
 // CONFIGURACIÓN JWT
 // ==========================================
 
-var jwtKey = builder.Configuration["Jwt:Key"];
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
+var jwtKey =
+    builder.Configuration["Jwt:Key"];
+
+var jwtIssuer =
+    builder.Configuration["Jwt:Issuer"];
+
+var jwtAudience =
+    builder.Configuration["Jwt:Audience"];
+
 
 if (string.IsNullOrWhiteSpace(jwtKey))
 {
@@ -95,6 +132,7 @@ if (string.IsNullOrWhiteSpace(jwtKey))
         "La clave JWT no está configurada."
     );
 }
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -126,6 +164,7 @@ builder.Services.AddAuthentication(options =>
         };
 });
 
+
 builder.Services.AddAuthorization();
 
 
@@ -133,13 +172,20 @@ builder.Services.AddAuthorization();
 // CONTROLADORES Y JSON
 // ==========================================
 
-builder.Services.AddControllers()
+builder.Services
+    .AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler =
-            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options
+            .JsonSerializerOptions
+            .ReferenceHandler =
+                System.Text.Json.Serialization
+                    .ReferenceHandler
+                    .IgnoreCycles;
 
-        options.JsonSerializerOptions.WriteIndented = true;
+        options
+            .JsonSerializerOptions
+            .WriteIndented = true;
     });
 
 
@@ -148,32 +194,60 @@ builder.Services.AddControllers()
 // ==========================================
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Ingrese el token JWT."
-    });
-
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
+    options.AddSecurityDefinition(
+        "Bearer",
+        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
+            Name = "Authorization",
+
+            Type =
+                Microsoft.OpenApi.Models
+                    .SecuritySchemeType
+                    .Http,
+
+            Scheme = "bearer",
+
+            BearerFormat = "JWT",
+
+            In =
+                Microsoft.OpenApi.Models
+                    .ParameterLocation
+                    .Header,
+
+            Description =
+                "Ingrese el token JWT."
         }
-    });
+    );
+
+
+    options.AddSecurityRequirement(
+        new Microsoft.OpenApi.Models
+            .OpenApiSecurityRequirement
+        {
+            {
+                new Microsoft.OpenApi.Models
+                    .OpenApiSecurityScheme
+                {
+                    Reference =
+                        new Microsoft.OpenApi.Models
+                            .OpenApiReference
+                        {
+                            Type =
+                                Microsoft.OpenApi.Models
+                                    .ReferenceType
+                                    .SecurityScheme,
+
+                            Id = "Bearer"
+                        }
+                },
+
+                Array.Empty<string>()
+            }
+        }
+    );
 });
 
 
@@ -196,13 +270,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
-
-// IMPORTANTE: Authentication debe ir antes
-// que Authorization.
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

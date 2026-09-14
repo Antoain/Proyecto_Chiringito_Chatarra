@@ -25,6 +25,7 @@ import AdministrarUsuarios from './pages/AdminsPages/AdminUsuarios';
 import AdministrarCategorias from './pages/AdminsPages/AdminCategoria';
 import AdministrarTiendas from './pages/AdminsPages/AdminTienda';
 import AdministrarProductos from './pages/AdminsPages/AdminProducto';
+import AdminMineria from './pages/AdminsPages/AdminMineria';
 // Páginas de autenticación
 import LoginPage from './pages/LoginsPages/login';
 import CrearCuenta from './pages/LoginsPages/CrearCuenta';  // Importar la página de registro
@@ -71,6 +72,7 @@ export function App() {
                     <Route path="categorias" element={<AdministrarCategorias />} />
                     <Route path="tiendas" element={<AdministrarTiendas/>} />
                     <Route path="Productos" element={<AdministrarProductos/>} />
+                    <Route path="mineria" element={<AdminMineria />} />
                 </Route>
             </Routes>
         </Router>

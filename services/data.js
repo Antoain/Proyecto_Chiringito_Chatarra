@@ -1,33 +1,39 @@
 // ============================= FETCH PARA USUARIOS ===============================
 
-const BASE_URL_Usuarios = 'https://localhost:7059/api/Usuario';
+const BASE_URL_Usuarios = 'http://localhost:5093/api/Usuario';
 
 // Autenticar usuario con su correo y clave
 export async function autenticarUsuario(correo, clave) {
-  const datos = { correo, clave };
+    const datos = { correo, clave };
 
-  try {
-      const response = await fetch(`${BASE_URL_Usuarios}/login`, 
-      {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(datos), // Convertimos los datos a JSON antes de enviarlos
-      });
+    try {
+        const response = await fetch(
+            `${BASE_URL_Usuarios}/login`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datos),
+            }
+        );
 
-      // Verificamos si la solicitud fue exitosa
-      if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-      }
+        if (!response.ok) {
+            throw new Error(
+                `Error: ${response.status} - ${response.statusText}`
+            );
+        }
 
-      // Convertimos la respuesta en JSON
-      const resultado = await response.json();
-      console.log("Datos recibidos desde el backend:", resultado); 
+        const resultado = await response.json();
 
-      return resultado;
-  } catch (error) {
-      console.error('Error en la autenticación:', error);
-      throw error;
-  }
+        return resultado;
+    } catch (error) {
+        console.error(
+            'Error en la autenticación:',
+            error
+        );
+        throw error;
+    }
 }
 
 // Registrar un nuevo usuario en el sistema

@@ -1,0 +1,11 @@
+idCliente,cantidadPedidos,totalGastado,ticketPromedio,diasDesdeUltimaCompra,frecuenciaCompraDias,idCategoriaFavorita,metodoEntregaMasUsado,NivelRecencia,NivelValorCliente,NivelCancelacion,clienteRecurrente,PatronComportamiento
+1031,19,767.26,40.38,3.0,0.44,1.0,TIENDA,Muy reciente,Valor alto,Sin cancelaciones,1,Cliente VIP
+1033,1,3.0,3.0,6.0,,4.0,,Muy reciente,Valor bajo,Sin cancelaciones,0,Cliente nuevo
+3,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+4,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+19,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+1022,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+1023,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+1026,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+1027,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial
+1030,0,0.0,0.0,,,,,Sin compras,Sin valor generado,Sin compras,0,Sin historial

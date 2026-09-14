@@ -1,0 +1,5 @@
+idProducto,nombreProducto,idCategoria,idTienda,CantidadVendida,NumeroCompras,ClientesDiferentes,TotalGenerado,CantidadVendidaNorm,NumeroComprasNorm,ClientesDiferentesNorm,TotalGeneradoNorm,PuntajePopularidad
+1019,Audifonos Gamer Pro,1,1028,23,13,1,689.77,1.0,1.0,0.5,1.0,87.5
+1020,productoPrueba,1,1026,10,10,1,10.0,0.43478260869565216,0.7692307692307693,0.5,0.014497586151905708,47.17
+2,Chocolates Ferrero,4,1,2,2,2,6.0,0.08695652173913043,0.15384615384615385,1.0,0.008698551691143424,32.02
+1023,prueba2,1,1026,1,1,1,2.0,0.043478260869565216,0.07692307692307693,0.5,0.0028995172303811416,15.99
