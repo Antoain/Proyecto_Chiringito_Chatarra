@@ -1,6 +1,7 @@
 ﻿using ChiringuitoCH_Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using ChiringuitoCH_Data.DAO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPICh.Controllers
 {
@@ -36,49 +37,84 @@ namespace WebAPICh.Controllers
             return Ok(categoria);
         }
 
-        // POST: api/Categoria/Crear Categorias
+
+        // POST: api/Categoria/PostCategorias
+        [Authorize(Roles = "Administrador")]
         [HttpPost("PostCategorias")]
         public async Task<IActionResult> PostCategoria(Categorium categorium)
         {
             await _categoriaDAO.CrearCategoriaAsync(categorium);
-            return CreatedAtAction(nameof(GetCategoria), new { id = categorium.IdCategoria }, categorium);
+
+            return CreatedAtAction(
+                nameof(GetCategoria),
+                new { id = categorium.IdCategoria },
+                categorium
+            );
         }
 
-        // PUT: api/Categoria/Editar Categoria/{id}
+        // PUT: api/Categoria/Editar?id=1
+        [Authorize(Roles = "Administrador")]
         [HttpPut("Editar")]
-        public async Task<IActionResult> PutCategoria(int id, [FromBody] Categorium categorium)
+        public async Task<IActionResult> PutCategoria(
+            int id,
+            [FromBody] Categorium categorium)
         {
             if (id != categorium.IdCategoria)
             {
-                return BadRequest(new { mensaje = "El ID en la URL no coincide con el ID de la categoría enviada." });
+                return BadRequest(new
+                {
+                    mensaje = "El ID en la URL no coincide con el ID de la categoría enviada."
+                });
             }
 
-            var categoriaExistente = await _categoriaDAO.ObtenerCategoriaPorIdAsync(id);
+            var categoriaExistente =
+                await _categoriaDAO.ObtenerCategoriaPorIdAsync(id);
+
             if (categoriaExistente == null)
             {
-                return NotFound(new { mensaje = "La categoría especificada no existe." });
+                return NotFound(new
+                {
+                    mensaje = "La categoría especificada no existe."
+                });
             }
 
-            categoriaExistente.Descripcion = !string.IsNullOrEmpty(categorium.Descripcion) ? categorium.Descripcion : categoriaExistente.Descripcion;
-            categoriaExistente.Activo = categorium.Activo; // Actualizamos el estado sin verificaciones adicionales.
+            categoriaExistente.Descripcion =
+                !string.IsNullOrWhiteSpace(categorium.Descripcion)
+                    ? categorium.Descripcion
+                    : categoriaExistente.Descripcion;
 
-            await _categoriaDAO.ActualizarCategoriaAsync(categoriaExistente);
+            categoriaExistente.Activo =
+                categorium.Activo;
 
-            return Ok(new { mensaje = "Categoría actualizada correctamente." });
+            await _categoriaDAO.ActualizarCategoriaAsync(
+                categoriaExistente
+            );
+
+            return Ok(new
+            {
+                mensaje = "Categoría actualizada correctamente."
+            });
         }
 
 
-        // DELETE: api/Categoria/Eliminar Categoria por ID/{id}
+        // DELETE: api/Categoria/Delete1
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("Delete{id}")]
         public async Task<IActionResult> DeleteCategoria(int id)
         {
-            var categoria = await _categoriaDAO.ObtenerCategoriaPorIdAsync(id);
+            var categoria =
+                await _categoriaDAO.ObtenerCategoriaPorIdAsync(id);
+
             if (categoria == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    mensaje = "La categoría especificada no existe."
+                });
             }
 
             await _categoriaDAO.EliminarCategoriaAsync(id);
+
             return NoContent();
         }
 

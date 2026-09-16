@@ -26,7 +26,7 @@ export function ClienteHome() {
   // Refresca favoritos desde la API
   const refreshFavoritos = async () => {
     try {
-      const data = await obtenerFavoritosPorCliente(idUsuario);
+      const data = await obtenerFavoritosPorCliente();
       setFavoritos(data.map(normalizeFavorito));
     } catch (err) {
       console.error("Error al refrescar favoritos:", err);
@@ -90,21 +90,29 @@ export function ClienteHome() {
         setFavoritos(favoritosPrevios); // Reversión
       }
     } else {
-      // Agregar favorito (optimista)
-      const tempFav = { idProducto: productoId, idFavorito: -1 };
-      setFavoritos(prev => [...prev, tempFav]);
-      try {
-        const nuevoFavoritoRaw = await agregarFavorito(idUsuario, productoId);
-        const nuevoFavorito = normalizeFavorito(nuevoFavoritoRaw);
-        setFavoritos(prev =>
-          prev.map(fav => Number(fav.idProducto) === productoId ? nuevoFavorito : fav)
-        );
-        await refreshFavoritos(); // 🔄 asegura estado real
-      } catch (err) {
-        console.error("Error al agregar favorito:", err);
-        setFavoritos(favoritosPrevios); // Reversión
+        const tempFav = {
+          idProducto: productoId,
+          idFavorito: -1
+        };
+
+        setFavoritos(prev => [
+          ...prev,
+          tempFav
+        ]);
+
+        try {
+          await agregarFavorito(productoId);
+
+          await refreshFavoritos();
+        } catch (err) {
+          console.error(
+            "Error al agregar favorito:",
+            err
+          );
+
+          setFavoritos(favoritosPrevios);
+        }
       }
-    }
   };
 
   return (

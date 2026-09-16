@@ -215,5 +215,31 @@ namespace ChiringuitoCH_Data.DAO
 
                 .ToListAsync();
         }
+
+        // ==========================================
+        // MOVIMIENTOS DE INVENTARIO POR VENDEDOR
+        // ==========================================
+
+        public async Task<List<MovimientoInventario>>
+            ObtenerMovimientosPorVendedorAsync(
+                int idVendedor)
+        {
+            return await _context.MovimientosInventario
+                .Include(m => m.IdInventarioNavigation)
+                    .ThenInclude(i => i.IdProductoNavigation)
+                        .ThenInclude(p => p.IdTiendaNavigation)
+                .Where(m =>
+                    m.IdInventarioNavigation != null &&
+                    m.IdInventarioNavigation.IdProductoNavigation != null &&
+                    m.IdInventarioNavigation.IdProductoNavigation
+                        .IdTiendaNavigation != null &&
+                    m.IdInventarioNavigation.IdProductoNavigation
+                        .IdTiendaNavigation.IdVendedor == idVendedor
+                )
+                .OrderByDescending(m =>
+                    m.FechaMovimiento
+                )
+                .ToListAsync();
+        }
     }
 }

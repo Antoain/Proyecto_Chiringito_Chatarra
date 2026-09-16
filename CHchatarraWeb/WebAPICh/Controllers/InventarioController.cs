@@ -886,6 +886,87 @@ namespace WebAPICh.Controllers
             });
         }
 
+        // ==========================================
+        // HISTORIAL DE MOVIMIENTOS DEL VENDEDOR
+        // ==========================================
+
+        [Authorize(Roles = "Vendedor")]
+        [HttpGet("Movimientos")]
+        public async Task<IActionResult> ObtenerMovimientos()
+        {
+            var idUsuarioClaim =
+                User.FindFirst(
+                    ClaimTypes.NameIdentifier
+                )?.Value;
+
+            if (!int.TryParse(
+                idUsuarioClaim,
+                out int idVendedor))
+            {
+                return Unauthorized(new
+                {
+                    mensaje =
+                        "No se pudo identificar al vendedor."
+                });
+            }
+
+            var movimientos =
+                await _inventarioDAO
+                    .ObtenerMovimientosPorVendedorAsync(
+                        idVendedor
+                    );
+
+            if (movimientos == null ||
+                !movimientos.Any())
+            {
+                return NotFound(new
+                {
+                    mensaje =
+                        "No se encontraron movimientos de inventario."
+                });
+            }
+
+            var resultado =
+                movimientos.Select(m => new
+                {
+                    m.IdMovimiento,
+
+                    m.IdInventario,
+
+                    IdProducto =
+                        m.IdInventarioNavigation?
+                            .IdProducto,
+
+                    Producto =
+                        m.IdInventarioNavigation?
+                            .IdProductoNavigation?
+                            .Nombre,
+
+                    Tienda =
+                        m.IdInventarioNavigation?
+                            .IdProductoNavigation?
+                            .IdTiendaNavigation?
+                            .NombreNegocio,
+
+                    m.TipoMovimiento,
+
+                    m.Cantidad,
+
+                    m.StockAnterior,
+
+                    m.StockNuevo,
+
+                    m.Motivo,
+
+                    m.Referencia,
+
+                    m.FechaMovimiento
+                })
+                .ToList();
+
+            return Ok(resultado);
+        }
+
 
     }
 }

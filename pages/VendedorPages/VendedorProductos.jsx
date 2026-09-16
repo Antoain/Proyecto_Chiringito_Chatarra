@@ -1,251 +1,1110 @@
-// Importaciones de React y hooks
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
 
-// Importación de funciones de servicios para manejar productos, tiendas y categorías
-import { obtenerProductosPorVendedor, crearProductos, actualizarProductos, eliminarProductos } from '../../services/data';
-import { obtenerCategorias, obtenerTiendasPorVendedor } from '../../services/data';
+import {
+  obtenerProductosPorVendedor,
+  crearProductos,
+  actualizarProductos,
+  eliminarProductos,
+  obtenerCategorias,
+  obtenerTiendasPorVendedor
+} from "../../services/data";
 
-// Estilos del componente
-import './VendedorPagesCss/VendedorTiendas.css';
+import "./VendedorPagesCss/VendedorProductos.css";
 
-// Componente principal
+
 export default function VendedorProductos() {
-  // Estados para productos, tiendas y categorías
+
+  const vendedorId =
+    localStorage.getItem("idVendedor") || "";
+
   const [productos, setProductos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [tiendas, setTiendas] = useState([]);
 
-  // Estado del producto en edición o creación
-  const [productoActual, setProductoActual] = useState({
-    idProducto: '',
-    nombre: '',
-    descripcion: '',
-    idTienda: '',
-    idCategoria: '',
-    precio: '',
-    stock: '',
-    sku: '',
-    rutaImagen: '',
+  const [mensaje, setMensaje] = useState("");
+  const [error, setError] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+
+  const [busqueda, setBusqueda] = useState("");
+
+
+  const crearProductoVacio = () => ({
+    idProducto: "",
+    nombre: "",
+    descripcion: "",
+    idTienda:
+      tiendas.length > 0
+        ? tiendas[0].idTienda
+        : "",
+    idCategoria: "",
+    precio: "",
+    stock: "",
+    sku: "",
+    rutaImagen: "",
     activo: true,
-    idVendedor: localStorage.getItem("idVendedor") || '',
+    idVendedor: vendedorId,
   });
 
-  // Estados para mensajes y control de UI
-  const [mensaje, setMensaje] = useState('');
-  const [error, setError] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [modoEdicion, setModoEdicion] = useState(false); // true si se está editando, false si se está creando
 
-  // Cargar datos al iniciar el componente
+  const [productoActual, setProductoActual] =
+    useState(crearProductoVacio());
+
+
   useEffect(() => {
+
     const fetchDatos = async () => {
+
       try {
-        const vendedorId = localStorage.getItem("idVendedor");
 
-        // Carga las tiendas del vendedor
-        const dataTiendas = await obtenerTiendasPorVendedor(vendedorId);
-        
-        // Carga las categorías disponibles
-        const dataCategorias = await obtenerCategorias();
+        const [
+          dataTiendas,
+          dataCategorias,
+          dataProductos
+        ] = await Promise.all([
+          obtenerTiendasPorVendedor(vendedorId),
+          obtenerCategorias(),
+          obtenerProductosPorVendedor(vendedorId)
+        ]);
 
-        // Carga los productos registrados por el vendedor
-        const dataProductos = await obtenerProductosPorVendedor(vendedorId);
-
-        // Actualiza los estados
         setTiendas(dataTiendas);
         setCategorias(dataCategorias);
         setProductos(dataProductos);
+
       } catch (err) {
-        console.error("Error al cargar tiendas/categorías:", err);
+
+        console.error(err);
+
+        setError(
+          "Error al cargar los productos."
+        );
       }
     };
 
-    fetchDatos();
-  }, []);
 
-  // Abre el modal para crear un nuevo producto
+    if (vendedorId) {
+      fetchDatos();
+    }
+
+  }, [vendedorId]);
+
+
   const manejarAbrirModalCrear = () => {
+
     setModoEdicion(false);
+
     setProductoActual({
-      idProducto: '',
-      nombre: '',
-      descripcion: '',
-      idTienda: tiendas.length > 0 ? tiendas[0].idTienda : '',
-      idCategoria: '',
-      precio: '',
-      stock: '',
-      sku: '',
-      rutaImagen: '',
-      activo: true,
-      idVendedor: localStorage.getItem("idVendedor"),
+      ...crearProductoVacio(),
+      idTienda:
+        tiendas.length > 0
+          ? tiendas[0].idTienda
+          : ""
     });
+
+    setError("");
     setShowModal(true);
   };
 
-  // Abre el modal para editar un producto existente
-  const manejarEditarProducto = (producto) => {
+
+  const manejarEditarProducto = (
+    producto
+  ) => {
+
     setModoEdicion(true);
-    setProductoActual(producto);
+
+    setProductoActual({
+      ...producto,
+      idTienda:
+        producto.idTienda ?? "",
+      idCategoria:
+        producto.idCategoria ?? "",
+      precio:
+        producto.precio ?? "",
+      stock:
+        producto.stock ?? 0,
+      rutaImagen:
+        producto.rutaImagen ?? "",
+      sku:
+        producto.sku ?? "",
+      activo:
+        producto.activo ?? true
+    });
+
+    setError("");
     setShowModal(true);
   };
 
-  // Guarda los cambios del producto (crear o actualizar)
-  const manejarGuardarCambios = async () => {
-    // Validación básica
-    if (!productoActual.nombre || !productoActual.idTienda || !productoActual.precio) {
-      setError('Todos los campos son obligatorios.');
-      return;
-    }
 
-    // Preparar datos antes de enviar al servidor
-    const productoProcesado = {
-      ...productoActual,
-      idTienda: parseInt(productoActual.idTienda),
-      idCategoria: parseInt(productoActual.idCategoria),
-      precio: parseFloat(productoActual.precio),
-      stock: parseInt(productoActual.stock),
-      sku: productoActual.sku.trim() !== '' ? productoActual.sku : `SKU-${Date.now()}`, // SKU generado automáticamente si está vacío
-      rutaImagen: productoActual.rutaImagen.trim() !== '' ? productoActual.rutaImagen : 'https://nomamesjajasalu2', // Imagen por defecto (esto podrías mejorarlo luego)
-      activo: Boolean(productoActual.activo),
-    };
+  const manejarGuardarCambios =
+    async () => {
 
-    try {
-      if (modoEdicion) {
-        await actualizarProductos(productoActual.idProducto, productoProcesado);
-        setMensaje('Producto actualizado exitosamente.');
-      } else {
-        await crearProductos(productoProcesado);
-        setMensaje('Producto creado exitosamente.');
+      if (
+        !productoActual.nombre ||
+        !productoActual.idTienda ||
+        !productoActual.idCategoria ||
+        productoActual.precio === ""
+      ) {
+
+        setError(
+          "Completa todos los campos obligatorios."
+        );
+
+        return;
       }
 
-      // Refrescar lista de productos
-      const vendedorId = localStorage.getItem("idVendedor");
-      const dataProductos = await obtenerProductosPorVendedor(vendedorId);
-      setProductos(dataProductos);
 
-      // Limpiar y cerrar modal
-      setTimeout(() => setMensaje(''), 3000);
-      setShowModal(false);
-    } catch (err) {
-      setError('Error al guardar el producto.');
-      setTimeout(() => setError(''), 3000);
-    }
-  };
+      const productoProcesado = {
+        ...productoActual,
 
-  // Eliminar un producto por ID
-  const manejarEliminarProducto = async (id) => {
-    if (!window.confirm('¿Estás seguro de eliminar este producto?')) return;
+        idTienda:
+          Number(productoActual.idTienda),
 
-    try {
-      await eliminarProductos(id);
-      setProductos(productos.filter(p => p.idProducto !== id));
-      setMensaje('Producto eliminado.');
-      setTimeout(() => setMensaje(''), 3000);
-    } catch (err) {
-      setError('Error al eliminar el producto.');
-      setTimeout(() => setError(''), 3000);
-    }
-  };
+        idCategoria:
+          Number(productoActual.idCategoria),
 
-  // Renderizado del componente
+        precio:
+          Number(productoActual.precio),
+
+        stock:
+          Number(productoActual.stock || 0),
+
+        sku:
+          productoActual.sku?.trim()
+            ? productoActual.sku.trim()
+            : `SKU-${Date.now()}`,
+
+        rutaImagen:
+          productoActual.rutaImagen?.trim()
+            ? productoActual.rutaImagen.trim()
+            : "",
+
+        activo:
+          Boolean(productoActual.activo)
+      };
+
+
+      try {
+
+        if (modoEdicion) {
+
+          await actualizarProductos(
+            productoActual.idProducto,
+            productoProcesado
+          );
+
+          setMensaje(
+            "Producto actualizado correctamente."
+          );
+
+        } else {
+
+          await crearProductos(
+            productoProcesado
+          );
+
+          setMensaje(
+            "Producto creado correctamente."
+          );
+        }
+
+
+        const dataProductos =
+          await obtenerProductosPorVendedor(
+            vendedorId
+          );
+
+        setProductos(dataProductos);
+
+        setShowModal(false);
+        setError("");
+
+
+        setTimeout(
+          () => setMensaje(""),
+          3000
+        );
+
+      } catch (err) {
+
+        console.error(err);
+
+        setError(
+          err.message ||
+          "Error al guardar el producto."
+        );
+
+        setTimeout(
+          () => setError(""),
+          3000
+        );
+      }
+    };
+
+
+  const manejarEliminarProducto =
+    async (id) => {
+
+      const confirmar =
+        window.confirm(
+          "¿Estás seguro de eliminar este producto?"
+        );
+
+
+      if (!confirmar) {
+        return;
+      }
+
+
+      try {
+
+        await eliminarProductos(id);
+
+        setProductos(prev =>
+          prev.filter(
+            producto =>
+              producto.idProducto !== id
+          )
+        );
+
+        setMensaje(
+          "Producto eliminado correctamente."
+        );
+
+        setTimeout(
+          () => setMensaje(""),
+          3000
+        );
+
+      } catch (err) {
+
+        console.error(err);
+
+        setError(
+          err.message ||
+          "Error al eliminar el producto."
+        );
+
+        setTimeout(
+          () => setError(""),
+          3000
+        );
+      }
+    };
+
+
+  const obtenerTienda = idTienda =>
+    tiendas.find(
+      tienda =>
+        Number(tienda.idTienda) ===
+        Number(idTienda)
+    )?.nombreNegocio ||
+    "Sin tienda";
+
+
+  const obtenerCategoria = idCategoria =>
+    categorias.find(
+      categoria =>
+        Number(categoria.idCategoria) ===
+        Number(idCategoria)
+    )?.descripcion ||
+    "Sin categoría";
+
+
+  const productosFiltrados =
+    productos.filter(producto => {
+
+      const texto =
+        `${producto.nombre} ${producto.sku || ""}`
+          .toLowerCase();
+
+      return texto.includes(
+        busqueda.toLowerCase()
+      );
+    });
+
+
+  const productosActivos =
+    productos.filter(
+      producto =>
+        producto.activo
+    ).length;
+
+
+  const productosSinStock =
+    productos.filter(
+      producto =>
+        Number(producto.stock) <= 0
+    ).length;
+
+
   return (
-    <div className="vendedor-background">
-      <div className="vendedor-container">
-        <h1>Mis Productos</h1>
-        {mensaje && <p className="mensaje-exito">{mensaje}</p>}
-        {error && <p className="mensaje-error">{error}</p>}
 
-        <button onClick={manejarAbrirModalCrear} className="btn-crear">
-          Crear Producto
-        </button>
+    <div className="productos-page">
 
-        <table className="vendedor-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Descripción</th>
-              <th>Precio</th>
-              <th>Stock</th>
-              <th>Tienda</th>
-              <th>Categoría</th>
-              <th>Activo</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.map((producto) => (
-              <tr key={producto.idProducto}>
-                <td>{producto.idProducto}</td>
-                <td>{producto.nombre}</td>
-                <td>{producto.descripcion}</td>
-                <td>${producto.precio.toFixed(2)}</td>
-                <td>{producto.stock}</td>
-                <td>{producto.idTienda}</td>
-                <td>{producto.idCategoria}</td>
-                <td>{producto.activo ? 'Sí' : 'No'}</td>
-                <td>
-                  <button onClick={() => manejarEditarProducto(producto)} className="btn-editar">Editar</button>
-                  <button onClick={() => manejarEliminarProducto(producto.idProducto)} className="btn-eliminar">Eliminar</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="productos-container">
 
-        {/* Modal de creación/edición de producto */}
-        {showModal && (
-          <div className="modal">
-            <div className="modal-content">
-              <h2>{modoEdicion ? 'Editar Producto' : 'Crear Producto'}</h2>
 
-              <label>Nombre:</label>
-              <input type="text" value={productoActual.nombre || ''} onChange={(e) => setProductoActual({...productoActual, nombre: e.target.value})} />
+        {/* HEADER */}
 
-              <label>Descripción:</label>
-              <input type="text" value={productoActual.descripcion || ''} onChange={(e) => setProductoActual({...productoActual, descripcion: e.target.value})} />
+        <div className="productos-header">
 
-              <label>SKU:</label>
-              <input type="text" value={productoActual.sku || ''} onChange={(e) => setProductoActual({...productoActual, sku: e.target.value})} />
+          <div>
 
-              <label>URL Imagen:</label>
-              <input type="text" value={productoActual.rutaImagen || ''} onChange={(e) => setProductoActual({...productoActual, rutaImagen: e.target.value})} />
+            <span className="productos-eyebrow">
+              GESTIÓN DE INVENTARIO
+            </span>
 
-              <label>Precio:</label>
-              <input type="number" step="0.01" value={productoActual.precio || ''} onChange={(e) => setProductoActual({...productoActual, precio: e.target.value})} />
+            <h1>
+              Mis productos
+            </h1>
 
-              <label>Stock:</label>
-              <input type="number" value={productoActual.stock || ''} onChange={(e) => setProductoActual({...productoActual, stock: e.target.value})} />
+            <p>
+              Administra el catálogo,
+              precios, existencias y estado
+              de tus productos.
+            </p>
 
-              <label>Tienda:</label>
-              <select value={productoActual.idTienda} onChange={(e) => setProductoActual({...productoActual, idTienda: e.target.value})}>
-                <option value="">Seleccione una tienda</option>
-                {tiendas.map((tienda) => (
-                  <option key={tienda.idTienda} value={tienda.idTienda}>{tienda.nombreNegocio}</option>
-                ))}
-              </select>
+          </div>
 
-              <label>Categoría:</label>
-              <select value={productoActual.idCategoria} onChange={(e) => setProductoActual({...productoActual, idCategoria: e.target.value})}>
-                <option value="">Seleccione una categoría</option>
-                {categorias.map((categoria) => (
-                  <option key={categoria.idCategoria} value={categoria.idCategoria}>{categoria.descripcion}</option>
-                ))}
-              </select>
 
-              <label>Activo:</label>
-              <input type="checkbox" checked={productoActual.activo} onChange={(e) => setProductoActual({...productoActual, activo: e.target.checked})} />
+          <button
+            className="productos-btn-primary"
+            onClick={
+              manejarAbrirModalCrear
+            }
+          >
 
-              <div className="modal-actions">
-                <button onClick={manejarGuardarCambios}>
-                  {modoEdicion ? 'Guardar Cambios' : 'Crear Producto'}
-                </button>
-                <button onClick={() => setShowModal(false)}>Cancelar</button>
-              </div>
-            </div>
+            <i className="bi bi-plus-lg"></i>
+
+            Nuevo producto
+
+          </button>
+
+        </div>
+
+
+        {/* ALERTAS */}
+
+        {mensaje && (
+
+          <div className="productos-alert productos-alert-success">
+
+            <i className="bi bi-check-circle"></i>
+
+            {mensaje}
+
           </div>
         )}
+
+
+        {error && !showModal && (
+
+          <div className="productos-alert productos-alert-error">
+
+            <i className="bi bi-exclamation-circle"></i>
+
+            {error}
+
+          </div>
+        )}
+
+
+        {/* RESUMEN */}
+
+        <div className="productos-summary">
+
+          <div className="productos-summary-card">
+
+            <span>
+              Productos registrados
+            </span>
+
+            <strong>
+              {productos.length}
+            </strong>
+
+            <i className="bi bi-box-seam"></i>
+
+          </div>
+
+
+          <div className="productos-summary-card">
+
+            <span>
+              Productos activos
+            </span>
+
+            <strong>
+              {productosActivos}
+            </strong>
+
+            <i className="bi bi-check-circle"></i>
+
+          </div>
+
+
+          <div className="productos-summary-card">
+
+            <span>
+              Sin existencias
+            </span>
+
+            <strong>
+              {productosSinStock}
+            </strong>
+
+            <i className="bi bi-exclamation-triangle"></i>
+
+          </div>
+
+        </div>
+
+
+        {/* TABLA */}
+
+        <section className="productos-card">
+
+          <div className="productos-card-header">
+
+            <div>
+
+              <h2>
+                Catálogo de productos
+              </h2>
+
+              <p>
+                Productos registrados
+                en tus tiendas
+              </p>
+
+            </div>
+
+
+            <div className="productos-search">
+
+              <i className="bi bi-search"></i>
+
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={busqueda}
+                onChange={e =>
+                  setBusqueda(
+                    e.target.value
+                  )
+                }
+              />
+
+            </div>
+
+          </div>
+
+
+          {productosFiltrados.length === 0 ? (
+
+            <div className="productos-empty">
+
+              <i className="bi bi-box"></i>
+
+              <h3>
+                No hay productos
+              </h3>
+
+              <p>
+                Registra un producto
+                para comenzar tu catálogo.
+              </p>
+
+            </div>
+
+          ) : (
+
+            <div className="table-responsive">
+
+              <table className="productos-table">
+
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>SKU</th>
+                    <th>Tienda</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+
+                  {productosFiltrados.map(
+                    producto => (
+
+                      <tr
+                        key={
+                          producto.idProducto
+                        }
+                      >
+
+                        <td>
+
+                          <div className="producto-info">
+
+                            <div className="producto-thumb">
+
+                              {producto.rutaImagen ? (
+
+                                <img
+                                  src={
+                                    producto.rutaImagen
+                                  }
+                                  alt={
+                                    producto.nombre
+                                  }
+                                  onError={e => {
+                                    e.currentTarget.style.display =
+                                      "none";
+                                  }}
+                                />
+
+                              ) : (
+
+                                <i className="bi bi-image"></i>
+                              )}
+
+                            </div>
+
+
+                            <div>
+
+                              <strong>
+                                {producto.nombre}
+                              </strong>
+
+                              <small>
+                                {
+                                  producto.descripcion ||
+                                  "Sin descripción"
+                                }
+                              </small>
+
+                            </div>
+
+                          </div>
+
+                        </td>
+
+
+                        <td>
+                          {
+                            producto.sku ||
+                            "—"
+                          }
+                        </td>
+
+
+                        <td>
+                          {
+                            obtenerTienda(
+                              producto.idTienda
+                            )
+                          }
+                        </td>
+
+
+                        <td>
+                          {
+                            obtenerCategoria(
+                              producto.idCategoria
+                            )
+                          }
+                        </td>
+
+
+                        <td className="producto-precio">
+
+                          $
+                          {Number(
+                            producto.precio || 0
+                          ).toFixed(2)}
+
+                        </td>
+
+
+                        <td>
+
+                          <span
+                            className={
+                              Number(
+                                producto.stock
+                              ) <= 0
+                                ? "producto-stock agotado"
+                                : Number(
+                                    producto.stock
+                                  ) <= 5
+                                  ? "producto-stock bajo"
+                                  : "producto-stock"
+                            }
+                          >
+
+                            {producto.stock}
+
+                          </span>
+
+                        </td>
+
+
+                        <td>
+
+                          <span
+                            className={
+                              producto.activo
+                                ? "producto-status activo"
+                                : "producto-status inactivo"
+                            }
+                          >
+
+                            {
+                              producto.activo
+                                ? "Activo"
+                                : "Inactivo"
+                            }
+
+                          </span>
+
+                        </td>
+
+
+                        <td>
+
+                          <div className="producto-actions">
+
+                            <button
+                              className="producto-action editar"
+                              title="Editar"
+                              onClick={() =>
+                                manejarEditarProducto(
+                                  producto
+                                )
+                              }
+                            >
+
+                              <i className="bi bi-pencil"></i>
+
+                            </button>
+
+
+                            <button
+                              className="producto-action eliminar"
+                              title="Eliminar"
+                              onClick={() =>
+                                manejarEliminarProducto(
+                                  producto.idProducto
+                                )
+                              }
+                            >
+
+                              <i className="bi bi-trash"></i>
+
+                            </button>
+
+                          </div>
+
+                        </td>
+
+                      </tr>
+
+                    )
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
+          )}
+
+        </section>
+
+
+        {/* MODAL */}
+
+        {showModal && (
+
+          <div className="productos-modal-backdrop">
+
+            <div className="productos-modal">
+
+              <div className="productos-modal-header">
+
+                <div>
+
+                  <span>
+                    {
+                      modoEdicion
+                        ? "ACTUALIZAR PRODUCTO"
+                        : "NUEVO PRODUCTO"
+                    }
+                  </span>
+
+                  <h2>
+                    {
+                      modoEdicion
+                        ? "Editar producto"
+                        : "Crear producto"
+                    }
+                  </h2>
+
+                </div>
+
+
+                <button
+                  className="productos-modal-close"
+                  onClick={() =>
+                    setShowModal(false)
+                  }
+                >
+
+                  <i className="bi bi-x-lg"></i>
+
+                </button>
+
+              </div>
+
+
+              {error && (
+
+                <div className="productos-alert productos-alert-error">
+                  {error}
+                </div>
+              )}
+
+
+              <div className="productos-form-grid">
+
+
+                <div className="productos-field span-2">
+
+                  <label>
+                    Nombre *
+                  </label>
+
+                  <input
+                    type="text"
+                    value={
+                      productoActual.nombre
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        nombre:
+                          e.target.value
+                      })
+                    }
+                  />
+
+                </div>
+
+
+                <div className="productos-field span-2">
+
+                  <label>
+                    Descripción
+                  </label>
+
+                  <textarea
+                    value={
+                      productoActual.descripcion || ""
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        descripcion:
+                          e.target.value
+                      })
+                    }
+                  />
+
+                </div>
+
+
+                <div className="productos-field">
+
+                  <label>
+                    SKU
+                  </label>
+
+                  <input
+                    type="text"
+                    value={
+                      productoActual.sku || ""
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        sku:
+                          e.target.value
+                      })
+                    }
+                    placeholder="Automático si se deja vacío"
+                  />
+
+                </div>
+
+
+                <div className="productos-field">
+
+                  <label>
+                    Precio *
+                  </label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={
+                      productoActual.precio
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        precio:
+                          e.target.value
+                      })
+                    }
+                  />
+
+                </div>
+
+
+                <div className="productos-field">
+
+                  <label>
+                    Stock
+                  </label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    value={
+                      productoActual.stock
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        stock:
+                          e.target.value
+                      })
+                    }
+                  />
+
+                </div>
+
+
+                <div className="productos-field">
+
+                  <label>
+                    Tienda *
+                  </label>
+
+                  <select
+                    value={
+                      productoActual.idTienda
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        idTienda:
+                          e.target.value
+                      })
+                    }
+                  >
+
+                    <option value="">
+                      Selecciona una tienda
+                    </option>
+
+                    {tiendas.map(
+                      tienda => (
+
+                        <option
+                          key={
+                            tienda.idTienda
+                          }
+                          value={
+                            tienda.idTienda
+                          }
+                        >
+
+                          {
+                            tienda.nombreNegocio
+                          }
+
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </div>
+
+
+                <div className="productos-field">
+
+                  <label>
+                    Categoría *
+                  </label>
+
+                  <select
+                    value={
+                      productoActual.idCategoria
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        idCategoria:
+                          e.target.value
+                      })
+                    }
+                  >
+
+                    <option value="">
+                      Selecciona una categoría
+                    </option>
+
+                    {categorias.map(
+                      categoria => (
+
+                        <option
+                          key={
+                            categoria.idCategoria
+                          }
+                          value={
+                            categoria.idCategoria
+                          }
+                        >
+
+                          {
+                            categoria.descripcion
+                          }
+
+                        </option>
+
+                      )
+                    )}
+
+                  </select>
+
+                </div>
+
+
+                <div className="productos-field span-2">
+
+                  <label>
+                    URL de imagen
+                  </label>
+
+                  <input
+                    type="text"
+                    value={
+                      productoActual.rutaImagen || ""
+                    }
+                    onChange={e =>
+                      setProductoActual({
+                        ...productoActual,
+                        rutaImagen:
+                          e.target.value
+                      })
+                    }
+                    placeholder="https://..."
+                  />
+
+                </div>
+
+
+                <div className="productos-field span-2">
+
+                  <label className="productos-switch">
+
+                    <input
+                      type="checkbox"
+                      checked={
+                        productoActual.activo
+                      }
+                      onChange={e =>
+                        setProductoActual({
+                          ...productoActual,
+                          activo:
+                            e.target.checked
+                        })
+                      }
+                    />
+
+                    <span className="productos-switch-ui"></span>
+
+                    <div>
+
+                      <strong>
+                        Producto activo
+                      </strong>
+
+                      <small>
+                        Los productos inactivos
+                        no estarán disponibles
+                        para los clientes.
+                      </small>
+
+                    </div>
+
+                  </label>
+
+                </div>
+
+              </div>
+
+
+              <div className="productos-modal-actions">
+
+                <button
+                  className="productos-btn-secondary"
+                  onClick={() =>
+                    setShowModal(false)
+                  }
+                >
+                  Cancelar
+                </button>
+
+
+                <button
+                  className="productos-btn-primary"
+                  onClick={
+                    manejarGuardarCambios
+                  }
+                >
+
+                  <i className="bi bi-check-lg"></i>
+
+                  {
+                    modoEdicion
+                      ? "Guardar cambios"
+                      : "Crear producto"
+                  }
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
       </div>
+
     </div>
   );
 }

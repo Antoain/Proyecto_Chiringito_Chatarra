@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPICh.Services;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebAPICh.Controllers
 {
@@ -45,16 +46,45 @@ namespace WebAPICh.Controllers
 
             return Ok(usuariosFiltrados);
         }
-        [Authorize]
+
+
+
         // GET: api/Usuario/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
-            var usuario = await _usuarioDAO.ObtenerUsuarioPorIdAsync(id);
+            var idUsuarioClaim =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var rol =
+                User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (!int.TryParse(idUsuarioClaim, out int idUsuarioToken))
+            {
+                return Unauthorized(new
+                {
+                    mensaje = "No se pudo identificar al usuario."
+                });
+            }
+
+            if (rol != "Administrador" && idUsuarioToken != id)
+            {
+                return StatusCode(403, new
+                {
+                    mensaje = "No tiene permiso para consultar este usuario."
+                });
+            }
+
+            var usuario =
+                await _usuarioDAO.ObtenerUsuarioPorIdAsync(id);
 
             if (usuario == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    mensaje = "Usuario no encontrado."
+                });
             }
 
             return Ok(new
@@ -68,7 +98,9 @@ namespace WebAPICh.Controllers
             });
         }
 
+
         // POST: api/Usuario/PostUsuario
+        [Authorize(Roles = "Administrador")]
         [HttpPost("PostUsuario")]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuario usuario)
         {
@@ -106,17 +138,42 @@ namespace WebAPICh.Controllers
             );
         }
 
-        // PUT: api/Usuario/Editar?id=5
+
+
+        // PUT: Editar usuario
+        [Authorize]
         [HttpPut("Editar")]
-        public async Task<IActionResult> PutUsuario(
-            int id,
-            [FromBody] Usuario usuario)
+        public async Task<IActionResult> PutUsuario(int id, [FromBody] Usuario usuario)
         {
             if (id != usuario.IdUsuario)
             {
                 return BadRequest(new
                 {
                     mensaje = "El ID en la URL no coincide con el ID del usuario enviado."
+                });
+            }
+
+            var idUsuarioClaim =
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var rolUsuarioActual =
+                User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (!int.TryParse(idUsuarioClaim, out int idUsuarioToken))
+            {
+                return Unauthorized(new
+                {
+                    mensaje = "No se pudo identificar al usuario."
+                });
+            }
+
+            // Un usuario normal solo puede editar su propia cuenta.
+            if (rolUsuarioActual != "Administrador" &&
+                idUsuarioToken != id)
+            {
+                return StatusCode(403, new
+                {
+                    mensaje = "No tiene permiso para modificar este usuario."
                 });
             }
 
@@ -132,29 +189,42 @@ namespace WebAPICh.Controllers
             }
 
             usuarioExistente.Nombres =
-                !string.IsNullOrEmpty(usuario.Nombres)
+                !string.IsNullOrWhiteSpace(usuario.Nombres)
                     ? usuario.Nombres
                     : usuarioExistente.Nombres;
 
             usuarioExistente.Apellidos =
-                !string.IsNullOrEmpty(usuario.Apellidos)
+                !string.IsNullOrWhiteSpace(usuario.Apellidos)
                     ? usuario.Apellidos
                     : usuarioExistente.Apellidos;
 
             usuarioExistente.Correo =
-                !string.IsNullOrEmpty(usuario.Correo)
+                !string.IsNullOrWhiteSpace(usuario.Correo)
                     ? usuario.Correo
                     : usuarioExistente.Correo;
 
-            usuarioExistente.Rol =
-                !string.IsNullOrEmpty(usuario.Rol)
-                    ? usuario.Rol
-                    : usuarioExistente.Rol;
+            // SOLO el Administrador puede cambiar roles.
+            if (rolUsuarioActual == "Administrador" &&
+                !string.IsNullOrWhiteSpace(usuario.Rol))
+            {
+                if (usuario.Rol != "Cliente" &&
+                    usuario.Rol != "Vendedor" &&
+                    usuario.Rol != "Administrador")
+                {
+                    return BadRequest(new
+                    {
+                        mensaje = "Rol no válido."
+                    });
+                }
 
-            // La contraseña NO se modifica desde este endpoint.
-            // Después crearemos un endpoint específico para cambiar contraseña.
+                usuarioExistente.Rol = usuario.Rol;
+            }
 
-            await _usuarioDAO.ActualizarUsuarioAsync(usuarioExistente);
+            // La contraseña no se modifica aquí.
+
+            await _usuarioDAO.ActualizarUsuarioAsync(
+                usuarioExistente
+            );
 
             return Ok(new
             {
@@ -162,7 +232,10 @@ namespace WebAPICh.Controllers
             });
         }
 
+
+
         // DELETE: api/Usuario/5
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
@@ -184,6 +257,9 @@ namespace WebAPICh.Controllers
                 mensaje = "Usuario eliminado exitosamente."
             });
         }
+
+
+
 
         // POST: api/Usuario/login
         [HttpPost("login")]
@@ -243,6 +319,8 @@ namespace WebAPICh.Controllers
                 }
             });
         }
+
+
 
         // POST: api/Usuario/register
         [HttpPost("register")]

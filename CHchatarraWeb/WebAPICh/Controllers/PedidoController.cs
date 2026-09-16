@@ -775,16 +775,14 @@ namespace WebAPICh.Controllers
             {
                 await transaction.RollbackAsync();
 
+                Console.WriteLine(
+                    $"Error al procesar pedido: {ex}"
+                );
+
                 return StatusCode(500, new
                 {
                     mensaje =
-                        "Ocurrió un error al procesar el pedido.",
-
-                    detalle =
-                        ex.Message,
-
-                    errorInterno =
-                        ex.InnerException?.Message
+                        "Ocurrió un error interno al procesar el pedido."
                 });
             }
         }

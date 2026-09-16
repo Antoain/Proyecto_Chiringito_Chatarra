@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import {
   obtenerFavoritosPorCliente,
-  eliminarFavorito,
-  agregarFavorito
+  eliminarFavorito
 } from '../../services/data';
 
 export function ClienteFavoritos() {
@@ -17,7 +16,7 @@ export function ClienteFavoritos() {
   useEffect(() => {
     const fetchFavoritos = async () => {
       try {
-        const data = await obtenerFavoritosPorCliente(idUsuario);
+        const data = await obtenerFavoritosPorCliente();
         setFavoritos(data);
         setFavoritosFiltrados(data);
       } catch (err) {

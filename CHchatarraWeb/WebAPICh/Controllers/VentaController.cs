@@ -38,8 +38,15 @@ namespace WebAPICh.Controllers
             }
             catch (Exception ex)
             {
-               
-                return BadRequest(new { mensaje = ex.Message });
+                Console.WriteLine(
+                    $"Error al realizar venta: {ex}"
+                );
+
+                return StatusCode(500, new
+                {
+                    mensaje =
+                        "Ocurrió un error interno al realizar la venta."
+                });
             }
         }
 
@@ -54,7 +61,15 @@ namespace WebAPICh.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensaje = ex.Message });
+                Console.WriteLine(
+                    $"Error al obtener ventas: {ex}"
+                );
+
+                return StatusCode(500, new
+                {
+                    mensaje =
+                        "Ocurrió un error interno al obtener las ventas."
+                });
             }
         }
 
@@ -69,7 +84,15 @@ namespace WebAPICh.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { mensaje = ex.Message });
+                Console.WriteLine(
+                    $"Error al obtener ventas del vendedor: {ex}"
+                );
+
+                return StatusCode(500, new
+                {
+                    mensaje =
+                        "Ocurrió un error interno al obtener las ventas."
+                });
             }
         }
 

@@ -380,3 +380,6 @@ env/
 
 # Build de Vite
 dist/
+
+.env
+.env.local

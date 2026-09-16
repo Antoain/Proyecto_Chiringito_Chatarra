@@ -43,7 +43,7 @@ export function ProductosPorCategoria() {
   useEffect(() => {
     const fetchFavoritos = async () => {
       try {
-        const data = await obtenerFavoritosPorCliente(idUsuario);
+        const data = await obtenerFavoritosPorCliente();
         // Normalizar estructura de datos
         setFavoritos(data.map(fav => ({
           idProducto: fav.IdProducto || fav.idProducto,
@@ -82,7 +82,7 @@ export function ProductosPorCategoria() {
       if (favoritoEncontrado && favoritoEncontrado.idFavorito) {
         await eliminarFavorito(favoritoEncontrado.idFavorito);
       } else {
-        await agregarFavorito(idUsuario, productoId);
+        await agregarFavorito(productoId);
       }
 
        // Actualizar lista de favoritos

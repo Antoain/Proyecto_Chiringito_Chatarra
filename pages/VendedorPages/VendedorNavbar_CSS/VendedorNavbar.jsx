@@ -1,83 +1,218 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import {
+  NavLink,
+  useNavigate
+} from "react-router-dom";
 
-// Componente de barra de navegación para la vista de vendedor
+import "./VendedorNavbar.css";
+
+
 export function VendedorNavbar() {
-  const navigate = useNavigate(); 
 
-  // Función que maneja el cierre de sesión
+  const navigate = useNavigate();
+
+  const nombre =
+    localStorage.getItem("nombreUsuario") ||
+    "Vendedor";
+
+
   const handleLogout = () => {
-    localStorage.clear(); // Limpia todos los datos guardados localmente (incluye idVendedor, tokens, etc.)
-    navigate('/'); // Redirige al usuario a la página principal o de login
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("idUsuario");
+    localStorage.removeItem("idVendedor");
+    localStorage.removeItem("rol");
+    localStorage.removeItem("nombreUsuario");
+    localStorage.removeItem("correoUsuario");
+
+    navigate("/");
   };
 
+
+  const claseNav = ({ isActive }) =>
+    isActive
+      ? "vendedor-nav-link active"
+      : "vendedor-nav-link";
+
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div className="container-fluid">
 
-        {/* Título o logo de la barra de navegación */}
-        <a className="navbar-brand">Chiringuito Chatarra</a>
+    <header className="vendedor-navbar">
 
-        {/* Botón de hamburguesa para dispositivos móviles */}
+      <div className="vendedor-navbar-container">
+
+
+        {/* ========================= */}
+        {/* MARCA */}
+        {/* ========================= */}
+
+        <NavLink
+          to="/vendedor"
+          className="vendedor-brand"
+        >
+
+          <div className="vendedor-brand-icon">
+            <i className="bi bi-shop"></i>
+          </div>
+
+          <div className="vendedor-brand-text">
+
+            <strong>
+              Chiringuito Chatarra
+            </strong>
+
+            <span>
+              Portal del vendedor
+            </span>
+
+          </div>
+
+        </NavLink>
+
+
+        {/* ========================= */}
+        {/* BOTÓN MOBILE */}
+        {/* ========================= */}
+
         <button
-          className="navbar-toggler"
+          className="navbar-toggler vendedor-toggler"
           type="button"
           data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
+          data-bs-target="#vendedorNavbar"
+          aria-controls="vendedorNavbar"
           aria-expanded="false"
-          aria-label="Toggle navigation"
+          aria-label="Mostrar navegación"
         >
+
           <span className="navbar-toggler-icon"></span>
+
         </button>
 
-        {/* Contenido colapsable del navbar, incluye enlaces de navegación y botón de logout */}
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          
-          {/* Lista de enlaces de navegación para el vendedor */}
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
 
-            {/* Enlace al dashboard o pantalla principal del vendedor */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/vendedor">
-                Home
-              </Link>
-            </li>
+        {/* ========================= */}
+        {/* NAVEGACIÓN */}
+        {/* ========================= */}
 
-            {/* Enlace para gestionar las tiendas del vendedor */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/vendedor/ListaTiendas">
-                Lista de Tiendas
-              </Link>
-            </li>
+        <div
+          className="collapse navbar-collapse vendedor-collapse"
+          id="vendedorNavbar"
+        >
 
-            {/* Enlace para visualizar las ventas realizadas */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/vendedor/ListaVentas">
-                Lista de Ventas
-              </Link>
-            </li>
+          <nav className="vendedor-nav">
 
-            {/* Enlace a la sección de administración de productos */}
-            <li className="nav-item">
-              <Link className="nav-link" to="/vendedor/AdministrarProductos">
-                Administrar Productos
-              </Link>
-            </li>
-          </ul>
+            <NavLink
+              end
+              to="/vendedor"
+              className={claseNav}
+            >
 
-          {/* Botón para cerrar sesión */}
-          <button
-            className="btn btn-danger"
-            onClick={handleLogout}
-          >
-            <i className="bi bi-box-arrow-right"></i> Cerrar Sesión
-          </button>
+              <i className="bi bi-grid"></i>
+
+              <span>
+                Dashboard
+              </span>
+
+            </NavLink>
+
+
+            <NavLink
+              to="/vendedor/ListaTiendas"
+              className={claseNav}
+            >
+
+              <i className="bi bi-shop-window"></i>
+
+              <span>
+                Tiendas
+              </span>
+
+            </NavLink>
+
+
+            <NavLink
+              to="/vendedor/AdministrarProductos"
+              className={claseNav}
+            >
+
+              <i className="bi bi-box-seam"></i>
+
+              <span>
+                Productos
+              </span>
+
+            </NavLink>
+
+
+            <NavLink
+              to="/vendedor/ListaVentas"
+              className={claseNav}
+            >
+
+              <i className="bi bi-receipt"></i>
+
+              <span>
+                Ventas
+              </span>
+
+            </NavLink>
+
+          </nav>
+
+
+          {/* ========================= */}
+          {/* USUARIO */}
+          {/* ========================= */}
+
+          <div className="vendedor-user">
+
+            <div className="vendedor-user-info">
+
+              <div className="vendedor-avatar">
+                {nombre
+                  .trim()
+                  .charAt(0)
+                  .toUpperCase()}
+              </div>
+
+              <div className="vendedor-user-text">
+
+                <strong>
+                  {nombre}
+                </strong>
+
+                <span>
+                  Vendedor
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              className="vendedor-logout"
+              onClick={handleLogout}
+              title="Cerrar sesión"
+            >
+
+              <i className="bi bi-box-arrow-right"></i>
+
+              <span>
+                Salir
+              </span>
+
+            </button>
+
+          </div>
+
         </div>
+
       </div>
-    </nav>
+
+    </header>
   );
 }
 
-// Exportar el componente para usarlo en otras partes de la app
+
 export default VendedorNavbar;

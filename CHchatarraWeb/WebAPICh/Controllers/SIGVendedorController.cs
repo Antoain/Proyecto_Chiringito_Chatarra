@@ -480,6 +480,118 @@ namespace WebAPICh.Controllers
         }
 
         // ==========================================
+        // pedidos
+        // ==========================================
+
+
+        [HttpGet("Pedidos")]
+        public async Task<IActionResult> Pedidos()
+        {
+            var idUsuarioClaim =
+                User.FindFirst(
+                    ClaimTypes.NameIdentifier
+                )?.Value;
+
+            if (!int.TryParse(
+                idUsuarioClaim,
+                out int idVendedor))
+            {
+                return Unauthorized(new
+                {
+                    mensaje =
+                        "No se pudo identificar al vendedor."
+                });
+            }
+
+
+            var subPedidos =
+                await _sigVendedorDAO
+                    .ObtenerSubPedidosVendedorAsync(
+                        idVendedor
+                    );
+
+
+            var resultado =
+                subPedidos.Select(sp => new
+                {
+                    sp.IdSubPedido,
+                    sp.IdPedido,
+
+                    Tienda =
+                        sp.IdTiendaNavigation?
+                            .NombreNegocio,
+
+                    sp.Subtotal,
+                    sp.CostoEnvio,
+                    sp.ComisionPlataforma,
+                    sp.TotalVendedor,
+                    sp.Estado,
+                    sp.MetodoEntrega,
+                    sp.FechaActualizacion,
+
+                    FechaPedido =
+                        sp.IdPedidoNavigation?
+                            .FechaPedido,
+
+                    MetodoPago =
+                        sp.IdPedidoNavigation?
+                            .MetodoPago,
+
+                    DireccionEntrega =
+                        sp.IdPedidoNavigation?
+                            .DireccionEntrega,
+
+                    Telefono =
+                        sp.IdPedidoNavigation?
+                            .Telefono,
+
+                    Cliente =
+                        sp.IdPedidoNavigation?
+                            .IdUsuarioNavigation == null
+                            ? null
+                            : new
+                            {
+                                sp.IdPedidoNavigation
+                                    .IdUsuarioNavigation
+                                    .Nombres,
+
+                                sp.IdPedidoNavigation
+                                    .IdUsuarioNavigation
+                                    .Apellidos,
+
+                                sp.IdPedidoNavigation
+                                    .IdUsuarioNavigation
+                                    .Correo
+                            },
+
+                    Entrega =
+                        sp.EntregaSubPedido == null
+                            ? null
+                            : new
+                            {
+                                sp.EntregaSubPedido
+                                    .EstadoEntrega,
+
+                                sp.EntregaSubPedido
+                                    .MetodoEntrega,
+
+                                sp.EntregaSubPedido
+                                    .ProveedorEntrega,
+
+                                sp.EntregaSubPedido
+                                    .CodigoSeguimiento,
+
+                                sp.EntregaSubPedido
+                                    .FechaEntrega
+                            }
+                })
+                .ToList();
+
+
+            return Ok(resultado);
+        }
+
+        // ==========================================
         // DASHBOARD COMPLETO DEL VENDEDOR
         // ==========================================
 

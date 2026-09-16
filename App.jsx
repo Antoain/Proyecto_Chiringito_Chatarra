@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // ====== Importar las páginas específicas ========
 
@@ -42,37 +43,97 @@ export function App() {
                 <Route path="/register" element={<CrearCuenta />} />
 
                 {/* Rutas para Cliente */}
-                <Route path="/cliente" element={<ClienteLayout />} >
+                <Route
+                    path="/cliente"
+                    element={
+                        <ProtectedRoute rolesPermitidos={["Cliente"]}>
+                        <ClienteLayout />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route index element={<ClienteHome />} />
-                    <Route path="favoritos" element={<ClienteFavoritos />} /> 
-                    <Route path="categoria/:idCategoria" element={<ProductosPorCategoria />} />
-
+                    <Route path="favoritos" element={<ClienteFavoritos />} />
+                    <Route
+                        path="categoria/:idCategoria"
+                        element={<ProductosPorCategoria />}
+                    />
                 </Route>
 
-                <Route path="/cliente" element={<ClienteLayoutSinBusqueda />}>
-                    <Route path="detalles/:idProducto" element={<ClienteProductoDetalles />} />
-                    <Route path="carrito" element={<ClienteCarrito />} />
+                <Route
+                path="/cliente"
+                    element={
+                        <ProtectedRoute rolesPermitidos={["Cliente"]}>
+                        <ClienteLayoutSinBusqueda />
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route
+                        path="detalles/:idProducto"
+                        element={<ClienteProductoDetalles />}
+                    />
+
+                    <Route
+                        path="carrito"
+                        element={<ClienteCarrito />}
+                    />
                 </Route>
 
                 {/* Rutas para Vendedor */}
 
-                <Route path="/vendedor" element={<VendedorLayout />} >
+                <Route
+                    path="/vendedor"
+                    element={
+                        <ProtectedRoute rolesPermitidos={["Vendedor"]}>
+                        <VendedorLayout />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route index element={<VendedorHome />} />
-                    <Route path="ListaTiendas" element={<VendedorTiendas/>} />
-                    <Route path="AdministrarProductos" element={<VendedorProductos/>} />
-                    <Route path="ListaVentas" element={<VendedorVentas/>} />
-
+                    <Route
+                        path="ListaTiendas"
+                        element={<VendedorTiendas />}
+                    />
+                    <Route
+                        path="AdministrarProductos"
+                        element={<VendedorProductos />}
+                    />
+                    <Route
+                        path="ListaVentas"
+                        element={<VendedorVentas />}
+                    />
                 </Route>
 
         
                 {/* Rutas para Administrador */}
-                <Route path="/admin" element={<AdminLayout />}>
+                <Route
+                    path="/admin"
+                    element={
+                        <ProtectedRoute rolesPermitidos={["Administrador"]}>
+                        <AdminLayout />
+                        </ProtectedRoute>
+                    }
+                >
                     <Route index element={<AdminHome />} />
-                    <Route path="usuarios" element={<AdministrarUsuarios />} />
-                    <Route path="categorias" element={<AdministrarCategorias />} />
-                    <Route path="tiendas" element={<AdministrarTiendas/>} />
-                    <Route path="Productos" element={<AdministrarProductos/>} />
-                    <Route path="mineria" element={<AdminMineria />} />
+                    <Route
+                        path="usuarios"
+                        element={<AdministrarUsuarios />}
+                    />
+                    <Route
+                        path="categorias"
+                        element={<AdministrarCategorias />}
+                    />
+                    <Route
+                        path="tiendas"
+                        element={<AdministrarTiendas />}
+                    />
+                    <Route
+                        path="Productos"
+                        element={<AdministrarProductos />}
+                    />
+                    <Route
+                        path="mineria"
+                        element={<AdminMineria />}
+                    />
                 </Route>
             </Routes>
         </Router>

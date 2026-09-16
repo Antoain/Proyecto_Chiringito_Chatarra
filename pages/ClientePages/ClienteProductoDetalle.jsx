@@ -68,7 +68,7 @@ export function ClienteProductoDetalles() {
     async function fetchFavoritos() {
       try {
         if (idUsuario && producto) {
-          const favData = await obtenerFavoritosPorCliente(idUsuario);
+          const favData = await obtenerFavoritosPorCliente();
           const normalized = normalizarFavoritos(favData);
           const exists = normalized.some(
             fav => Number(fav.idProducto) === Number(producto.idProducto)
@@ -115,7 +115,7 @@ export function ClienteProductoDetalles() {
         await eliminarFavorito(favFound.idFavorito);
         setFavorito(false);
       } else {
-        await agregarFavorito(idUsuario, productoId);
+        await agregarFavorito(productoId);
         setFavorito(true);
       }
     } catch (err) {
@@ -135,10 +135,9 @@ export function ClienteProductoDetalles() {
     setAgregandoResena(true);
     try {
       const resenaObj = {
-        IdUsuario: Number(idUsuario),
-        IdProducto: Number(producto.idProducto),
-        Calificacion: Number(nuevoRating),
-        Comentario: nuevoComentario.trim()
+        idProducto: Number(producto.idProducto),
+        calificacion: Number(nuevoRating),
+        comentario: nuevoComentario.trim()
       };
       await agregarResena(resenaObj);
       const data = await obtenerResenasPorProducto(idProducto);
@@ -156,9 +155,8 @@ export function ClienteProductoDetalles() {
   const handleAgregarCarrito = async () => {
     if (!idUsuario) return;
     const carritoItem = {
-      IdUsuario: Number(idUsuario),
-      IdProducto: Number(producto.idProducto),
-      Cantidad: 1,
+      idProducto: Number(producto.idProducto),
+      cantidad: 1
     };
 
     try {

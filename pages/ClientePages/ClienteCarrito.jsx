@@ -6,7 +6,7 @@ import {
   agregarFavorito,
   eliminarFavorito,
   obtenerFavoritosPorCliente,
-  realizarVenta
+  realizarCheckout
 } from "../../services/data";
 import ModalProcesarVenta from "./ModalProcesarVenta";
 import "./ClientePagesCss/ClienteCarrito.css";
@@ -31,7 +31,7 @@ export function ClienteCarrito() {
   useEffect(() => {
     async function fetchCarrito() {
       try {
-        const data = await obtenerCarritoPorUsuario(Number(idUsuario));
+        const data = await obtenerCarritoPorUsuario();
         setCarrito(data);
       } catch (err) {
         console.error("Error al obtener el carrito:", err);
@@ -57,7 +57,7 @@ export function ClienteCarrito() {
     async function fetchFavoritos() {
       try {
         if (idUsuario) {
-          const favData = await obtenerFavoritosPorCliente(idUsuario);
+          const favData = await obtenerFavoritosPorCliente();
           setFavoritos(
             favData.map(fav => ({
               IdProducto: fav.idProducto ?? fav.IdProducto,
@@ -114,44 +114,58 @@ export function ClienteCarrito() {
         await eliminarFavorito(favoritoExistente.IdFavorito);
         setFavoritos(prev => prev.filter(fav => Number(fav.IdProducto) !== Number(idProducto)));
       } else {
-        const response = await agregarFavorito(idUsuario, idProducto);
-        if (response?.mensaje?.includes("Producto agregado a favoritos.")) {
-          setFavoritos(prev => [...prev, { IdProducto: idProducto, IdFavorito: response.IdFavorito }]);
+          await agregarFavorito(idProducto);
+
+          const favData =
+            await obtenerFavoritosPorCliente();
+
+          setFavoritos(
+            favData.map(fav => ({
+              IdProducto:
+                fav.idProducto ??
+                fav.IdProducto,
+
+              IdFavorito:
+                fav.idFavorito ??
+                fav.IdFavorito
+            }))
+          );
         }
-      }
     } catch (err) {
       console.error("Error al manejar el favorito:", err);
     }
   };
 
   // Confirmar y procesar venta desde el modal
-  const handleConfirmarVenta = async (venta) => {
+  const handleConfirmarVenta = async (checkout) => {
     try {
-      const response = await realizarVenta(venta);
+      const response = await realizarCheckout(checkout);
+
       if (response?.mensaje) {
         mostrarMensajeTemporal(response.mensaje);
       } else {
-        mostrarMensajeTemporal("Error al realizar la venta.");
+        mostrarMensajeTemporal(
+          "Pedido realizado correctamente."
+        );
       }
+
+      setCarrito([]);
       setMostrarModal(false);
+
     } catch (error) {
-      console.error("Error al realizar la venta:", error);
-      mostrarMensajeTemporal("Ocurrió un error al procesar la venta.");
+      console.error(
+        "Error al procesar el pedido:",
+        error
+      );
+
+      mostrarMensajeTemporal(
+        error.message ||
+        "Ocurrió un error al procesar el pedido."
+      );
+
       setMostrarModal(false);
     }
   };
-
-  if (loading) return <div className="container mt-4">Cargando carrito...</div>;
-  if (error) return <div className="container mt-4 alert alert-danger">{error}</div>;
-
-  if (carrito.length === 0) {
-    return (
-      <div className="container mt-4">
-        <h2>Tu Carrito</h2>
-        <p>El carrito está vacío.</p>
-      </div>
-    );
-  }
 
   return (
     <div className="container mt-4">
@@ -231,8 +245,7 @@ export function ClienteCarrito() {
         <ModalProcesarVenta
           onClose={() => setMostrarModal(false)}
           onConfirm={handleConfirmarVenta}
-          total={total}
-          totalProductos={carrito.reduce((acc, item) => acc + (item.cantidad || 0), 0)}
+          carrito={carrito}
         />
       )}
     </div>

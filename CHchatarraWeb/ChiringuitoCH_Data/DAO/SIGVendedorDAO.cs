@@ -19,21 +19,33 @@ namespace ChiringuitoCH_Data.DAO
         // OBTENER SUBPEDIDOS DEL VENDEDOR
         // ==========================================
 
-        public async Task<List<SubPedido>>
-            ObtenerSubPedidosVendedorAsync(
-                int idVendedor)
+        public async Task<List<SubPedido>> ObtenerSubPedidosVendedorAsync(int idVendedor)
         {
-            return await _context.SubPedidos
+                return await _context.SubPedidos
 
-                .Include(sp =>
-                    sp.IdTiendaNavigation)
+                    .Include(sp =>
+                        sp.IdTiendaNavigation)
 
-                .Where(sp =>
-                    sp.IdTiendaNavigation != null &&
-                    sp.IdTiendaNavigation.IdVendedor
-                        == idVendedor)
+                    .Include(sp =>
+                        sp.IdPedidoNavigation)
 
-                .ToListAsync();
+                        .ThenInclude(p =>
+                            p!.IdUsuarioNavigation)
+
+                    .Include(sp =>
+                        sp.EntregaSubPedido)
+
+                    .Where(sp =>
+                        sp.IdTiendaNavigation != null &&
+                        sp.IdTiendaNavigation.IdVendedor
+                            == idVendedor)
+
+                    .OrderByDescending(sp =>
+                        sp.IdPedidoNavigation != null
+                            ? sp.IdPedidoNavigation.FechaPedido
+                            : sp.FechaActualizacion)
+
+                    .ToListAsync();
         }
 
 
