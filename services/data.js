@@ -632,3 +632,193 @@ export const obtenerMovimientosInventario = async () => {
     throw error;
   }
 };
+
+export const registrarEntradaInventario = async (
+  entrada
+) => {
+  return apiFetch(
+    "/Inventario/Entrada",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        idProducto: Number(
+          entrada.idProducto
+        ),
+        cantidad: Number(
+          entrada.cantidad
+        ),
+        motivo:
+          entrada.motivo || null
+      }),
+    },
+    true
+  );
+};
+
+export const registrarAjusteInventario = async (
+  ajuste
+) => {
+  return apiFetch(
+    "/Inventario/Ajuste",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        idProducto: Number(
+          ajuste.idProducto
+        ),
+        stockFisico: Number(
+          ajuste.stockFisico
+        ),
+        motivo:
+          ajuste.motivo || null
+      }),
+    },
+    true
+  );
+};
+
+
+// ==========================================
+// COBERTURAS DE ENTREGA
+// ==========================================
+
+export const obtenerMisCoberturas = async () => {
+  return apiFetch(
+    "/Cobertura/MisCoberturas",
+    {
+      method: "GET"
+    },
+    true
+  );
+};
+
+
+export const crearCobertura = async (
+  cobertura
+) => {
+  return apiFetch(
+    "/Cobertura",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        idTienda: Number(
+          cobertura.idTienda
+        ),
+
+        idDistrito: Number(
+          cobertura.idDistrito
+        ),
+
+        costoEnvio: Number(
+          cobertura.costoEnvio
+        )
+      })
+    },
+    true
+  );
+};
+
+
+export const actualizarCobertura = async (
+  idCobertura,
+  cobertura
+) => {
+  return apiFetch(
+    `/Cobertura/${idCobertura}`,
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        costoEnvio: Number(
+          cobertura.costoEnvio
+        ),
+
+        activo: Boolean(
+          cobertura.activo
+        )
+      })
+    },
+    true
+  );
+};
+
+
+export const eliminarCobertura = async (
+  idCobertura
+) => {
+  return apiFetch(
+    `/Cobertura/${idCobertura}`,
+    {
+      method: "DELETE"
+    },
+    true
+  );
+};
+
+
+// ==========================================
+// MÉTODOS DE ENTREGA
+// ==========================================
+
+export const obtenerMisMetodosEntrega =
+  async () => {
+    return apiFetch(
+      "/MetodoEntrega/MisMetodos",
+      {
+        method: "GET"
+      },
+      true
+    );
+  };
+
+
+export const crearMetodoEntrega = async (
+  metodo
+) => {
+  return apiFetch(
+    "/MetodoEntrega",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        idTienda: Number(
+          metodo.idTienda
+        ),
+
+        tipoMetodo:
+          metodo.tipoMetodo
+      })
+    },
+    true
+  );
+};
+
+
+export const actualizarMetodoEntrega =
+  async (
+    idMetodoEntrega,
+    activo
+  ) => {
+    return apiFetch(
+      `/MetodoEntrega/${idMetodoEntrega}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          activo: Boolean(activo)
+        })
+      },
+      true
+    );
+  };
+
+
+export const eliminarMetodoEntrega =
+  async (
+    idMetodoEntrega
+  ) => {
+    return apiFetch(
+      `/MetodoEntrega/${idMetodoEntrega}`,
+      {
+        method: "DELETE"
+      },
+      true
+    );
+  };

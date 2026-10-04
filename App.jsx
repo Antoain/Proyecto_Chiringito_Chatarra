@@ -18,6 +18,7 @@ import VendedorHome from './pages/VendedorPages/VendedorHome';
 import VendedorTiendas from './pages/VendedorPages/VendedorTiendas'
 import VendedorProductos from './pages/VendedorPages/VendedorProductos';
 import VendedorVentas from './pages/VendedorPages/VendedorVentas'
+import VendedorInventario from './pages/VendedorPages/VendedorInventario';
 
 // Páginas de Administrador
 import AdminLayout from './pages/AdminsPages/AdminLayout';
@@ -96,6 +97,10 @@ export function App() {
                     <Route
                         path="AdministrarProductos"
                         element={<VendedorProductos />}
+                    />
+                    <Route
+                        path="Inventario"
+                        element={<VendedorInventario />}
                     />
                     <Route
                         path="ListaVentas"

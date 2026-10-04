@@ -3,6 +3,7 @@ using ChiringuitoCH_Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPICh.Controllers
 {
@@ -25,18 +26,36 @@ namespace WebAPICh.Controllers
         }
 
         // POST para crear un Departamento
+        [Authorize(Roles = "Administrador")]
         [HttpPost("Departamentos")]
-        public async Task<IActionResult> CrearDepartamento([FromBody] Departamento departamento)
+        public async Task<IActionResult> CrearDepartamento(
+            [FromBody] Departamento departamento)
         {
-            if (departamento == null || string.IsNullOrEmpty(departamento.Descripcion))
+            if (departamento == null ||
+                string.IsNullOrWhiteSpace(
+                    departamento.Descripcion))
             {
-                return BadRequest(new { mensaje = "Datos de departamento incorrectos." });
+                return BadRequest(new
+                {
+                    mensaje =
+                        "Datos de departamento incorrectos."
+                });
             }
 
-            _context.Departamentos.Add(departamento);
+            _context.Departamentos.Add(
+                departamento
+            );
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObtenerDepartamentos), new { id = departamento.IdDepartamento }, departamento);
+            return CreatedAtAction(
+                nameof(ObtenerDepartamentos),
+                new
+                {
+                    id = departamento.IdDepartamento
+                },
+                departamento
+            );
         }
 
         // GET para obtener Provincias según idDepartamento
@@ -50,18 +69,38 @@ namespace WebAPICh.Controllers
         }
 
         // POST para crear una Provincia
+        [Authorize(Roles = "Administrador")]
         [HttpPost("Provincias")]
-        public async Task<IActionResult> CrearProvincia([FromBody] Provincium provincia)
+        public async Task<IActionResult> CrearProvincia(
+        [FromBody] Provincium provincia)
         {
-            if (provincia == null || string.IsNullOrEmpty(provincia.Descripcion) || provincia.IdDepartamento == null)
+            if (provincia == null ||
+                string.IsNullOrWhiteSpace(
+                    provincia.Descripcion) ||
+                provincia.IdDepartamento == null)
             {
-                return BadRequest(new { mensaje = "Datos de provincia incorrectos." });
+                return BadRequest(new
+                {
+                    mensaje =
+                        "Datos de provincia incorrectos."
+                });
             }
 
-            _context.Provincia.Add(provincia);
+            _context.Provincia.Add(
+                provincia
+            );
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObtenerProvincias), new { idDepartamento = provincia.IdDepartamento }, provincia);
+            return CreatedAtAction(
+                nameof(ObtenerProvincias),
+                new
+                {
+                    idDepartamento =
+                        provincia.IdDepartamento
+                },
+                provincia
+            );
         }
 
         // GET para obtener Distritos según idProvincia
@@ -75,18 +114,38 @@ namespace WebAPICh.Controllers
         }
 
         // POST para crear un Distrito.
+        [Authorize(Roles = "Administrador")]
         [HttpPost("Distritos")]
-        public async Task<IActionResult> CrearDistrito([FromBody] Distrito distrito)
+        public async Task<IActionResult> CrearDistrito(
+        [FromBody] Distrito distrito)
         {
-            if (distrito == null || string.IsNullOrEmpty(distrito.Descripcion) || distrito.IdProvincia == null)
+            if (distrito == null ||
+                string.IsNullOrWhiteSpace(
+                    distrito.Descripcion) ||
+                distrito.IdProvincia == null)
             {
-                return BadRequest(new { mensaje = "Datos de distrito incorrectos." });
+                return BadRequest(new
+                {
+                    mensaje =
+                        "Datos de distrito incorrectos."
+                });
             }
 
-            _context.Distritos.Add(distrito);
+            _context.Distritos.Add(
+                distrito
+            );
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(ObtenerDistritos), new { idProvincia = distrito.IdProvincia }, distrito);
+            return CreatedAtAction(
+                nameof(ObtenerDistritos),
+                new
+                {
+                    idProvincia =
+                        distrito.IdProvincia
+                },
+                distrito
+            );
         }
     }
 }

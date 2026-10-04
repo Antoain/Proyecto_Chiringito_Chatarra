@@ -54,10 +54,9 @@ export function VendedorVentas() {
 
   }, []);
 
-  useEffect(() => { setPaginaActual(1);},
-   [
-    busqueda,
-    estadoFiltro]);
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [busqueda, estadoFiltro]);
 
 
   const formatearFecha = fecha => {

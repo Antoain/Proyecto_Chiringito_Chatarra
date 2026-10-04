@@ -142,6 +142,19 @@ export function VendedorNavbar() {
 
             </NavLink>
 
+            <NavLink
+              to="/vendedor/Inventario"
+              className={claseNav}
+            >
+
+              <i className="bi bi-boxes"></i>
+
+              <span>
+                Inventario
+              </span>
+
+            </NavLink>
+
 
             <NavLink
               to="/vendedor/ListaVentas"

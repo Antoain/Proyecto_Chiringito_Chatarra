@@ -35,22 +35,20 @@ export default function CrearCuenta() {
 
             // Verifica que se haya recibido el ID del usuario
             if (respuesta && respuesta.idUsuario) {
-                // ✅ Guardar los datos del usuario en localStorage para usar en otras páginas
-                localStorage.setItem("idUsuario", respuesta.idUsuario);
-                localStorage.setItem("rol", respuesta.rol);
-                localStorage.setItem("nombreUsuario", nombre); // Usa el valor del formulario
-                localStorage.setItem("correoUsuario", correo);
 
-                // Redirigir según el tipo de usuario
-                if (respuesta.rol === 'Vendedor') {
-                    localStorage.setItem("idVendedor", respuesta.idUsuario);
-                    navigate('/vendedor');
-                } else if (respuesta.rol === 'Cliente') {
-                    navigate('/cliente');
-                }
-            } else {
-                throw new Error("No se recibió el ID del usuario correctamente.");
-            }
+                alert(
+                    "Cuenta creada correctamente. Ahora inicia sesión."
+                );
+
+                navigate("/");
+
+                } else {
+
+                throw new Error(
+                    "No se recibió el ID del usuario correctamente."
+                );
+            } 
+            
         } catch (error) {
             // Mostrar mensaje de error si algo falla
             setMensaje(error.message || 'Error al registrar');
