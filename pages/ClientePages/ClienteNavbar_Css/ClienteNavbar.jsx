@@ -1,149 +1,493 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './ClienteNavbar.css';
+import React from "react";
+import {
+  Link,
+  NavLink
+} from "react-router-dom";
 
-/**
- * Navbar principal del cliente con:
- * - Logo y categorías
- * - Barra de búsqueda
- * - Íconos de favoritos, carrito
- * - Menú de contacto
- * - Perfil de usuario
- */
-export function ClienteNavbar({ categorias, busqueda, setBusqueda, cartCount }) {
-  const usuarioNombre = localStorage.getItem("nombreUsuario");
-  const usuarioCorreo = localStorage.getItem("correoUsuario");
+import "./ClienteNavbar.css";
+
+
+export function ClienteNavbar({
+  categorias = [],
+  mostrarBusqueda = false,
+  busqueda = "",
+  setBusqueda = () => {},
+  cartCount = 0
+}) {
+
+  const usuarioNombre =
+    localStorage.getItem(
+      "nombreUsuario"
+    );
+
+  const usuarioCorreo =
+    localStorage.getItem(
+      "correoUsuario"
+    );
+
+
+  // =====================================================
+  // CLASE NAVLINK
+  // =====================================================
+
+  const claseNav = ({
+    isActive
+  }) => {
+
+    return (
+      "cliente-nav-link" +
+      (
+        isActive
+          ? " active"
+          : ""
+      )
+    );
+  };
+
+
+  // =====================================================
+  // LOGOUT
+  // =====================================================
+
+  const cerrarSesion = () => {
+
+    localStorage.removeItem(
+      "token"
+    );
+
+    localStorage.removeItem(
+      "idUsuario"
+    );
+
+    localStorage.removeItem(
+      "idVendedor"
+    );
+
+    localStorage.removeItem(
+      "nombreUsuario"
+    );
+
+    localStorage.removeItem(
+      "correoUsuario"
+    );
+
+    localStorage.removeItem(
+      "rol"
+    );
+
+
+    window.location.href = "/";
+  };
+
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
-      <div className="container-fluid">
-        {/* Sección izquierda: logo y menú de categorías */}
-        <div className="d-flex align-items-center">
-          <Link className="navbar-brand me-2" to="/cliente">
-            <img
-              src="https://i.postimg.cc/76zgfDFZ/image.png"
-              alt="Logo Chiringuito Chatarra"
-              className="logo-image"
-            />
-          </Link>
 
-          {/* Menú desplegable de categorías */}
-          <div className="dropdown">
-            <button className="btn btn-secondary dropdown-toggle no-caret" type="button"
-              id="dropdownCategories"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i className="bi bi-list me-1"></i> Categorías
-            </button>
-            <ul className="dropdown-menu">
-              {categorias.map(categoria => (
-                <li key={categoria.idCategoria}>
-                  <Link className="dropdown-item" to={`/cliente/categoria/${categoria.idCategoria}`}>
-                    {categoria.descripcion}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+    <nav className="cliente-navbar">
+
+      <div className="cliente-navbar-container">
+
+
+        {/* ================================================= */}
+        {/* BRAND */}
+        {/* ================================================= */}
+
+        <Link
+          to="/cliente"
+          className="cliente-brand"
+        >
+
+          <div className="cliente-brand-icon">
+
+            <i className="bi bi-recycle"></i>
+
           </div>
-        </div>
 
-        {/* Centro: barra de búsqueda */}
-        <div className="mx-auto search-container">
-          <input
-            className="form-control"
-            type="search"
-            placeholder="Buscar productos..."
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-          />
-        </div>
 
-        {/* Sección derecha: íconos, contacto y perfil de usuario */}
-        <div className="d-flex align-items-center gap-3">
-          {/* Ícono de favoritos */}
-          <Link className="nav-link text-white" to="/cliente/favoritos" title="Favoritos">
-            <i className="bi bi-heart"></i>
-          </Link>
+          <div>
 
-          {/* Ícono de carrito con contador */}
-          <Link className="nav-link text-white position-relative" to="/cliente/carrito" title="Carrito">
-            <i className="bi bi-cart"></i>
-            {cartCount > 0 && (
-              <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+            <strong>
+              Chiringuito
+            </strong>
 
-          {/* Menú de contacto del administrador */}
-          <div className="dropdown">
-            <button className="btn btn-outline-light dropdown-toggle" type="button"
-              id="dropdownAdmin"
-              data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i className="bi bi-person-workspace"></i> Contáctanos
-            </button>
-            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAdmin">
-              <li className="dropdown-item">
-                <strong>Antony Tobías</strong>
-              </li>
-              <li className="dropdown-item small">tb0822032023@unab.edu.sv</li>
+            <span>
+              Chatarra
+            </span>
+
+          </div>
+
+        </Link>
+
+
+        {/* ================================================= */}
+        {/* CATEGORÍAS */}
+        {/* ================================================= */}
+
+        <div className="dropdown cliente-categories">
+
+          <button
+            className="cliente-category-btn dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+
+            <i className="bi bi-grid"></i>
+
+            <span>
+              Categorías
+            </span>
+
+          </button>
+
+
+          <ul className="dropdown-menu cliente-category-menu">
+
+            {categorias.length === 0 ? (
+
               <li>
-                <a className="dropdown-item text-primary" href="mailto:tb0822032023@unab.edu.sv">
-                  <i className="bi bi-envelope-fill me-1"></i> Enviar correo
-                </a>
+
+                <span className="dropdown-item-text text-muted">
+
+                  Sin categorías
+
+                </span>
+
               </li>
-            </ul>
+
+            ) : (
+
+              categorias.map(
+                categoria => (
+
+                  <li
+                    key={
+                      categoria.idCategoria
+                    }
+                  >
+
+                    <Link
+                      className="dropdown-item"
+                      to={
+                        `/cliente/categoria/${categoria.idCategoria}`
+                      }
+                    >
+
+                      {
+                        categoria.descripcion
+                      }
+
+                    </Link>
+
+                  </li>
+
+                )
+              )
+
+            )}
+
+          </ul>
+
+        </div>
+
+
+        {/* ================================================= */}
+        {/* BÚSQUEDA CONDICIONAL */}
+        {/* ================================================= */}
+
+        {mostrarBusqueda && (
+
+          <div className="cliente-search">
+
+            <i className="bi bi-search"></i>
+
+            <input
+              type="search"
+              value={busqueda}
+              onChange={e =>
+                setBusqueda(
+                  e.target.value
+                )
+              }
+              placeholder="Buscar productos..."
+            />
+
+            {busqueda && (
+
+              <button
+                type="button"
+                onClick={() =>
+                  setBusqueda("")
+                }
+                title="Limpiar búsqueda"
+              >
+
+                <i className="bi bi-x"></i>
+
+              </button>
+
+            )}
+
           </div>
 
-          {/* Menú del usuario logueado o login */}
+        )}
+
+
+        {/* ================================================= */}
+        {/* NAVEGACIÓN */}
+        {/* ================================================= */}
+
+        <div
+          className={
+            mostrarBusqueda
+              ? "cliente-nav-actions"
+              : "cliente-nav-actions cliente-nav-actions-spacer"
+          }
+        >
+
+
+          <NavLink
+            to="/cliente"
+            end
+            className={claseNav}
+            title="Inicio"
+          >
+
+            <i className="bi bi-house"></i>
+
+            <span>
+              Inicio
+            </span>
+
+          </NavLink>
+
+
+          <NavLink
+            to="/cliente/favoritos"
+            className={claseNav}
+            title="Favoritos"
+          >
+
+            <i className="bi bi-heart"></i>
+
+            <span>
+              Favoritos
+            </span>
+
+          </NavLink>
+
+
+          <NavLink
+            to="/cliente/pedidos"
+            className={claseNav}
+            title="Mis pedidos"
+          >
+
+            <i className="bi bi-bag-check"></i>
+
+            <span>
+              Pedidos
+            </span>
+
+          </NavLink>
+
+
+          <NavLink
+            to="/cliente/carrito"
+            className={
+              ({ isActive }) =>
+                "cliente-nav-link cliente-cart-link" +
+                (
+                  isActive
+                    ? " active"
+                    : ""
+                )
+            }
+            title="Carrito"
+          >
+
+            <div className="cliente-cart-icon">
+
+              <i className="bi bi-cart3"></i>
+
+              {cartCount > 0 && (
+
+                <span className="cliente-cart-badge">
+
+                  {
+                    cartCount > 99
+                      ? "99+"
+                      : cartCount
+                  }
+
+                </span>
+
+              )}
+
+            </div>
+
+            <span>
+              Carrito
+            </span>
+
+          </NavLink>
+
+
+          {/* ============================================= */}
+          {/* USUARIO */}
+          {/* ============================================= */}
+
           <div className="dropdown">
-            <button className="btn btn-outline-light dropdown-toggle" type="button"
-              id="dropdownUser"
+
+            <button
+              className="cliente-user-btn dropdown-toggle"
+              type="button"
               data-bs-toggle="dropdown"
-              aria-expanded="false">
-              <i className="bi bi-person-circle"></i>
+              aria-expanded="false"
+            >
+
+              <div className="cliente-user-avatar">
+
+                {
+                  usuarioNombre
+                    ?.charAt(0)
+                    ?.toUpperCase() ||
+                  <i className="bi bi-person"></i>
+                }
+
+              </div>
+
+
+              <div className="cliente-user-info">
+
+                <strong>
+
+                  {
+                    usuarioNombre ||
+                    "Mi cuenta"
+                  }
+
+                </strong>
+
+                <span>
+
+                  {
+                    usuarioCorreo ||
+                    "Cliente"
+                  }
+
+                </span>
+
+              </div>
+
             </button>
-            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
-              {usuarioNombre && usuarioCorreo ? (
+
+
+            <ul className="dropdown-menu dropdown-menu-end cliente-user-menu">
+
+
+              {usuarioNombre && (
+
                 <>
-                  <li className="dropdown-item">
-                    <strong>{usuarioNombre}</strong>
+
+                  <li className="cliente-user-dropdown-header">
+
+                    <span>
+                      Sesión iniciada como
+                    </span>
+
+                    <strong>
+                      {usuarioNombre}
+                    </strong>
+
+                    {usuarioCorreo && (
+
+                      <small>
+                        {usuarioCorreo}
+                      </small>
+
+                    )}
+
                   </li>
-                  <li className="dropdown-item small">{usuarioCorreo}</li>
+
+
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li>
-                    <button className="dropdown-item text-danger" onClick={() => cerrarSesion()}>
-                      <i className="bi bi-box-arrow-right me-1"></i> Cerrar sesión
-                    </button>
-                  </li>
+
                 </>
-              ) : (
-                <li>
-                  <Link className="dropdown-item" to="/login">
-                    <i className="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
-                  </Link>
-                </li>
+
               )}
+
+
+              <li>
+
+                <Link
+                  className="dropdown-item"
+                  to="/cliente/pedidos"
+                >
+
+                  <i className="bi bi-bag-check"></i>
+
+                  Mis pedidos
+
+                </Link>
+
+              </li>
+
+
+              <li>
+
+                <Link
+                  className="dropdown-item"
+                  to="/cliente/favoritos"
+                >
+
+                  <i className="bi bi-heart"></i>
+
+                  Favoritos
+
+                </Link>
+
+              </li>
+
+
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+
+
+              <li>
+
+                <button
+                  type="button"
+                  className="dropdown-item text-danger"
+                  onClick={
+                    cerrarSesion
+                  }
+                >
+
+                  <i className="bi bi-box-arrow-right"></i>
+
+                  Cerrar sesión
+
+                </button>
+
+              </li>
+
+
             </ul>
+
           </div>
+
+
         </div>
+
+
       </div>
+
     </nav>
   );
 }
 
-/**
- * Limpia el almacenamiento local y redirige al inicio
- */
-const cerrarSesion = () => {
-  localStorage.removeItem("idUsuario");
-  localStorage.removeItem("nombreUsuario");
-  localStorage.removeItem("correoUsuario");
-  localStorage.removeItem("rol");
-  window.location.href = "/";
-};
 
 export default ClienteNavbar;

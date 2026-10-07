@@ -6,12 +6,12 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 // Páginas de Cliente
 import ClienteLayout from './pages/ClientePages/ClienteLayout';
-import ClienteLayoutSinBusqueda from './pages/ClientePages/ClienteLayoutSinBarra';
 import ClienteHome from './pages/ClientePages/ClienteHome';
 import ClienteFavoritos from './pages/ClientePages/ClienteFavoritos'
 import ProductosPorCategoria from './pages/ClientePages/ClienteProductosPorCat';
 import ClienteProductoDetalles from './pages/ClientePages/ClienteProductoDetalle';
 import ClienteCarrito from './pages/ClientePages/ClienteCarrito';
+import ClientePedidos from './pages/ClientePages/ClientePedidos';
 // Páginas de Vendedor
 import VendedorLayout from  './pages/VendedorPages/VendedorLayout'
 import VendedorHome from './pages/VendedorPages/VendedorHome';
@@ -19,6 +19,8 @@ import VendedorTiendas from './pages/VendedorPages/VendedorTiendas'
 import VendedorProductos from './pages/VendedorPages/VendedorProductos';
 import VendedorVentas from './pages/VendedorPages/VendedorVentas'
 import VendedorInventario from './pages/VendedorPages/VendedorInventario';
+import VendedorEnvios from './pages/VendedorPages/VendedorEnvios';
+import VendedorPromociones from "./pages/VendedorPages/VendedorPromociones";
 
 // Páginas de Administrador
 import AdminLayout from './pages/AdminsPages/AdminLayout';
@@ -47,27 +49,34 @@ export function App() {
                 <Route
                     path="/cliente"
                     element={
-                        <ProtectedRoute rolesPermitidos={["Cliente"]}>
-                        <ClienteLayout />
+                        <ProtectedRoute
+                            rolesPermitidos={["Cliente"]}
+                        >
+                            <ClienteLayout />
                         </ProtectedRoute>
                     }
                 >
-                    <Route index element={<ClienteHome />} />
-                    <Route path="favoritos" element={<ClienteFavoritos />} />
+
+                    <Route
+                        index
+                        element={<ClienteHome />}
+                    />
+
+                    <Route
+                        path="favoritos"
+                        element={<ClienteFavoritos />}
+                    />
+
+                    <Route
+                        path="pedidos"
+                        element={<ClientePedidos />}
+                    />
+
                     <Route
                         path="categoria/:idCategoria"
                         element={<ProductosPorCategoria />}
                     />
-                </Route>
 
-                <Route
-                path="/cliente"
-                    element={
-                        <ProtectedRoute rolesPermitidos={["Cliente"]}>
-                        <ClienteLayoutSinBusqueda />
-                        </ProtectedRoute>
-                    }
-                >
                     <Route
                         path="detalles/:idProducto"
                         element={<ClienteProductoDetalles />}
@@ -77,6 +86,7 @@ export function App() {
                         path="carrito"
                         element={<ClienteCarrito />}
                     />
+
                 </Route>
 
                 {/* Rutas para Vendedor */}
@@ -101,6 +111,14 @@ export function App() {
                     <Route
                         path="Inventario"
                         element={<VendedorInventario />}
+                    />
+                    <Route
+                        path="Promociones"
+                        element={<VendedorPromociones />}
+                    />
+                    <Route
+                        path="Envios"
+                        element={<VendedorEnvios />}
                     />
                     <Route
                         path="ListaVentas"

@@ -1,147 +1,894 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link, useOutletContext } from 'react-router-dom'; 
+import React, {
+  useEffect,
+  useState
+} from "react";
+
+import {
+  useParams,
+  Link,
+  useOutletContext
+} from "react-router-dom";
+
 import {
   obtenerProductosPorCategoria,
   obtenerCategoriaPorId,
   obtenerFavoritosPorCliente,
   agregarFavorito,
   eliminarFavorito,
-  agregarCarrito
-} from '../../services/data';
+  obtenerPromocionesActivas
+} from "../../services/data";
+
 
 export function ProductosPorCategoria() {
-  const { idCategoria } = useParams();
-  const { busqueda } = useOutletContext(); 
 
-  const [productos, setProductos] = useState([]);
-  const [favoritos, setFavoritos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]); 
-  const [categoriaNombre, setCategoriaNombre] = useState("");
+  const {
+    idCategoria
+  } = useParams();
 
-  const idUsuario = localStorage.getItem("idUsuario");
 
-  // Cargar categoría y productos al montar o cuando cambia la categoría
-  useEffect(() => {
-    const fetchDatos = async () => {
-      try {
-        // Obtener nombre de categoría
-        const categoria = await obtenerCategoriaPorId(idCategoria);
-        if (categoria) setCategoriaNombre(categoria.descripcion);
+  const {
+    busqueda = ""
+  } = useOutletContext() || {};
 
-        // Obtener productos de la categoría
-        const productosData = await obtenerProductosPorCategoria(idCategoria);
-        setProductos(productosData);
-        setProductosFiltrados(productosData); // Inicialmente no hay filtro
-      } catch (error) {
-        console.error("Error al obtener datos:", error);
-      }
+
+  const [
+    productos,
+    setProductos
+  ] = useState([]);
+
+  const [
+    favoritos,
+    setFavoritos
+  ] = useState([]);
+
+  const [
+    promociones,
+    setPromociones
+  ] = useState([]);
+
+  const [
+    productosFiltrados,
+    setProductosFiltrados
+  ] = useState([]);
+
+  const [
+    categoriaNombre,
+    setCategoriaNombre
+  ] = useState("");
+
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+  const [
+    error,
+    setError
+  ] = useState("");
+
+  const [
+    favoritoProcesando,
+    setFavoritoProcesando
+  ] = useState(null);
+
+
+  const idUsuario =
+    localStorage.getItem(
+      "idUsuario"
+    );
+
+
+  // =====================================================
+  // NORMALIZAR FAVORITOS
+  // =====================================================
+
+  const normalizarFavoritos =
+    data => {
+
+      return (
+        Array.isArray(data)
+          ? data
+          : []
+      ).map(
+        fav => ({
+
+          idProducto:
+            fav.IdProducto ??
+            fav.idProducto,
+
+          idFavorito:
+            fav.IdFavorito ??
+            fav.idFavorito
+        })
+      );
     };
+
+
+  // =====================================================
+  // CARGAR CATEGORÍA + PRODUCTOS + PROMOCIONES
+  // =====================================================
+
+  useEffect(() => {
+
+    const fetchDatos =
+      async () => {
+
+        try {
+
+          setLoading(true);
+
+          setError("");
+
+
+          const [
+            categoria,
+            productosData,
+            promocionesData
+          ] = await Promise.all([
+            obtenerCategoriaPorId(
+              idCategoria
+            ),
+
+            obtenerProductosPorCategoria(
+              idCategoria
+            ),
+
+            obtenerPromocionesActivas()
+          ]);
+
+
+          if (categoria) {
+
+            setCategoriaNombre(
+              categoria.descripcion ||
+              "Desconocida"
+            );
+          }
+
+
+          const listaProductos =
+            Array.isArray(
+              productosData
+            )
+              ? productosData
+              : [];
+
+
+          setProductos(
+            listaProductos
+          );
+
+
+          setProductosFiltrados(
+            listaProductos
+          );
+
+
+          setPromociones(
+            Array.isArray(
+              promocionesData
+            )
+              ? promocionesData
+              : []
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Error al obtener datos:",
+            error
+          );
+
+
+          setError(
+            error.message ||
+            "No se pudieron cargar los productos."
+          );
+
+        } finally {
+
+          setLoading(false);
+        }
+      };
+
+
     fetchDatos();
+
   }, [idCategoria]);
 
-  // Cargar favoritos del usuario
-  useEffect(() => {
-    const fetchFavoritos = async () => {
-      try {
-        const data = await obtenerFavoritosPorCliente();
-        // Normalizar estructura de datos
-        setFavoritos(data.map(fav => ({
-          idProducto: fav.IdProducto || fav.idProducto,
-          idFavorito: fav.IdFavorito || fav.idFavorito
-        })));
-      } catch (error) {
-        console.error("Error al obtener favoritos:", error);
-      }
-    };  
 
-    if (idUsuario) fetchFavoritos();
+  // =====================================================
+  // CARGAR FAVORITOS
+  // =====================================================
+
+  useEffect(() => {
+
+    const fetchFavoritos =
+      async () => {
+
+        try {
+
+          const data =
+            await obtenerFavoritosPorCliente();
+
+
+          setFavoritos(
+            normalizarFavoritos(
+              data
+            )
+          );
+
+        } catch (error) {
+
+          console.error(
+            "Error al obtener favoritos:",
+            error
+          );
+
+
+          setFavoritos(
+            []
+          );
+        }
+      };
+
+
+    if (idUsuario) {
+
+      fetchFavoritos();
+    }
+
   }, [idUsuario]);
 
-  // Filtrar productos por término de búsqueda
+
+  // =====================================================
+  // FILTRO DE BÚSQUEDA
+  // =====================================================
+
   useEffect(() => {
-    if (!busqueda) {
-      setProductosFiltrados(productos);
-    } else {
-      const filtrados = productos.filter(producto =>
-        producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
+
+    if (!busqueda.trim()) {
+
+      setProductosFiltrados(
+        productos
       );
-      setProductosFiltrados(filtrados);
-    }
-  }, [busqueda, productos]);
-  
-  // Verifica si un producto está en la lista de favoritos
-  const isFavorito = (producto) =>
-    favoritos.some(fav => Number(fav.idProducto) === Number(producto.idProducto));
-  
-  // Agrega o elimina un producto de favoritos
-  const toggleFavorito = async (producto) => {
-    const productoId = Number(producto.idProducto);
-    const favoritoEncontrado = favoritos.find(fav => Number(fav.idProducto) === productoId);
 
-    try {
-      if (favoritoEncontrado && favoritoEncontrado.idFavorito) {
-        await eliminarFavorito(favoritoEncontrado.idFavorito);
-      } else {
-        await agregarFavorito(productoId);
+      return;
+    }
+
+
+    const texto =
+      busqueda
+        .trim()
+        .toLowerCase();
+
+
+    const filtrados =
+      productos.filter(
+        producto => {
+
+          const contenido =
+            [
+              producto.nombre,
+              producto.descripcion,
+              producto.sku
+            ]
+              .filter(Boolean)
+              .join(" ")
+              .toLowerCase();
+
+
+          return contenido.includes(
+            texto
+          );
+        }
+      );
+
+
+    setProductosFiltrados(
+      filtrados
+    );
+
+  }, [
+    busqueda,
+    productos
+  ]);
+
+
+  // =====================================================
+  // PROMOCIÓN
+  // =====================================================
+
+  const obtenerPromocion =
+    idProducto => {
+
+      return promociones.find(
+        promocion =>
+          Number(
+            promocion.idProducto
+          ) ===
+          Number(
+            idProducto
+          )
+      ) || null;
+    };
+
+
+  // =====================================================
+  // FAVORITO
+  // =====================================================
+
+  const isFavorito =
+    producto => {
+
+      return favoritos.some(
+        fav =>
+          Number(
+            fav.idProducto
+          ) ===
+          Number(
+            producto.idProducto
+          )
+      );
+    };
+
+
+  // =====================================================
+  // TOGGLE FAVORITO
+  // =====================================================
+
+  const toggleFavorito =
+    async producto => {
+
+      const productoId =
+        Number(
+          producto.idProducto
+        );
+
+
+      const favoritoEncontrado =
+        favoritos.find(
+          fav =>
+            Number(
+              fav.idProducto
+            ) ===
+            productoId
+        );
+
+
+      const favoritosAnteriores =
+        [...favoritos];
+
+
+      try {
+
+        setFavoritoProcesando(
+          productoId
+        );
+
+
+        if (
+          favoritoEncontrado &&
+          favoritoEncontrado.idFavorito
+        ) {
+
+          setFavoritos(
+            prev =>
+              prev.filter(
+                fav =>
+                  Number(
+                    fav.idProducto
+                  ) !==
+                  productoId
+              )
+          );
+
+
+          await eliminarFavorito(
+            favoritoEncontrado.idFavorito
+          );
+
+        } else {
+
+          setFavoritos(
+            prev => [
+              ...prev,
+              {
+                idFavorito: -1,
+                idProducto:
+                  productoId
+              }
+            ]
+          );
+
+
+          await agregarFavorito(
+            productoId
+          );
+        }
+
+
+        const data =
+          await obtenerFavoritosPorCliente();
+
+
+        setFavoritos(
+          normalizarFavoritos(
+            data
+          )
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Error en toggleFavorito:",
+          error
+        );
+
+
+        setFavoritos(
+          favoritosAnteriores
+        );
+
+      } finally {
+
+        setFavoritoProcesando(
+          null
+        );
       }
+    };
 
-       // Actualizar lista de favoritos
-      const data = await obtenerFavoritosPorCliente(idUsuario);
-      setFavoritos(data.map(fav => ({
-        idProducto: fav.IdProducto || fav.idProducto,
-        idFavorito: fav.IdFavorito || fav.idFavorito
-      })));
-    } catch (error) {
-      console.error("Error en toggleFavorito:", error);
-    }
-  };
+
+  // =====================================================
+  // LOADING
+  // =====================================================
+
+  if (loading) {
+
+    return (
+
+      <div className="container mt-4">
+
+        <div className="text-center py-5">
+
+          <div className="spinner-border mb-3" />
+
+          <p>
+            Cargando productos...
+          </p>
+
+        </div>
+
+      </div>
+    );
+  }
+
+
+  // =====================================================
+  // RENDER
+  // =====================================================
 
   return (
+
     <div className="container mt-4">
-      <h2>Productos de la categoría: {categoriaNombre || "Desconocida"}</h2>
 
-      <div className="row">
-        {productosFiltrados.length === 0 ? (
-          <p className="text-center text-danger">No se encontraron productos.</p>
-        ) : (
-          productosFiltrados.map(producto => (
-            <div className="col-md-3" key={producto.idProducto}>
-              <div className="card h-100">
-                <div className="position-relative">
-                  <img src={producto.rutaImagen || '/imagenes/default-producto.png'} className="card-img-top" alt={producto.nombre}/>
 
-                  {/* Agregar en un futuro!!!!!!*/}
-                  {producto.descuento && (
-                    <span className="badge bg-danger discount-badge">
-                      -{producto.descuento}%
-                    </span>
-                  )}
-                </div>
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{producto.nombre}</h5>
-                  <p className="card-text small text-truncate">{producto.descripcion}</p>
-                  <p className="h6 text-success">${producto.precio.toFixed(2)}</p>
+      <div className="mb-4">
 
-                  <div className="button-group mt-auto d-flex justify-content-around">
-                    <button className="btn btn-outline-danger btn-sm" title={isFavorito(producto) ? "Eliminar de favoritos" : "Agregar a favoritos"}
-                      onClick={() => toggleFavorito(producto)}>
+        <h2>
 
-                      <i className={isFavorito(producto) ? "bi bi-heart-fill text-danger" : "bi bi-heart"}></i>
-                    </button>
-                    
-                    <Link to={`/cliente/detalles/${producto.idProducto}`} className="btn btn-secondary btn-sm" title="Ver detalles" >
-                      Detalles
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
+          Productos de la categoría:{" "}
+
+          {
+            categoriaNombre ||
+            "Desconocida"
+          }
+
+        </h2>
+
+
+        <p className="text-muted">
+
+          {
+            productosFiltrados.length
+          }
+
+          {" "}
+
+          {
+            productosFiltrados.length === 1
+              ? "producto disponible"
+              : "productos disponibles"
+          }
+
+        </p>
+
       </div>
+
+
+      {error && (
+
+        <div className="alert alert-danger">
+
+          {error}
+
+        </div>
+
+      )}
+
+
+      <div className="row g-4">
+
+
+        {productosFiltrados.length === 0 ? (
+
+          <div className="text-center py-5">
+
+            <i
+              className="bi bi-search"
+              style={{
+                fontSize: "3rem",
+                color: "#9ca3af"
+              }}
+            ></i>
+
+
+            <h4 className="mt-3">
+
+              No se encontraron productos
+
+            </h4>
+
+
+            <p className="text-muted">
+
+              {
+                busqueda
+                  ? "Prueba con otro término de búsqueda."
+                  : "No hay productos disponibles en esta categoría."
+              }
+
+            </p>
+
+          </div>
+
+        ) : (
+
+          productosFiltrados.map(
+            producto => {
+
+              const promocion =
+                obtenerPromocion(
+                  producto.idProducto
+                );
+
+
+              const precioOriginal =
+                Number(
+                  promocion
+                    ?.precioOriginal ??
+                  producto.precio ??
+                  0
+                );
+
+
+              const precioFinal =
+                promocion
+                  ? Number(
+                      promocion.precioFinal ||
+                      0
+                    )
+                  : Number(
+                      producto.precio ||
+                      0
+                    );
+
+
+              const favorito =
+                isFavorito(
+                  producto
+                );
+
+
+              const procesando =
+                favoritoProcesando ===
+                Number(
+                  producto.idProducto
+                );
+
+
+              const stock =
+                Number(
+                  producto.stock ||
+                  0
+                );
+
+
+              return (
+
+                <div
+                  className="col-xl-3 col-lg-4 col-md-6"
+                  key={
+                    producto.idProducto
+                  }
+                >
+
+                  <div className="card h-100">
+
+
+                    {/* ===================================== */}
+                    {/* IMAGEN */}
+                    {/* ===================================== */}
+
+                    <div className="position-relative">
+
+
+                      {producto.rutaImagen ? (
+
+                        <img
+                          src={
+                            producto.rutaImagen
+                          }
+                          className="card-img-top"
+                          alt={
+                            producto.nombre
+                          }
+                          style={{
+                            height: "220px",
+                            objectFit: "cover"
+                          }}
+                        />
+
+                      ) : (
+
+                        <div
+                          className="card-img-top d-flex flex-column align-items-center justify-content-center bg-light"
+                          style={{
+                            height: "220px"
+                          }}
+                        >
+
+                          <i
+                            className="bi bi-image text-muted"
+                            style={{
+                              fontSize: "2rem"
+                            }}
+                          ></i>
+
+
+                          <small className="text-muted mt-2">
+
+                            Sin imagen
+
+                          </small>
+
+                        </div>
+
+                      )}
+
+
+                      {/* DESCUENTO */}
+
+                      {promocion && (
+
+                        <span className="badge bg-danger discount-badge">
+
+                          -
+                          {
+                            Number(
+                              promocion.descuento ||
+                              0
+                            )
+                          }
+                          %
+
+                        </span>
+
+                      )}
+
+
+                      {/* STOCK */}
+
+                      {stock <= 0 && (
+
+                        <span
+                          className="badge bg-secondary position-absolute top-0 end-0 m-2"
+                        >
+
+                          Agotado
+
+                        </span>
+
+                      )}
+
+
+                    </div>
+
+
+                    {/* ===================================== */}
+                    {/* BODY */}
+                    {/* ===================================== */}
+
+                    <div className="card-body d-flex flex-column">
+
+
+                      <h5 className="card-title">
+
+                        {
+                          producto.nombre
+                        }
+
+                      </h5>
+
+
+                      <p className="card-text small text-truncate">
+
+                        {
+                          producto.descripcion ||
+                          "Sin descripción"
+                        }
+
+                      </p>
+
+
+                      <p className="small text-muted mb-2">
+
+                        Stock:{" "}
+
+                        <strong>
+                          {stock}
+                        </strong>
+
+                      </p>
+
+
+                      {/* ===================================== */}
+                      {/* PRECIO */}
+                      {/* ===================================== */}
+
+                      {promocion ? (
+
+                        <div className="mb-3">
+
+                          <small
+                            className="text-muted d-block"
+                            style={{
+                              textDecoration:
+                                "line-through"
+                            }}
+                          >
+
+                            $
+
+                            {
+                              precioOriginal
+                                .toFixed(2)
+                            }
+
+                          </small>
+
+
+                          <strong className="text-success fs-5">
+
+                            $
+
+                            {
+                              precioFinal
+                                .toFixed(2)
+                            }
+
+                          </strong>
+
+
+                          <small className="text-danger d-block">
+
+                            Ahorras{" $"}
+
+                            {
+                              (
+                                precioOriginal -
+                                precioFinal
+                              ).toFixed(2)
+                            }
+
+                          </small>
+
+                        </div>
+
+                      ) : (
+
+                        <p className="h6 text-success mb-3">
+
+                          $
+
+                          {
+                            precioFinal
+                              .toFixed(2)
+                          }
+
+                        </p>
+
+                      )}
+
+
+                      {/* ===================================== */}
+                      {/* ACCIONES */}
+                      {/* ===================================== */}
+
+                      <div className="button-group mt-auto d-flex justify-content-around">
+
+
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger btn-sm"
+                          title={
+                            favorito
+                              ? "Eliminar de favoritos"
+                              : "Agregar a favoritos"
+                          }
+                          disabled={
+                            procesando
+                          }
+                          onClick={() =>
+                            toggleFavorito(
+                              producto
+                            )
+                          }
+                        >
+
+                          {procesando ? (
+
+                            <span className="spinner-border spinner-border-sm"></span>
+
+                          ) : (
+
+                            <i
+                              className={
+                                favorito
+                                  ? "bi bi-heart-fill text-danger"
+                                  : "bi bi-heart"
+                              }
+                            ></i>
+
+                          )}
+
+                        </button>
+
+
+                        <Link
+                          to={
+                            `/cliente/detalles/${producto.idProducto}`
+                          }
+                          className="btn btn-secondary btn-sm"
+                          title="Ver detalles"
+                        >
+
+                          Detalles
+
+                        </Link>
+
+
+                      </div>
+
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              );
+            }
+          )
+
+        )}
+
+
+      </div>
+
     </div>
   );
 }
 
-// Exportar el componente para usarlo en otras partes de la app
+
 export default ProductosPorCategoria;

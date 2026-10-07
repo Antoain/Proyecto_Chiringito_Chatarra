@@ -822,3 +822,323 @@ export const eliminarMetodoEntrega =
       true
     );
   };
+// ======================================================
+// MÉTODOS DE ENTREGA - CLIENTE
+// ======================================================
+
+export const obtenerMetodosEntregaPorTienda =
+  async idTienda => {
+
+    try {
+
+      return await apiFetch(
+        `/MetodoEntrega/Tienda/${idTienda}`,
+        {},
+        false
+      );
+
+    } catch (error) {
+
+      if (error.status === 404) {
+        return [];
+      }
+
+      throw error;
+    }
+  };
+
+// ======================================================
+// GESTIÓN DE PEDIDOS / ENTREGAS DEL VENDEDOR
+// ======================================================
+
+export const cambiarEstadoEntrega = async (
+  idSubPedido,
+  estadoEntrega
+) => {
+  return apiFetch(
+    "/Pedido/CambiarEstadoEntrega",
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        idSubPedido: Number(idSubPedido),
+        estadoEntrega
+      })
+    },
+    true
+  );
+};
+
+
+export const actualizarSeguimientoEntrega = async (
+  idSubPedido,
+  proveedorEntrega,
+  codigoSeguimiento
+) => {
+  return apiFetch(
+    "/Pedido/ActualizarSeguimientoEntrega",
+    {
+      method: "PUT",
+      body: JSON.stringify({
+        idSubPedido: Number(idSubPedido),
+        proveedorEntrega,
+        codigoSeguimiento
+      })
+    },
+    true
+  );
+};
+
+
+export const obtenerHistorialEntrega = async (
+  idSubPedido
+) => {
+  return apiFetch(
+    `/Pedido/HistorialEntrega/${idSubPedido}`,
+    {},
+    true
+  );
+};
+
+// ======================================================
+// DETALLE DE PEDIDOS DEL VENDEDOR
+// ======================================================
+
+export const obtenerPedidosTiendaVendedor = async () => {
+  try {
+    return await apiFetch(
+      "/Pedido/PedidosTienda",
+      {},
+      true
+    );
+  } catch (error) {
+    if (error.status === 404) {
+      return [];
+    }
+
+    throw error;
+  }
+};
+
+
+// ======================================================
+// DEVOLUCIONES DE INVENTARIO
+// ======================================================
+
+export const registrarDevolucionInventario = async (
+  devolucion
+) => {
+  return apiFetch(
+    "/Inventario/Devolucion",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        idSubPedido: Number(
+          devolucion.idSubPedido
+        ),
+
+        idProducto: Number(
+          devolucion.idProducto
+        ),
+
+        cantidad: Number(
+          devolucion.cantidad
+        ),
+
+        motivo:
+          devolucion.motivo?.trim() || null
+      })
+    },
+    true
+  );
+};
+
+// ======================================================
+// PEDIDOS DEL CLIENTE
+// ======================================================
+
+export const obtenerMisPedidos = async () => {
+  try {
+    return await apiFetch(
+      "/Pedido/MisPedidos",
+      {},
+      true
+    );
+  } catch (error) {
+    if (error.status === 404) {
+      return [];
+    }
+
+    throw error;
+  }
+};
+
+
+export const obtenerMiPedido = async (
+  idPedido
+) => {
+  return apiFetch(
+    `/Pedido/MiPedido/${idPedido}`,
+    {},
+    true
+  );
+};
+
+
+export const obtenerHistorialEntregaCliente = async (
+  idSubPedido
+) => {
+  return apiFetch(
+    `/Pedido/HistorialEntrega/${idSubPedido}`,
+    {},
+    true
+  );
+};
+
+// ======================================================
+// PROMOCIONES
+// ======================================================
+
+export const obtenerMisPromociones =
+  async () => {
+
+    try {
+
+      return await apiFetch(
+        "/Promocion/MisPromociones",
+        {},
+        true
+      );
+
+    } catch (error) {
+
+      if (error.status === 404) {
+        return [];
+      }
+
+      throw error;
+    }
+  };
+
+
+export const obtenerPromocionActiva =
+  async idProducto => {
+
+    return apiFetch(
+      `/Promocion/ActivaProducto/${idProducto}`,
+      {},
+      false
+    );
+  };
+
+
+export const crearPromocion =
+  async promocion => {
+
+    return apiFetch(
+      "/Promocion",
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          idProducto:
+            Number(
+              promocion.idProducto
+            ),
+
+          titulo:
+            promocion.titulo,
+
+          descripcion:
+            promocion.descripcion ||
+            null,
+
+          descuento:
+            Number(
+              promocion.descuento
+            ),
+
+          fechaInicio:
+            promocion.fechaInicio,
+
+          fechaFin:
+            promocion.fechaFin
+        })
+      },
+      true
+    );
+  };
+
+
+export const actualizarPromocion =
+  async (
+    idPromocion,
+    promocion
+  ) => {
+
+    return apiFetch(
+      `/Promocion/${idPromocion}`,
+      {
+        method: "PUT",
+
+        body: JSON.stringify({
+          titulo:
+            promocion.titulo,
+
+          descripcion:
+            promocion.descripcion ||
+            null,
+
+          descuento:
+            Number(
+              promocion.descuento
+            ),
+
+          fechaInicio:
+            promocion.fechaInicio,
+
+          fechaFin:
+            promocion.fechaFin
+        })
+      },
+      true
+    );
+  };
+
+
+export const eliminarPromocion =
+  async idPromocion => {
+
+    return apiFetch(
+      `/Promocion/${idPromocion}`,
+      {
+        method: "DELETE"
+      },
+      true
+    );
+  };
+
+
+  // ======================================================
+// PROMOCIONES ACTIVAS - CLIENTE
+// ======================================================
+
+export const obtenerPromocionesActivas =
+  async () => {
+
+    try {
+
+      return await apiFetch(
+        "/Promocion/Activas",
+        {},
+        false
+      );
+
+    } catch (error) {
+
+      if (error.status === 404) {
+        return [];
+      }
+
+      throw error;
+    }
+  };

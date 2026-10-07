@@ -465,3 +465,750 @@
         flex-direction: column;
     }
 }
+
+/* =====================================================
+   ALERTA SUCCESS
+   ===================================================== */
+
+.ventas-alert-success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+
+/* =====================================================
+   BOTÓN GESTIONAR
+   ===================================================== */
+
+.ventas-manage-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 10px;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: .72rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.ventas-manage-btn:hover {
+    background: #dbeafe;
+}
+
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+.ventas-modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(17,24,39,.55);
+}
+
+.ventas-modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.22);
+
+    overflow: hidden;
+}
+
+.ventas-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 22px 24px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ventas-modal-header span {
+    color: #2563eb;
+
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.ventas-modal-header h2 {
+    margin: 4px 0 2px;
+
+    color: #111827;
+    font-size: 1.25rem;
+}
+
+.ventas-modal-header small {
+    color: #9ca3af;
+    font-size: .72rem;
+}
+
+.ventas-modal-header button {
+    border: 0;
+
+    background: transparent;
+    color: #6b7280;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+}
+
+.ventas-modal-body {
+    max-height: calc(90vh - 85px);
+
+    padding: 22px 24px;
+
+    overflow-y: auto;
+}
+
+
+/* =====================================================
+   ERROR MODAL
+   ===================================================== */
+
+.ventas-modal-error {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 10px 12px;
+    margin-bottom: 18px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+    color: #991b1b;
+
+    font-size: .75rem;
+}
+
+
+/* =====================================================
+   DETALLES
+   ===================================================== */
+
+.ventas-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.ventas-detail-grid > div {
+    padding: 12px 13px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    background: #f9fafb;
+}
+
+.ventas-detail-grid span,
+.ventas-address span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #9ca3af;
+    font-size: .67rem;
+}
+
+.ventas-detail-grid strong,
+.ventas-address strong {
+    color: #111827;
+    font-size: .8rem;
+}
+
+.ventas-address {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    padding: 13px 14px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    background: #f9fafb;
+}
+
+.ventas-address > i {
+    margin-top: 2px;
+
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   SECCIONES MODAL
+   ===================================================== */
+
+.ventas-modal-section {
+    padding-top: 22px;
+    margin-top: 22px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.ventas-modal-section-title {
+    margin-bottom: 14px;
+}
+
+.ventas-modal-section-title span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #2563eb;
+
+    font-size: .64rem;
+    font-weight: 800;
+
+    letter-spacing: .8px;
+}
+
+.ventas-modal-section-title h3 {
+    margin: 0;
+
+    color: #111827;
+    font-size: .95rem;
+}
+
+
+/* =====================================================
+   ESTADOS
+   ===================================================== */
+
+.ventas-state-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.ventas-state-next,
+.ventas-state-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 39px;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    font-size: .76rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.ventas-state-next {
+    border: 1px solid #2563eb;
+
+    background: #2563eb;
+    color: white;
+}
+
+.ventas-state-next:hover {
+    background: #1d4ed8;
+}
+
+.ventas-state-cancel {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.ventas-state-next:disabled,
+.ventas-state-cancel:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   SEGUIMIENTO
+   ===================================================== */
+
+.ventas-tracking-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+
+    align-items: end;
+
+    gap: 12px;
+}
+
+.ventas-field label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #374151;
+
+    font-size: .72rem;
+    font-weight: 600;
+}
+
+.ventas-field input {
+    width: 100%;
+
+    min-height: 40px;
+
+    padding: 9px 10px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: .78rem;
+}
+
+.ventas-field input:focus {
+    border-color: #2563eb;
+}
+
+.ventas-save-tracking {
+    min-height: 40px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 9px 13px;
+
+    border: 1px solid #2563eb;
+    border-radius: 8px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: .72rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   HISTORIAL
+   ===================================================== */
+
+.ventas-history {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+}
+
+.ventas-history-item {
+    position: relative;
+
+    display: flex;
+    gap: 12px;
+
+    padding-bottom: 18px;
+}
+
+.ventas-history-item:not(:last-child)::before {
+    content: "";
+
+    position: absolute;
+
+    top: 12px;
+    left: 5px;
+    bottom: 0;
+
+    width: 2px;
+
+    background: #e5e7eb;
+}
+
+.ventas-history-dot {
+    position: relative;
+
+    z-index: 1;
+
+    width: 12px;
+    height: 12px;
+
+    flex: 0 0 12px;
+
+    margin-top: 3px;
+
+    border: 3px solid #bfdbfe;
+    border-radius: 50%;
+
+    background: #2563eb;
+}
+
+.ventas-history-item > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.ventas-history-item strong {
+    color: #111827;
+    font-size: .8rem;
+}
+
+.ventas-history-item span {
+    color: #6b7280;
+    font-size: .7rem;
+}
+
+.ventas-history-item small {
+    color: #9ca3af;
+    font-size: .67rem;
+}
+
+.ventas-history-loading,
+.ventas-history-empty {
+    min-height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    color: #6b7280;
+
+    font-size: .76rem;
+}
+
+.ventas-history-empty i {
+    color: #9ca3af;
+}
+
+
+/* =====================================================
+   RESPONSIVE MODAL
+   ===================================================== */
+
+@media (max-width: 800px) {
+
+    .ventas-detail-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .ventas-tracking-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .ventas-modal-backdrop {
+        padding: 10px;
+    }
+
+    .ventas-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ventas-state-actions {
+        flex-direction: column;
+    }
+
+    .ventas-state-next,
+    .ventas-state-cancel {
+        width: 100%;
+    }
+}
+
+/* =====================================================
+   PRODUCTOS DEL PEDIDO
+   ===================================================== */
+
+.ventas-products {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ventas-product-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 13px 14px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    background: #f9fafb;
+}
+
+.ventas-product-main {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.ventas-product-icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.ventas-product-main > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ventas-product-main strong {
+    color: #111827;
+    font-size: .8rem;
+}
+
+.ventas-product-main span {
+    color: #9ca3af;
+    font-size: .66rem;
+}
+
+.ventas-product-data {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.ventas-product-data > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    text-align: right;
+}
+
+.ventas-product-data span {
+    color: #9ca3af;
+    font-size: .64rem;
+}
+
+.ventas-product-data strong {
+    color: #374151;
+    font-size: .78rem;
+}
+
+.ventas-products-empty {
+    min-height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    color: #6b7280;
+
+    font-size: .76rem;
+}
+
+
+/* =====================================================
+   DEVOLUCIONES
+   ===================================================== */
+
+.ventas-section-help {
+    margin: 5px 0 0;
+
+    color: #9ca3af;
+
+    font-size: .72rem;
+}
+
+.ventas-return-form {
+    display: grid;
+    grid-template-columns: 1fr 160px;
+
+    gap: 13px;
+}
+
+.ventas-field select,
+.ventas-field textarea {
+    width: 100%;
+
+    padding: 9px 10px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: white;
+
+    outline: none;
+
+    font-size: .78rem;
+}
+
+.ventas-field select {
+    min-height: 40px;
+}
+
+.ventas-field textarea {
+    resize: vertical;
+}
+
+.ventas-field select:focus,
+.ventas-field textarea:focus {
+    border-color: #2563eb;
+}
+
+.ventas-field select:disabled,
+.ventas-field input:disabled {
+    background: #f3f4f6;
+
+    cursor: not-allowed;
+}
+
+.ventas-field-full {
+    grid-column: 1 / -1;
+}
+
+.ventas-return-warning {
+    grid-column: 1 / -1;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+
+    background: #eff6ff;
+    color: #1e40af;
+
+    font-size: .7rem;
+    line-height: 1.45;
+}
+
+.ventas-return-warning i {
+    margin-top: 1px;
+}
+
+.ventas-return-btn {
+    grid-column: 1 / -1;
+
+    justify-self: flex-start;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 40px;
+
+    padding: 9px 14px;
+
+    border: 1px solid #059669;
+    border-radius: 8px;
+
+    background: #ecfdf5;
+    color: #047857;
+
+    font-size: .75rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.ventas-return-btn:hover:not(:disabled) {
+    background: #d1fae5;
+}
+
+.ventas-return-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   RESPONSIVE PRODUCTOS / DEVOLUCIONES
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .ventas-product-item {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .ventas-product-data {
+        width: 100%;
+
+        justify-content: space-between;
+
+        gap: 12px;
+    }
+
+    .ventas-product-data > div {
+        text-align: left;
+    }
+
+    .ventas-return-form {
+        grid-template-columns: 1fr;
+    }
+
+    .ventas-field-full,
+    .ventas-return-warning,
+    .ventas-return-btn {
+        grid-column: 1;
+    }
+
+    .ventas-return-btn {
+        width: 100%;
+    }
+}

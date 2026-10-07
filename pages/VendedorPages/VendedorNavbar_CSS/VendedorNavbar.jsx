@@ -141,6 +141,16 @@ export function VendedorNavbar() {
               </span>
 
             </NavLink>
+            <NavLink
+              to="/vendedor/Promociones"
+              className={claseNav}
+            >
+              <i className="bi bi-percent"></i>
+
+              <span>
+                Promociones
+              </span>
+            </NavLink>
 
             <NavLink
               to="/vendedor/Inventario"
@@ -151,6 +161,19 @@ export function VendedorNavbar() {
 
               <span>
                 Inventario
+              </span>
+
+            </NavLink>
+
+            <NavLink
+              to="/vendedor/Envios"
+              className={claseNav}
+            >
+
+              <i className="bi bi-truck"></i>
+
+              <span>
+                Envíos
               </span>
 
             </NavLink>

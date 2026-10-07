@@ -1,0 +1,923 @@
+.envios-page {
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+.envios-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+
+/* ==========================================
+   HEADER
+   ========================================== */
+
+.envios-header {
+    margin-bottom: 24px;
+}
+
+.envios-eyebrow,
+.envios-card-eyebrow {
+    display: block;
+    margin-bottom: 6px;
+    color: #2563eb;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.envios-header h1 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.envios-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: .9rem;
+}
+
+
+/* ==========================================
+   ALERTAS
+   ========================================== */
+
+.envios-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 15px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+.envios-alert.error {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.envios-alert.success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+
+/* ==========================================
+   SELECTOR TIENDA
+   ========================================== */
+
+.envios-store-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 18px 20px;
+    margin-bottom: 22px;
+
+    border: 1px solid #dbeafe;
+    border-radius: 15px;
+
+    background: #eff6ff;
+}
+
+.envios-store-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.envios-store-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 1.15rem;
+}
+
+.envios-store-info span {
+    display: block;
+    margin-bottom: 2px;
+
+    color: #6b7280;
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .8px;
+}
+
+.envios-store-info strong {
+    color: #111827;
+    font-size: 1rem;
+}
+
+.envios-store-card select {
+    min-width: 260px;
+    padding: 10px 12px;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+
+    background: white;
+    color: #374151;
+
+    outline: none;
+    font-size: .82rem;
+}
+
+
+/* ==========================================
+   RESUMEN
+   ========================================== */
+
+.envios-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+.envios-summary-card {
+    position: relative;
+
+    padding: 20px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.04);
+}
+
+.envios-summary-card span {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #6b7280;
+    font-size: .76rem;
+}
+
+.envios-summary-card strong {
+    color: #111827;
+    font-size: 1.7rem;
+}
+
+.envios-summary-card > i {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+
+    color: #2563eb;
+    font-size: 1.3rem;
+}
+
+
+/* ==========================================
+   CARD
+   ========================================== */
+
+.envios-card {
+    padding: 24px;
+    margin-bottom: 22px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.045);
+}
+
+.envios-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 22px;
+}
+
+.envios-card-header h2 {
+    margin: 0 0 4px;
+
+    color: #111827;
+    font-size: 1.08rem;
+}
+
+.envios-card-header p {
+    margin: 0;
+
+    color: #9ca3af;
+    font-size: .8rem;
+}
+
+
+/* ==========================================
+   BOTONES
+   ========================================== */
+
+.envios-btn-primary,
+.envios-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 9px 15px;
+
+    border-radius: 9px;
+
+    font-size: .78rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.envios-btn-primary {
+    border: 1px solid #2563eb;
+
+    background: #2563eb;
+    color: white;
+}
+
+.envios-btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.envios-btn-secondary {
+    border: 1px solid #d1d5db;
+
+    background: white;
+    color: #374151;
+}
+
+.envios-btn-primary:disabled,
+.envios-btn-secondary:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   TABLA
+   ========================================== */
+
+.envios-table {
+    width: 100%;
+    min-width: 850px;
+
+    border-collapse: collapse;
+}
+
+.envios-table th {
+    padding: 11px 10px;
+
+    border-bottom:
+        2px solid #e5e7eb;
+
+    color: #6b7280;
+
+    font-size: .69rem;
+    font-weight: 700;
+
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.envios-table td {
+    padding: 13px 10px;
+
+    border-bottom:
+        1px solid #f1f2f4;
+
+    color: #374151;
+
+    font-size: .8rem;
+}
+
+.envios-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.envios-location {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.envios-location > i {
+    color: #2563eb;
+}
+
+.envios-location div {
+    display: flex;
+    flex-direction: column;
+}
+
+.envios-location strong {
+    color: #111827;
+}
+
+.envios-location small {
+    color: #9ca3af;
+    font-size: .68rem;
+}
+
+.envios-price {
+    color: #111827;
+    font-size: .9rem;
+}
+
+
+/* ==========================================
+   STATUS
+   ========================================== */
+
+.envios-status {
+    display: inline-block;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    font-size: .67rem;
+    font-weight: 700;
+}
+
+.envios-status.active {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.envios-status.inactive {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+
+/* ==========================================
+   ACCIONES
+   ========================================== */
+
+.envios-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.envios-action {
+    width: 33px;
+    height: 33px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+.envios-action.edit {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.envios-action.enable {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.envios-action.disable {
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.envios-action.delete {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* ==========================================
+   MÉTODOS
+   ========================================== */
+
+.envios-method-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.envios-method {
+    padding: 20px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+
+    background: #f9fafb;
+
+    transition:
+        transform .15s ease,
+        border-color .15s ease;
+}
+
+.envios-method.active {
+    border-color: #bfdbfe;
+    background: #f8fbff;
+}
+
+.envios-method:hover {
+    transform: translateY(-2px);
+}
+
+.envios-method-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.envios-method-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: 1.1rem;
+}
+
+.envios-method h3 {
+    margin: 0 0 7px;
+
+    color: #111827;
+    font-size: .95rem;
+}
+
+.envios-method p {
+    min-height: 42px;
+
+    margin: 0 0 18px;
+
+    color: #6b7280;
+    font-size: .75rem;
+    line-height: 1.5;
+}
+
+.envios-method-add {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    padding: 9px;
+
+    border: 1px dashed #93c5fd;
+    border-radius: 8px;
+
+    background: #eff6ff;
+    color: #2563eb;
+
+    font-size: .75rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.envios-method-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.envios-method-toggle {
+    flex: 1;
+
+    padding: 9px;
+
+    border-radius: 8px;
+
+    font-size: .75rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.envios-method-toggle.enable {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.envios-method-toggle.disable {
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #b45309;
+}
+
+.envios-method-delete {
+    width: 38px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+    color: #dc2626;
+
+    cursor: pointer;
+}
+
+
+/* ==========================================
+   EMPTY
+   ========================================== */
+
+.envios-empty,
+.envios-empty-global {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+
+    color: #6b7280;
+}
+
+.envios-empty {
+    min-height: 230px;
+}
+
+.envios-empty-global {
+    min-height: 420px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    background: white;
+}
+
+.envios-empty i,
+.envios-empty-global i {
+    margin-bottom: 10px;
+
+    color: #9ca3af;
+    font-size: 2.5rem;
+}
+
+.envios-empty h3,
+.envios-empty-global h2 {
+    margin-bottom: 5px;
+
+    color: #111827;
+}
+
+.envios-empty p,
+.envios-empty-global p {
+    font-size: .8rem;
+}
+
+
+/* ==========================================
+   PAGINACIÓN
+   ========================================== */
+
+.envios-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-top: 18px;
+    margin-top: 8px;
+
+    border-top:
+        1px solid #f1f2f4;
+
+    color: #6b7280;
+    font-size: .76rem;
+}
+
+.envios-pagination strong {
+    color: #374151;
+}
+
+.envios-pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.envios-pagination-controls button {
+    width: 36px;
+    height: 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    background: white;
+    color: #374151;
+
+    cursor: pointer;
+}
+
+.envios-pagination-controls button:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   MODAL
+   ========================================== */
+
+.envios-modal-backdrop {
+    position: fixed;
+    inset: 0;
+
+    z-index: 2000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(17,24,39,.55);
+}
+
+.envios-modal {
+    width: 100%;
+    max-width: 500px;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.2);
+
+    overflow: hidden;
+}
+
+.envios-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 22px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+.envios-modal-header span {
+    color: #2563eb;
+
+    font-size: .65rem;
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.envios-modal-header h2 {
+    margin: 4px 0 0;
+
+    color: #111827;
+    font-size: 1.15rem;
+}
+
+.envios-modal-header button {
+    border: 0;
+
+    background: transparent;
+    color: #6b7280;
+
+    cursor: pointer;
+}
+
+.envios-modal form {
+    padding: 22px;
+}
+
+.envios-field {
+    margin-bottom: 16px;
+}
+
+.envios-field label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #374151;
+
+    font-size: .77rem;
+    font-weight: 600;
+}
+
+.envios-field select,
+.envios-field input {
+    width: 100%;
+
+    padding: 10px 11px;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    background: white;
+
+    outline: none;
+
+    font-size: .82rem;
+}
+
+.envios-field select:focus,
+.envios-field input:focus {
+    border-color: #2563eb;
+}
+
+.envios-field select:disabled {
+    background: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.envios-modal-location {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 13px 14px;
+    margin-bottom: 18px;
+
+    border-radius: 9px;
+
+    background: #f9fafb;
+}
+
+.envios-modal-location i {
+    color: #2563eb;
+}
+
+.envios-modal-location span {
+    display: block;
+
+    color: #9ca3af;
+    font-size: .68rem;
+}
+
+.envios-modal-location strong {
+    color: #111827;
+    font-size: .85rem;
+}
+
+.envios-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    margin-top: 20px;
+}
+
+.envios-modal-error {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 10px 12px;
+    margin-bottom: 16px;
+
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    background: #fef2f2;
+    color: #991b1b;
+
+    font-size: .75rem;
+}
+
+
+/* ==========================================
+   LOADING
+   ========================================== */
+
+.envios-loading {
+    min-height: 60vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    color: #6b7280;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1000px) {
+
+    .envios-summary {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .envios-method-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .envios-page {
+        padding:
+            22px 12px 40px;
+    }
+
+    .envios-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .envios-store-card {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .envios-store-card select {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .envios-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .envios-card-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .envios-card-header
+    .envios-btn-primary {
+        width: 100%;
+    }
+
+    .envios-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .envios-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .envios-modal-actions button {
+        width: 100%;
+    }
+}
