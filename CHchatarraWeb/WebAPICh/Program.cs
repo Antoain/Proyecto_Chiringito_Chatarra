@@ -56,6 +56,7 @@ builder.Services.AddScoped<FavoritosDAO>();
 builder.Services.AddScoped<CarritoDAO>();
 builder.Services.AddScoped<RenseniaProductoDAO>();
 builder.Services.AddScoped<PedidoDAO>();
+builder.Services.AddScoped<PromocionDAO>();
 
 
 // ==========================================

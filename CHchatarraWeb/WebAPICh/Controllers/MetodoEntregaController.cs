@@ -360,5 +360,64 @@ namespace WebAPICh.Controllers
 
             return NoContent();
         }
+
+
+        // ==========================================
+        // MÉTODOS ACTIVOS DE UNA TIENDA - PÚBLICO
+        // ==========================================
+
+        [AllowAnonymous]
+        [HttpGet("Tienda/{idTienda}")]
+        public async Task<IActionResult>
+            ObtenerActivosPorTienda(
+                int idTienda)
+        {
+            if (idTienda <= 0)
+            {
+                return BadRequest(new
+                {
+                    mensaje =
+                        "El identificador de la tienda no es válido."
+                });
+            }
+
+
+            var metodos =
+                await _metodoEntregaDAO
+                    .ObtenerActivosPorTiendaAsync(
+                        idTienda
+                    );
+
+
+            var resultado =
+                metodos.Select(m => new
+                {
+                    m.IdMetodoEntrega,
+
+                    m.IdTienda,
+
+                    m.TipoMetodo,
+
+                    Nombre =
+                        m.TipoMetodo switch
+                        {
+                            "TIENDA" =>
+                                "Entrega por la tienda",
+
+                            "ALIADO" =>
+                                "Entrega por aliado",
+
+                            "RECOGER_TIENDA" =>
+                                "Recoger en tienda",
+
+                            _ =>
+                                m.TipoMetodo
+                        }
+                })
+                .ToList();
+
+
+            return Ok(resultado);
+        }
     }
 }

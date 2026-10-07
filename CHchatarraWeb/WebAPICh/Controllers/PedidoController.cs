@@ -14,17 +14,22 @@ namespace WebAPICh.Controllers
         private readonly PedidoDAO _pedidoDAO;
         private readonly CoberturaTiendaDAO _coberturaDAO;
         private readonly MetodoEntregaTiendaDAO _metodoEntregaDAO;
+        private readonly PromocionDAO _promocionDAO;
 
         public PedidoController(
             PedidoDAO pedidoDAO,
             CoberturaTiendaDAO coberturaDAO,
-            MetodoEntregaTiendaDAO metodoEntregaDAO)
+            MetodoEntregaTiendaDAO metodoEntregaDAO,
+            PromocionDAO promocionDAO)
         {
             _pedidoDAO = pedidoDAO;
-            _coberturaDAO = coberturaDAO;
-            _metodoEntregaDAO = metodoEntregaDAO;
-        }
 
+            _coberturaDAO = coberturaDAO;
+
+            _metodoEntregaDAO = metodoEntregaDAO;
+
+            _promocionDAO = promocionDAO;
+        }
 
         // ==========================================
         // CHECKOUT
@@ -374,13 +379,93 @@ namespace WebAPICh.Controllers
 
 
             // ==========================================
-            // 6.3 CALCULAR TOTAL GENERAL
+            // 6.3 OBTENER PROMOCIONES ACTIVAS
+            // ==========================================
+
+            var descuentosPorProducto =
+            new Dictionary<int, decimal>();
+
+
+            foreach (
+                var idProducto in
+                carrito
+                    .Where(item =>
+                        item.IdProducto.HasValue
+                    )
+                    .Select(item =>
+                        item.IdProducto!.Value
+                    )
+                    .Distinct()
+            )
+            {
+                var promocion =
+                    await _promocionDAO
+                        .ObtenerPromocionActivaProductoAsync(
+                            idProducto
+                        );
+
+
+                decimal descuento =
+                    promocion?.Descuento ??
+                    0m;
+
+
+                descuentosPorProducto[
+                    idProducto
+                ] = descuento;
+            }
+
+
+            // ==========================================
+            // 6.4 FUNCIÓN DE PRECIO FINAL
+            // ==========================================
+
+            decimal CalcularPrecioFinal(
+                Producto producto)
+            {
+                decimal descuento =
+                    descuentosPorProducto
+                        .GetValueOrDefault(
+                            producto.IdProducto,
+                            0m
+                        );
+
+
+                if (descuento <= 0)
+                {
+                    return producto.Precio;
+                }
+
+
+                return Math.Round(
+                    producto.Precio *
+                    (
+                        1m -
+                        descuento /
+                        100m
+                    ),
+                    2
+                );
+            }
+
+
+            // ==========================================
+            // 6.5 CALCULAR TOTAL GENERAL
             // ==========================================
 
             decimal subtotalPedido =
                 carrito.Sum(item =>
-                    item.IdProductoNavigation!.Precio *
+                    CalcularPrecioFinal(
+                        item.IdProductoNavigation!
+                    ) *
                     item.Cantidad
+                );
+
+
+            subtotalPedido =
+                Math.Round(
+                    subtotalPedido,
+                    2
                 );
 
 
@@ -390,8 +475,11 @@ namespace WebAPICh.Controllers
 
 
             decimal totalPedido =
-                subtotalPedido +
-                costoEnvioPedido;
+                Math.Round(
+                    subtotalPedido +
+                    costoEnvioPedido,
+                    2
+                );
 
 
             // ==========================================
@@ -460,8 +548,17 @@ namespace WebAPICh.Controllers
 
                     decimal subtotalSubPedido =
                         grupo.Sum(item =>
-                            item.IdProductoNavigation!.Precio *
+                            CalcularPrecioFinal(
+                                item.IdProductoNavigation!
+                            ) *
                             item.Cantidad
+                        );
+
+
+                    subtotalSubPedido =
+                        Math.Round(
+                            subtotalSubPedido,
+                            2
                         );
 
 
@@ -586,12 +683,25 @@ namespace WebAPICh.Controllers
 
 
                         decimal descuento =
-                            0m;
+                            descuentosPorProducto
+                                .GetValueOrDefault(
+                                    producto.IdProducto,
+                                    0m
+                                );
+
+
+                        decimal precioFinalUnitario =
+                            CalcularPrecioFinal(
+                                producto
+                            );
 
 
                         decimal subtotalDetalle =
-                            precioUnitario *
-                            item.Cantidad;
+                            Math.Round(
+                                precioFinalUnitario *
+                                item.Cantidad,
+                                2
+                            );
 
 
                         var detalle =
