@@ -1,20 +1,816 @@
-/* Estilos  para el modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
+
+/* =====================================================
+   CHIRINGUITO CHATARRA — MODAL CHECKOUT
+   Prefijo: cmv-
+   ===================================================== */
+
+.cmv-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.68);
+  backdrop-filter: blur(5px);
 }
-.modal-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 4px;
-    width: 90%;
-    max-width: 500px;
+
+.cmv-modal {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 780px;
+  max-height: min(92vh, 940px);
+  max-height: min(92dvh, 940px);
+
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #fff;
+
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.26);
+}
+
+.cmv-modal:focus {
+  outline: none;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.cmv-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+
+  flex: 0 0 auto;
+  padding: 24px 27px 21px;
+
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cmv-header-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 49px;
+  height: 49px;
+  flex: 0 0 49px;
+
+  border-radius: 13px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 1.45rem;
+}
+
+.cmv-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.cmv-header-text > span {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #2563eb;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.cmv-header h2 {
+  margin: 0 0 6px;
+  color: #111827;
+  font-size: 1.38rem;
+  font-weight: 800;
+}
+
+.cmv-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.77rem;
+  line-height: 1.5;
+}
+
+.cmv-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 33px;
+  height: 33px;
+
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+
+  background: #f3f4f6;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.cmv-close:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.cmv-close:disabled {
+  opacity: 0.4;
+}
+
+/* =====================================================
+   CONTENIDO Y SCROLL
+   ===================================================== */
+
+.cmv-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.cmv-body {
+  flex: 1;
+  min-height: 0;
+
+  padding: 25px 27px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cmv-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cmv-body::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+.cmv-body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #cbd5e1;
+}
+
+/* =====================================================
+   SECCIONES
+   ===================================================== */
+
+.cmv-section {
+  padding-bottom: 27px;
+  margin-bottom: 27px;
+  border-bottom: 1px solid #edf0f3;
+}
+
+.cmv-section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 20px;
+}
+
+.cmv-step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+
+  font-size: 0.73rem;
+  font-weight: 800;
+}
+
+.cmv-section-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin: 2px 0 5px;
+  color: #111827;
+
+  font-size: 0.97rem;
+  font-weight: 800;
+}
+
+.cmv-section-heading h3 i {
+  color: #2563eb;
+}
+
+.cmv-section-heading p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+/* =====================================================
+   CAMPOS
+   ===================================================== */
+
+.cmv-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.cmv-field {
+  min-width: 0;
+}
+
+.cmv-field-full {
+  grid-column: 1 / -1;
+}
+
+.cmv-field label {
+  display: block;
+  margin-bottom: 8px;
+
+  color: #334155;
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.cmv-field input,
+.cmv-field select,
+.cmv-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+
+  padding: 11px 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+
+  background: #fff;
+  color: #111827;
+
+  font-family: inherit;
+  font-size: 0.78rem;
+  line-height: 1.5;
+
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cmv-field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.cmv-field input:focus,
+.cmv-field select:focus,
+.cmv-field textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+.cmv-field input:disabled,
+.cmv-field select:disabled,
+.cmv-field textarea:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.cmv-field input::placeholder,
+.cmv-field textarea::placeholder {
+  color: #9ca3af;
+}
+
+.cmv-field small {
+  display: block;
+  margin-top: 7px;
+  color: #94a3b8;
+  font-size: 0.68rem;
+}
+
+/* =====================================================
+   MENSAJES
+   ===================================================== */
+
+.cmv-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+
+  padding: 13px 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.cmv-alert > span {
+  flex: 1;
+}
+
+.cmv-alert > button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.cmv-alert-error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+.cmv-alert-warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.cmv-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px;
+  border-radius: 10px;
+
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.76rem;
+}
+
+/* =====================================================
+   TIENDAS
+   ===================================================== */
+
+.cmv-shops {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cmv-shop {
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 13px;
+  background: #fbfcfe;
+}
+
+.cmv-shop-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-bottom: 15px;
+}
+
+.cmv-shop-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+
+  border-radius: 10px;
+  background: #e0e7ff;
+  color: #4338ca;
+  font-size: 1.15rem;
+}
+
+.cmv-shop-heading strong {
+  display: block;
+  color: #111827;
+  font-size: 0.81rem;
+}
+
+.cmv-shop-heading small {
+  display: block;
+  margin-top: 4px;
+  color: #94a3b8;
+  font-size: 0.69rem;
+}
+
+.cmv-shop-empty {
+  padding: 12px;
+  border: 1px solid #fecaca;
+  border-radius: 9px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: 0.73rem;
+  line-height: 1.55;
+}
+
+/* =====================================================
+   OPCIONES DE ENTREGA
+   ===================================================== */
+
+.cmv-methods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cmv-method {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  min-width: 0;
+  min-height: 80px;
+  padding: 12px;
+
+  border: 1px solid #dbe1e8;
+  border-radius: 11px;
+
+  background: #fff;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cmv-method:hover {
+  border-color: #93c5fd;
+}
+
+.cmv-method-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+.cmv-method input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.cmv-method:focus-within {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.cmv-method-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 1rem;
+}
+
+.cmv-method-active .cmv-method-icon {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.cmv-method-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cmv-method-info strong {
+  display: block;
+  margin-bottom: 5px;
+
+  color: #1f2937;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.cmv-method-info small {
+  display: block;
+  color: #64748b;
+  font-size: 0.66rem;
+  line-height: 1.4;
+}
+
+.cmv-method-check {
+  color: #cbd5e1;
+  font-size: 0.88rem;
+}
+
+.cmv-method-active .cmv-method-check {
+  color: #2563eb;
+}
+
+/* =====================================================
+   MÉTODOS DE PAGO
+   ===================================================== */
+
+.cmv-payment-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.cmv-payment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 15px;
+  border: 1px solid #dbe1e8;
+  border-radius: 11px;
+  background: #fff;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cmv-payment-active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 1px #2563eb;
+}
+
+.cmv-payment input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.cmv-payment:focus-within {
+  outline: 2px solid #60a5fa;
+  outline-offset: 2px;
+}
+
+.cmv-payment > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 37px;
+  width: 37px;
+  height: 37px;
+
+  border-radius: 9px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 1.1rem;
+}
+
+.cmv-payment-active > i {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.cmv-payment span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cmv-payment strong {
+  color: #1f2937;
+  font-size: 0.79rem;
+}
+
+.cmv-payment small {
+  color: #64748b;
+  font-size: 0.68rem;
+}
+
+/* =====================================================
+   RESUMEN DEL PEDIDO
+   ===================================================== */
+
+.cmv-summary {
+  padding: 21px;
+  border: 1px solid #dbeafe;
+  border-radius: 13px;
+  background: #f8fbff;
+}
+
+.cmv-summary-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+
+  border-bottom: 1px solid #dbeafe;
+}
+
+.cmv-summary-title i {
+  color: #2563eb;
+  font-size: 1.15rem;
+}
+
+.cmv-summary-title strong {
+  color: #111827;
+  font-size: 0.87rem;
+}
+
+.cmv-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 13px;
+  color: #64748b;
+  font-size: 0.76rem;
+}
+
+.cmv-summary-row strong {
+  color: #334155;
+  font-size: 0.78rem;
+}
+
+.cmv-summary-row > span:last-child {
+  text-align: right;
+}
+
+.cmv-summary-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+
+  margin: 17px 0 0;
+  padding-top: 14px;
+
+  border-top: 1px solid #dbeafe;
+  color: #64748b;
+
+  font-size: 0.69rem;
+  line-height: 1.65;
+}
+
+.cmv-summary-note i {
+  color: #2563eb;
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.cmv-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+
+  flex: 0 0 auto;
+  padding: 18px 27px;
+
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.cmv-cancel,
+.cmv-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 45px;
+  padding: 12px 18px;
+  border-radius: 10px;
+
+  font-size: 0.77rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cmv-cancel {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #475569;
+}
+
+.cmv-cancel:hover:not(:disabled) {
+  background: #f8fafc;
+}
+
+.cmv-submit {
+  min-width: 215px;
+  border: 1px solid #166534;
+  background: #166534;
+  color: #fff;
+}
+
+.cmv-submit:hover:not(:disabled) {
+  background: #14532d;
+}
+
+.cmv-submit:disabled {
+  border-color: #9ca3af;
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cmv-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 700px) {
+  .cmv-overlay {
+    padding: 10px;
+  }
+
+  .cmv-modal {
+    max-height: 96vh;
+    max-height: 96dvh;
+    border-radius: 13px;
+  }
+
+  .cmv-header {
+    gap: 11px;
+    padding: 18px;
+  }
+
+  .cmv-header-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    font-size: 1.2rem;
+  }
+
+  .cmv-header h2 {
+    font-size: 1.17rem;
+  }
+
+  .cmv-body {
+    padding: 19px;
+  }
+
+  .cmv-methods {
+    grid-template-columns: 1fr;
+  }
+
+  .cmv-footer {
+    padding: 15px 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cmv-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .cmv-field-full {
+    grid-column: auto;
+  }
+
+  .cmv-payment-options {
+    grid-template-columns: 1fr;
+  }
+
+  .cmv-section-heading h3 {
+    font-size: 0.88rem;
+  }
+
+  .cmv-summary {
+    padding: 16px;
+  }
+
+  .cmv-footer {
+    flex-direction: column-reverse;
+  }
+
+  .cmv-cancel,
+  .cmv-submit {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmv-modal *,
+  .cmv-modal *::before,
+  .cmv-modal *::after {
+    transition: none !important;
+  }
 }

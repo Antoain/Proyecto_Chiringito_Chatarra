@@ -1,26 +1,893 @@
-/* Clase para envolver secciones con borde */
-.mi-borde {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+/* =====================================================
+   CHIRINGUITO CHATARRA — DETALLE DE PRODUCTO
+   ===================================================== */
+
+.cpd-pagina {
+  min-height: 100vh;
+  padding: 26px 20px 76px;
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+.cpd-contenedor {
+  max-width: 1450px;
+  margin: auto;
+}
+
+/* NAVEGACIÓN */
+
+.cpd-migas {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 23px;
+  color: #6b7280;
+  font-size: .77rem;
+}
+
+.cpd-migas a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.cpd-migas > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cpd-migas > .bi {
+  font-size: .65rem;
+  color: #9ca3af;
+}
+
+/* DISTRIBUCIÓN PRINCIPAL */
+
+.cpd-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.07fr)
+    minmax(0, 1.1fr)
+    minmax(260px, .75fr);
+  align-items: start;
+  gap: 19px;
+}
+
+.cpd-panel {
+  min-width: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 5px 20px rgba(15, 23, 42, .035);
+}
+
+/* IMAGEN PRINCIPAL */
+
+.cpd-galeria {
+  overflow: hidden;
+}
+
+.cpd-imagen-principal {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 390px;
+  aspect-ratio: 1 / 1;
+  background: #f8fafc;
+  overflow: hidden;
+}
+
+.cpd-foto-producto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 590px;
+  object-fit: contain;
+}
+
+.cpd-imagen-vacia {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 230px;
+  height: 100%;
+  color: #94a3b8;
+  font-size: .79rem;
+}
+
+.cpd-imagen-vacia .bi {
+  font-size: 3rem;
+}
+
+.cpd-imagen-principal .cpd-imagen-vacia {
+  position: absolute;
+  inset: 0;
+}
+
+.cpd-badge-descuento,
+.cpd-badge-agotado {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: #fff;
+  font-weight: 800;
+  font-size: .77rem;
+}
+
+.cpd-badge-descuento {
+  background: #dc2626;
+}
+
+.cpd-badge-agotado {
+  top: auto;
+  bottom: 15px;
+  background: #374151;
+}
+
+.cpd-galeria-pie {
+  padding: 13px 18px;
+  color: #94a3b8;
+  font-size: .72rem;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+/* INFORMACIÓN DEL PRODUCTO */
+
+.cpd-informacion {
+  padding: 27px;
+}
+
+.cpd-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+  color: #2563eb;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: 1.25px;
+}
+
+.cpd-informacion h1 {
+  margin: 0 0 9px;
+  font-size: clamp(1.4rem, 2.15vw, 2.05rem);
+  font-weight: 800;
+  line-height: 1.26;
+  color: #111827;
+}
+
+.cpd-sku {
+  color: #94a3b8;
+  font-size: .69rem;
+}
+
+/* CALIFICACIÓN */
+
+.cpd-rating-resumen {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 19px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  font-size: .74rem;
+}
+
+.cpd-rating-resumen strong {
+  color: #111827;
+}
+
+.cpd-estrellas {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #cbd5e1;
+  font-size: .94rem;
+}
+
+.cpd-estrella-activa {
+  color: #f59e0b !important;
+}
+
+.cpd-estrellas-editables {
+  gap: 7px;
+  margin-bottom: 21px;
+}
+
+.cpd-estrellas-editables button {
+  border: 0;
+  padding: 4px;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 1.65rem;
+  cursor: pointer;
+}
+
+.cpd-estrellas-editables button:focus-visible {
+  outline: 2px solid #2563eb;
+  border-radius: 5px;
+}
+
+/* PRECIOS */
+
+.cpd-precios {
+  margin: 22px 0;
+  padding: 20px 0;
+  border-top: 1px solid #edf0f3;
+  border-bottom: 1px solid #edf0f3;
+}
+
+.cpd-precio-anterior {
+  display: block;
+  color: #94a3b8;
+  font-size: .9rem;
+  text-decoration: line-through;
+}
+
+.cpd-precio-linea {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 13px;
+}
+
+.cpd-precio-actual {
+  color: #166534;
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  font-weight: 850;
+  line-height: 1.4;
+}
+
+.cpd-ahorro {
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: .72rem;
+  font-weight: 750;
+}
+
+.cpd-promocion-titulo {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: .76rem;
+}
+
+/* STOCK */
+
+.cpd-disponibilidad {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 20px;
+  font-size: .79rem;
+  color: #15803d;
+}
+
+.cpd-disponibilidad span {
+  color: #64748b;
+  margin-left: 4px;
+}
+
+/* BOTONES */
+
+.cpd-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.cpd-boton-primario {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  min-height: 47px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.cpd-acciones .cpd-boton-primario {
+  flex: 1;
+}
+
+.cpd-boton-primario:hover:not(:disabled) {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.cpd-boton-primario:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.cpd-boton-favorito {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+  width: 48px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  color: #64748b;
+  font-size: 1.14rem;
+  cursor: pointer;
+}
+
+.cpd-boton-favorito.cpd-guardado,
+.cpd-boton-favorito:hover {
+  border-color: #fecdd3;
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.cpd-boton-favorito:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+/* DESCRIPCIÓN */
+
+.cpd-descripcion {
+  margin-top: 25px;
+  padding-top: 19px;
+  border-top: 1px solid #edf0f3;
+}
+
+.cpd-descripcion h2 {
+  margin: 0 0 11px;
+  font-size: .99rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.cpd-descripcion p {
+  margin: 0;
+  color: #64748b;
+  font-size: .81rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* CONFIANZA */
+
+.cpd-confianza {
+  display: flex;
+  gap: 8px;
+  align-items: start;
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #475569;
+  font-size: .7rem;
+  line-height: 1.55;
+}
+
+.cpd-confianza i {
+  color: #2563eb;
+}
+
+/* MENSAJES */
+
+.cpd-aviso {
+  display: flex;
+  gap: 9px;
+  align-items: start;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 9px;
+  font-size: .77rem;
+  line-height: 1.5;
+}
+
+.cpd-aviso > span {
+  flex: 1;
+}
+
+.cpd-aviso > button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.cpd-aviso-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.cpd-aviso-exito {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* =====================================================
+   TARJETA DE TIENDA
+   ===================================================== */
+
+.cpd-tienda {
+  padding: 22px;
+}
+
+.cpd-tienda-encabezado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cpd-tienda-encabezado > .bi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 1.2rem;
+}
+
+.cpd-tienda-encabezado span {
+  color: #9ca3af;
+  font-size: .6rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.cpd-tienda-encabezado h2 {
+  margin: 4px 0 0;
+  color: #111827;
+  font-size: .89rem;
+  font-weight: 800;
+}
+
+.cpd-tienda-imagen {
+  height: 145px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+}
+
+.cpd-foto-tienda {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cpd-tienda-imagen .cpd-imagen-vacia {
+  min-height: 0;
+}
+
+.cpd-tienda-imagen .cpd-imagen-vacia .bi {
+  font-size: 2rem;
+}
+
+.cpd-tienda h3 {
+  margin: 18px 0 5px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #111827;
+}
+
+.cpd-tienda-eslogan {
+  color: #64748b;
+  font-size: .74rem;
+  margin-bottom: 15px;
+}
+
+.cpd-datos-tienda {
+  margin: 18px 0 0;
+}
+
+.cpd-datos-tienda > div {
+  padding: 12px 0;
+  border-top: 1px solid #f1f5f9;
+}
+
+.cpd-datos-tienda dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: .72rem;
+  font-weight: 600;
+}
+
+.cpd-datos-tienda dd {
+  margin: 6px 0 0 23px;
+  color: #334155;
+  font-size: .75rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.cpd-enlaces-tienda {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-top: 9px;
+}
+
+.cpd-enlaces-tienda a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  font-size: .71rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cpd-tienda-nota {
+  display: flex;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 12px;
+  border-radius: 9px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: .68rem;
+  line-height: 1.6;
+}
+
+.cpd-tienda-nota .bi {
+  color: #2563eb;
+}
+
+/* =====================================================
+   RESEÑAS
+   ===================================================== */
+
+.cpd-resenas-seccion {
+  margin-top: 35px;
+  scroll-margin-top: 100px;
+}
+
+.cpd-resenas-titulo {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.cpd-resenas-titulo h2 {
+  margin: 0 0 6px;
+  font-size: 1.4rem;
+  color: #111827;
+  font-weight: 800;
+}
+
+.cpd-resenas-titulo p {
+  margin: 0;
+  color: #64748b;
+  font-size: .8rem;
+}
+
+.cpd-promedio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.cpd-promedio > strong {
+  font-size: 2rem;
+  color: #111827;
+}
+
+.cpd-promedio small {
+  color: #64748b;
+  font-size: .7rem;
+}
+
+.cpd-resenas-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(310px, .85fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.cpd-lista-resenas,
+.cpd-formulario-resena {
+  padding: 25px;
+}
+
+.cpd-lista-resenas > h3,
+.cpd-formulario-resena > h3 {
+  margin: 0 0 20px;
+  color: #111827;
+  font-size: 1.07rem;
+  font-weight: 800;
+}
+
+.cpd-resena-item {
+  padding: 19px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cpd-resena-item:last-child {
+  border-bottom: 0;
+}
+
+.cpd-resena-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.cpd-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 50%;
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.cpd-resena-autor {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  font-size: .79rem;
+}
+
+.cpd-resena-autor .cpd-estrellas {
+  font-size: .73rem;
+}
+
+.cpd-resena-nota {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: .67rem;
+  font-weight: 800;
+}
+
+.cpd-resena-item > p {
+  margin: 13px 0 0 51px;
+  color: #475569;
+  font-size: .8rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* SIN RESEÑAS */
+
+.cpd-sin-resenas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 50px 20px;
+  text-align: center;
+  color: #64748b;
+  font-size: .8rem;
+}
+
+.cpd-sin-resenas > .bi {
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.cpd-sin-resenas strong {
+  color: #374151;
+}
+
+.cpd-sin-resenas p {
+  margin: 0;
+}
+
+/* FORMULARIO DE RESEÑA */
+
+.cpd-formulario-icono {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 45px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 1.2rem;
+}
+
+.cpd-requisito {
+  margin: -5px 0 23px;
+  color: #64748b;
+  font-size: .75rem;
+  line-height: 1.65;
+}
+
+.cpd-label {
+  display: block;
+  margin: 0 0 9px;
+  font-size: .76rem;
+  color: #374151;
+  font-weight: 800;
+}
+
+.cpd-formulario-resena textarea {
+  display: block;
+  resize: vertical;
+  width: 100%;
+  min-height: 120px;
+  padding: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  outline: 0;
+  color: #111827;
+  font-size: .79rem;
+  line-height: 1.6;
+}
+
+.cpd-formulario-resena textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .09);
+}
+
+.cpd-contador {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0 19px;
+  color: #94a3b8;
+  font-size: .68rem;
+}
+
+.cpd-cerca-limite {
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.cpd-formulario-resena .cpd-boton-primario {
+  width: 100%;
+}
+
+/* ESTADOS DE CARGA Y ERROR */
+
+.cpd-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  min-height: 370px;
+  text-align: center;
+}
+
+.cpd-estado > .bi {
+  font-size: 2.7rem;
+  color: #94a3b8;
+}
+
+.cpd-estado h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #111827;
+}
+
+.cpd-estado p {
+  margin: 0 0 9px;
+  color: #64748b;
+  font-size: .82rem;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1200px) {
+  .cpd-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1.1fr);
   }
-  
-  /* Clase para cada reseña individual, con línea divisoria excepto la última */
-  .resena-item:not(:last-child) {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+
+  .cpd-tienda {
+    grid-column: 1 / -1;
   }
-  
-  /* Opcional: estilos para el contenedor de reseñas */
-  .resenas-contenedor {
-    /* Aquí puedes personalizar más, por ejemplo: */
-    padding: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 16px;
+
+  .cpd-tienda-imagen {
+    max-width: 420px;
   }
-  
+}
+
+@media (max-width: 820px) {
+  .cpd-grid,
+  .cpd-resenas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cpd-tienda {
+    grid-column: auto;
+  }
+
+  .cpd-imagen-principal {
+    min-height: 300px;
+    max-height: 520px;
+  }
+
+  .cpd-resenas-titulo {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .cpd-tienda-imagen {
+    max-width: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .cpd-pagina {
+    padding: 17px 12px 45px;
+  }
+
+  .cpd-informacion,
+  .cpd-tienda,
+  .cpd-lista-resenas,
+  .cpd-formulario-resena {
+    padding: 19px;
+  }
+
+  .cpd-imagen-principal {
+    min-height: 250px;
+  }
+
+  .cpd-precio-actual {
+    font-size: 1.85rem;
+  }
+
+  .cpd-resenas-titulo h2 {
+    font-size: 1.2rem;
+  }
+
+  .cpd-resena-item > p {
+    margin-left: 0;
+  }
+
+  .cpd-promedio {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cpd-pagina * {
+    scroll-behavior: auto !important;
+  }
+}

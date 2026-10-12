@@ -1,7 +1,6 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   obtenerCarritoPorUsuario,
@@ -15,1131 +14,910 @@ import {
 } from "../../services/data";
 
 import ModalProcesarVenta from "./ModalProcesarVenta";
-
 import "./ClientePagesCss/ClienteCarrito.css";
 
+const dinero = valor =>
+  `$${Number(valor || 0).toFixed(2)}`;
+
+const normalizarFavoritos = data =>
+  (Array.isArray(data) ? data : []).map(fav => ({
+    idProducto: fav.idProducto ?? fav.IdProducto,
+    idFavorito: fav.idFavorito ?? fav.IdFavorito
+  }));
+
+function ImagenProducto({ producto }) {
+  const [fallo, setFallo] = useState(false);
+
+  useEffect(() => {
+    setFallo(false);
+  }, [producto?.rutaImagen]);
+
+  if (!producto?.rutaImagen || fallo) {
+    return (
+      <div className="cc-imagen-placeholder">
+        <i className="bi bi-image"></i>
+        <span>Sin imagen</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={producto.rutaImagen}
+      alt={producto.nombre || "Producto"}
+      className="carrito-img"
+      loading="lazy"
+      onError={() => setFallo(true)}
+    />
+  );
+}
 
 export function ClienteCarrito() {
+  const [carrito, setCarrito] = useState([]);
+  const [promociones, setPromociones] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
+
+  const [procesandoItems, setProcesandoItems] = useState([]);
+  const [procesandoCheckout, setProcesandoCheckout] = useState(false);
+  const [mostrarModal, setMostrarModal] = useState(false);
+
+  const idUsuario = localStorage.getItem("idUsuario");
 
   // =====================================================
-  // ESTADOS
+  // NOTIFICACIONES
   // =====================================================
 
-  const [
-    promociones,
-    setPromociones
-  ] = useState([]);
-
-  const [
-    carrito,
-    setCarrito
-  ] = useState([]);
-
-  const [
-    total,
-    setTotal
-  ] = useState(0);
-
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
-
-  const [
-    error,
-    setError
-  ] = useState("");
-
-  const [
-    mensaje,
-    setMensaje
-  ] = useState("");
-
-  const [
-    favoritos,
-    setFavoritos
-  ] = useState([]);
-
-  const [
-    mostrarModal,
-    setMostrarModal
-  ] = useState(false);
-
-
-  const idUsuario =
-    localStorage.getItem(
-      "idUsuario"
-    );
-
-
-  // =====================================================
-  // MENSAJE TEMPORAL
-  // =====================================================
-
-  const mostrarMensajeTemporal = (
-    texto,
-    tiempo = 3000
-  ) => {
-
-    setMensaje(texto);
-
-
-    setTimeout(
-      () => setMensaje(""),
-      tiempo
-    );
+  const notificar = (texto, esError = false) => {
+    if (esError) {
+      setError(texto);
+      setMensaje("");
+    } else {
+      setMensaje(texto);
+      setError("");
+    }
   };
 
+  const avisarCambioCarrito = () => {
+    window.dispatchEvent(new Event("carritoActualizado"));
+  };
 
   // =====================================================
-  // CARGAR CARRITO + PROMOCIONES
+  // CARGA INICIAL
   // =====================================================
 
   useEffect(() => {
+    let activo = true;
 
-    async function fetchCarrito() {
+    const cargar = async () => {
+      setLoading(true);
+      setError("");
 
       try {
+        const dataCarrito = await obtenerCarritoPorUsuario();
 
-        const [
-          data,
-          dataPromociones
-        ] = await Promise.all([
-          obtenerCarritoPorUsuario(),
-          obtenerPromocionesActivas()
-        ]);
-
-
-        setCarrito(
-          Array.isArray(data)
-            ? data
-            : []
-        );
-
-
-        setPromociones(
-          Array.isArray(dataPromociones)
-            ? dataPromociones
-            : []
-        );
-
-      } catch (err) {
-
-        console.error(
-          "Error al obtener el carrito:",
-          err
-        );
-
-
-        setError(
-          "Error al cargar el carrito."
-        );
-
-      } finally {
-
-        setLoading(false);
-      }
-    }
-
-
-    fetchCarrito();
-
-  }, [idUsuario]);
-
-
-  // =====================================================
-  // PROMOCIONES
-  // =====================================================
-
-  const obtenerPromocion =
-    idProducto => {
-
-      return promociones.find(
-        promocion =>
-          Number(
-            promocion.idProducto
-          ) ===
-          Number(
-            idProducto
-          )
-      ) || null;
-    };
-
-
-  const obtenerPrecioProducto =
-    item => {
-
-      const promocion =
-        obtenerPromocion(
-          item.idProducto
-        );
-
-
-      if (promocion) {
-
-        return Number(
-          promocion.precioFinal || 0
-        );
-      }
-
-
-      return Number(
-        item
-          ?.idProductoNavigation
-          ?.precio || 0
-      );
-    };
-
-
-  // =====================================================
-  // CALCULAR TOTAL
-  // =====================================================
-
-  useEffect(() => {
-
-    const totalCalculado =
-      carrito.reduce(
-        (
-          sum,
-          item
-        ) => {
-
-          const precio =
-            obtenerPrecioProducto(
-              item
-            );
-
-
-          const cantidad =
-            Number(
-              item.cantidad || 1
-            );
-
-
-          return (
-            sum +
-            precio *
-            cantidad
+        if (activo) {
+          setCarrito(
+            Array.isArray(dataCarrito) ? dataCarrito : []
           );
-        },
-        0
-      );
-
-
-    setTotal(
-      totalCalculado
-    );
-
-  }, [
-    carrito,
-    promociones
-  ]);
-
-
-  // =====================================================
-  // CARGAR FAVORITOS
-  // =====================================================
-
-  useEffect(() => {
-
-    async function fetchFavoritos() {
-
-      try {
-
-        if (!idUsuario) {
-          return;
         }
 
+        // Los datos complementarios no deben romper
+        // la página principal si fallan.
+        const [resultadoPromociones, resultadoFavoritos] =
+          await Promise.allSettled([
+            obtenerPromocionesActivas(),
+            obtenerFavoritosPorCliente()
+          ]);
 
-        const favData =
-          await obtenerFavoritosPorCliente();
+        if (!activo) return;
 
+        if (resultadoPromociones.status === "fulfilled") {
+          setPromociones(
+            Array.isArray(resultadoPromociones.value)
+              ? resultadoPromociones.value
+              : []
+          );
+        }
 
-        setFavoritos(
-          favData.map(
-            fav => ({
-
-              IdProducto:
-                fav.idProducto ??
-                fav.IdProducto,
-
-              IdFavorito:
-                fav.idFavorito ??
-                fav.IdFavorito
-            })
-          )
-        );
-
+        if (resultadoFavoritos.status === "fulfilled") {
+          setFavoritos(
+            normalizarFavoritos(resultadoFavoritos.value)
+          );
+        }
       } catch (err) {
+        if (!activo) return;
 
-        console.error(
-          "Error al obtener favoritos:",
-          err
-        );
-      }
-    }
+        console.error("Error cargando carrito:", err);
 
-
-    fetchFavoritos();
-
-  }, [idUsuario]);
-
-
-  // =====================================================
-  // ELIMINAR DEL CARRITO
-  // =====================================================
-
-  const handleEliminarDelCarrito =
-    async idCarrito => {
-
-      try {
-
-        await eliminarDelCarrito(
-          idCarrito
-        );
-
-
-        setCarrito(
-          prev =>
-            prev.filter(
-              item =>
-                item.idCarrito !==
-                idCarrito
-            )
-        );
-
-
-        window.dispatchEvent(
-          new Event(
-            "carritoActualizado"
-          )
-        );
-
-
-        mostrarMensajeTemporal(
-          "Producto eliminado correctamente."
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Error al eliminar producto del carrito:",
-          error
-        );
-
-
-        mostrarMensajeTemporal(
-          "Error al eliminar producto."
-        );
+        if (err.status === 404) {
+          setCarrito([]);
+        } else {
+          setError(
+            err.message || "No se pudo cargar tu carrito."
+          );
+        }
+      } finally {
+        if (activo) setLoading(false);
       }
     };
 
+    cargar();
+
+    return () => {
+      activo = false;
+    };
+  }, [idUsuario]);
+
+  // =====================================================
+  // PRECIOS Y PROMOCIONES
+  // =====================================================
+
+  const promocionesPorProducto = useMemo(() => {
+    const mapa = new Map();
+
+    promociones.forEach(promocion => {
+      mapa.set(Number(promocion.idProducto), promocion);
+    });
+
+    return mapa;
+  }, [promociones]);
+
+  const obtenerPromocion = idProducto =>
+    promocionesPorProducto.get(Number(idProducto)) || null;
+
+  const obtenerPrecio = item => {
+    const promocion = obtenerPromocion(item.idProducto);
+
+    if (promocion) {
+      return Number(promocion.precioFinal ?? 0);
+    }
+
+    return Number(item.idProductoNavigation?.precio ?? 0);
+  };
+
+  const obtenerStock = item => {
+    const producto = item.idProductoNavigation;
+
+    const stock = Number(producto?.stock ?? 0);
+
+    return Number.isFinite(stock)
+      ? Math.max(0, Math.floor(stock))
+      : 0;
+  };
+
+  const resumen = useMemo(() => {
+    let subtotal = 0;
+    let ahorro = 0;
+    let cantidadProductos = 0;
+    let productosSinStock = 0;
+    let cantidadesInvalidas = 0;
+
+    carrito.forEach(item => {
+      const cantidad = Number(item.cantidad || 0);
+      const producto = item.idProductoNavigation;
+
+      const promocion = promocionesPorProducto.get(
+        Number(item.idProducto)
+      );
+
+      const precioOriginal = Number(producto?.precio ?? 0);
+      const precioFinal = promocion
+        ? Number(promocion.precioFinal ?? 0)
+        : precioOriginal;
+
+      const stock = Math.max(
+        0,
+        Number(producto?.stock ?? 0)
+      );
+
+      const cantidadSegura = Math.max(0, cantidad);
+
+      subtotal += precioFinal * cantidadSegura;
+
+      ahorro += Math.max(
+        0,
+        precioOriginal - precioFinal
+      ) * cantidadSegura;
+
+      cantidadProductos += cantidadSegura;
+
+      if (stock <= 0) productosSinStock++;
+
+      if (
+        !Number.isInteger(cantidad) ||
+        cantidad < 1 ||
+        cantidad > stock ||
+        producto?.activo === false
+      ) {
+        cantidadesInvalidas++;
+      }
+    });
+
+    return {
+      subtotal,
+      ahorro,
+      cantidadProductos,
+      productosSinStock,
+      cantidadesInvalidas
+    };
+  }, [carrito, promocionesPorProducto]);
+
+  const puedeComprar =
+    carrito.length > 0 &&
+    resumen.cantidadesInvalidas === 0 &&
+    procesandoItems.length === 0 &&
+    !procesandoCheckout &&
+    !loading;
+
+  // =====================================================
+  // ELIMINAR PRODUCTO
+  // =====================================================
+
+  const handleEliminarDelCarrito = async idCarrito => {
+    if (procesandoItems.includes(idCarrito)) return;
+
+    setProcesandoItems(prev => [...prev, idCarrito]);
+    setError("");
+
+    try {
+      await eliminarDelCarrito(idCarrito);
+
+      setCarrito(prev =>
+        prev.filter(item => item.idCarrito !== idCarrito)
+      );
+
+      avisarCambioCarrito();
+      notificar("Producto eliminado del carrito.");
+    } catch (err) {
+      console.error("Error eliminando producto:", err);
+
+      notificar(
+        err.message || "No se pudo eliminar el producto.",
+        true
+      );
+    } finally {
+      setProcesandoItems(prev =>
+        prev.filter(id => id !== idCarrito)
+      );
+    }
+  };
 
   // =====================================================
   // MODIFICAR CANTIDAD
   // =====================================================
 
-  const handleModificarCantidad =
-    async (
-      idCarrito,
-      nuevaCantidad
-    ) => {
+  const handleModificarCantidad = async (
+    item,
+    nuevaCantidad
+  ) => {
+    const idCarrito = item.idCarrito;
+    const stock = obtenerStock(item);
 
-      if (nuevaCantidad < 1) {
-        return;
+    if (procesandoItems.includes(idCarrito)) return;
+
+    if (
+      !Number.isInteger(nuevaCantidad) ||
+      nuevaCantidad < 1
+    ) {
+      return;
+    }
+
+    if (nuevaCantidad > stock) {
+      notificar(
+        `Solo hay ${stock} unidades disponibles de ${item.idProductoNavigation?.nombre || "este producto"}.`,
+        true
+      );
+      return;
+    }
+
+    setProcesandoItems(prev => [...prev, idCarrito]);
+    setError("");
+
+    try {
+      const respuesta = await actualizarCantidadEnBackend(
+        idCarrito,
+        nuevaCantidad
+      );
+
+      // apiFetch lanza error ante estados HTTP fallidos.
+      // Comprobamos además respuestas que declaren fallo.
+      if (respuesta?.exito === false) {
+        throw new Error(
+          respuesta.mensaje || "No se pudo actualizar."
+        );
       }
 
+      setCarrito(prev =>
+        prev.map(producto =>
+          producto.idCarrito === idCarrito
+            ? { ...producto, cantidad: nuevaCantidad }
+            : producto
+        )
+      );
 
+      avisarCambioCarrito();
+    } catch (err) {
+      console.error("Error modificando cantidad:", err);
+
+      notificar(
+        err.message ||
+          "No se pudo actualizar la cantidad. Comprueba el stock.",
+        true
+      );
+
+      // Volver a consultar por si el stock cambió
+      // mientras se realizaba la operación.
       try {
-
-        const data =
-          await actualizarCantidadEnBackend(
-            idCarrito,
-            nuevaCantidad
-          );
-
-
-        if (
-          !data ||
-          !data.mensaje?.includes(
-            "actualizada correctamente"
-          )
-        ) {
-
-          console.error(
-            "Error en actualización:",
-            data?.mensaje
-          );
-
-          return;
-        }
-
+        const actualizado =
+          await obtenerCarritoPorUsuario();
 
         setCarrito(
-          prev =>
-            prev.map(
-              item =>
-                item.idCarrito ===
-                idCarrito
-                  ? {
-                      ...item,
-
-                      cantidad:
-                        nuevaCantidad
-                    }
-                  : item
-            )
+          Array.isArray(actualizado) ? actualizado : []
         );
-
-
-        window.dispatchEvent(
-          new Event(
-            "carritoActualizado"
-          )
-        );
-
-      } catch (error) {
-
+        avisarCambioCarrito();
+      } catch (errorRecarga) {
         console.error(
-          "Error al modificar la cantidad:",
-          error
+          "No se pudo refrescar el carrito:",
+          errorRecarga
         );
       }
-    };
-
+    } finally {
+      setProcesandoItems(prev =>
+        prev.filter(id => id !== idCarrito)
+      );
+    }
+  };
 
   // =====================================================
   // FAVORITOS
   // =====================================================
 
-  const esFavorito =
-    idProducto => {
+  const esFavorito = idProducto =>
+    favoritos.some(
+      fav =>
+        Number(fav.idProducto) === Number(idProducto)
+    );
 
-      return favoritos.some(
-        fav =>
-          Number(
-            fav.IdProducto
-          ) ===
-          Number(
-            idProducto
-          )
-      );
-    };
+  const toggleFavorito = async idProducto => {
+    const encontrado = favoritos.find(
+      fav =>
+        Number(fav.idProducto) === Number(idProducto)
+    );
 
+    try {
+      setError("");
 
-  const toggleFavorito =
-    async idProducto => {
+      if (encontrado?.idFavorito) {
+        await eliminarFavorito(encontrado.idFavorito);
 
-      try {
-
-        const favoritoExistente =
-          favoritos.find(
+        setFavoritos(prev =>
+          prev.filter(
             fav =>
-              Number(
-                fav.IdProducto
-              ) ===
-              Number(
-                idProducto
-              )
-          );
-
-
-        if (
-          favoritoExistente &&
-          favoritoExistente.IdFavorito
-        ) {
-
-          await eliminarFavorito(
-            favoritoExistente.IdFavorito
-          );
-
-
-          setFavoritos(
-            prev =>
-              prev.filter(
-                fav =>
-                  Number(
-                    fav.IdProducto
-                  ) !==
-                  Number(
-                    idProducto
-                  )
-              )
-          );
-
-        } else {
-
-          await agregarFavorito(
-            idProducto
-          );
-
-
-          const favData =
-            await obtenerFavoritosPorCliente();
-
-
-          setFavoritos(
-            favData.map(
-              fav => ({
-
-                IdProducto:
-                  fav.idProducto ??
-                  fav.IdProducto,
-
-                IdFavorito:
-                  fav.idFavorito ??
-                  fav.IdFavorito
-              })
-            )
-          );
-        }
-
-      } catch (err) {
-
-        console.error(
-          "Error al manejar el favorito:",
-          err
+              Number(fav.idProducto) !== Number(idProducto)
+          )
         );
-      }
-    };
 
+        notificar("Producto eliminado de favoritos.");
+      } else {
+        await agregarFavorito(idProducto);
+
+        const actualizados =
+          await obtenerFavoritosPorCliente();
+
+        setFavoritos(normalizarFavoritos(actualizados));
+        notificar("Producto agregado a favoritos.");
+      }
+    } catch (err) {
+      console.error("Error modificando favoritos:", err);
+
+      notificar(
+        err.message || "No se pudo modificar el favorito.",
+        true
+      );
+    }
+  };
 
   // =====================================================
   // CHECKOUT
   // =====================================================
 
-  const handleConfirmarVenta =
-    async checkout => {
+  const handleConfirmarVenta = async checkout => {
+    if (procesandoCheckout) return;
 
-      try {
+    setProcesandoCheckout(true);
+    setError("");
 
-        const response =
-          await realizarCheckout(
-            checkout
-          );
+    try {
+      const respuesta = await realizarCheckout(checkout);
 
+      setCarrito([]);
+      setMostrarModal(false);
 
-        if (response?.mensaje) {
+      avisarCambioCarrito();
 
-          mostrarMensajeTemporal(
-            response.mensaje
-          );
+      notificar(
+        respuesta?.mensaje ||
+          "¡Tu pedido se realizó correctamente!"
+      );
+    } catch (err) {
+      console.error("Error al realizar checkout:", err);
 
-        } else {
+      notificar(
+        err.message ||
+          "No se pudo completar la compra.",
+        true
+      );
 
-          mostrarMensajeTemporal(
-            "Pedido realizado correctamente."
-          );
-        }
-
-
-        setCarrito([]);
-
-
-        window.dispatchEvent(
-          new Event(
-            "carritoActualizado"
-          )
-        );
-
-
-        setMostrarModal(
-          false
-        );
-
-      } catch (error) {
-
-        console.error(
-          "Error al procesar el pedido:",
-          error
-        );
-
-
-        mostrarMensajeTemporal(
-          error.message ||
-          "Ocurrió un error al procesar el pedido."
-        );
-
-
-        setMostrarModal(
-          false
-        );
-      }
-    };
-
-
-  // =====================================================
-  // LOADING
-  // =====================================================
-
-  if (loading) {
-
-    return (
-
-      <div className="container mt-4">
-
-        <div className="text-center py-5">
-
-          <div className="spinner-border mb-3" />
-
-          <p>
-            Cargando carrito...
-          </p>
-
-        </div>
-
-      </div>
-    );
-  }
-
+      // Permite al modal mostrar el error sin cerrarse.
+      throw err;
+    } finally {
+      setProcesandoCheckout(false);
+    }
+  };
 
   // =====================================================
   // RENDER
   // =====================================================
 
+  if (loading) {
+    return (
+      <div className="cc-page">
+        <div className="cc-loading">
+          <div className="spinner-border text-primary" />
+          <p>Cargando tu carrito...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-
-    <div className="container mt-4">
-
-
-      {error && (
-
-        <div className="alert alert-danger">
-
-          {error}
-
-        </div>
-
-      )}
-
-
-      {mensaje && (
-
-        <div className="alert alert-success">
-
-          {mensaje}
-
-        </div>
-
-      )}
-
-
-      <div className="row">
-
-
-        {/* ================================================= */}
-        {/* PRODUCTOS */}
-        {/* ================================================= */}
-
-        <div className="col-md-8">
-
-          <h2 className="mb-4">
-            Tu Carrito
-          </h2>
-
-
-          {carrito.length === 0 ? (
-
-            <div className="text-center py-5">
-
-              <i
-                className="bi bi-cart-x"
-                style={{
-                  fontSize: "3rem"
-                }}
-              ></i>
-
-
-              <h4 className="mt-3">
-
-                Tu carrito está vacío
-
-              </h4>
-
-
-              <p className="text-muted">
-
-                Agrega productos para comenzar
-                tu compra.
-
-              </p>
-
-            </div>
-
-          ) : (
-
-            carrito.map(
-              item => {
-
-                const promocion =
-                  obtenerPromocion(
-                    item.idProducto
-                  );
-
-
-                const precioFinal =
-                  obtenerPrecioProducto(
-                    item
-                  );
-
-
-                const cantidad =
-                  Number(
-                    item.cantidad || 1
-                  );
-
-
-                const subtotal =
-                  precioFinal *
-                  cantidad;
-
-
-                return (
-
-                  <div
-                    key={
-                      item.idCarrito
-                    }
-                    className="carrito-item"
-                  >
-
-
-                    {/* IMAGEN */}
-
-                    <div className="position-relative">
-
-                      {item
-                        .idProductoNavigation
-                        ?.rutaImagen ? (
-
-                        <img
-                          src={
-                            item
-                              .idProductoNavigation
-                              .rutaImagen
-                          }
-                          alt={
-                            item
-                              .idProductoNavigation
-                              ?.nombre ||
-                            "Producto"
-                          }
-                          className="carrito-img"
-                        />
-
-                      ) : (
-
-                        <div
-                          className="carrito-img d-flex align-items-center justify-content-center bg-light"
-                        >
-
-                          <i
-                            className="bi bi-image text-muted"
-                            style={{
-                              fontSize: "2rem"
-                            }}
-                          ></i>
-
-                        </div>
-
-                      )}
-
-
-                      {promocion && (
-
-                        <span
-                          className="badge bg-danger position-absolute top-0 start-0 m-2"
-                        >
-
-                          -
-                          {
-                            Number(
-                              promocion.descuento || 0
-                            )
-                          }
-                          %
-
-                        </span>
-
-                      )}
-
-                    </div>
-
-
-                    {/* INFO */}
-
-                    <div className="carrito-info">
-
-
-                      <h5>
-
-                        {
-                          item
-                            .idProductoNavigation
-                            ?.nombre
-                        }
-
-                      </h5>
-
-
-                      {/* PRECIO */}
-
-                      <div className="mb-2">
-
-                        <strong>
-                          Precio:
-                        </strong>
-
-                        {" "}
-
-
-                        {promocion ? (
-
-                          <>
-
-                            <span
-                              className="text-muted me-2"
-                              style={{
-                                textDecoration:
-                                  "line-through"
-                              }}
-                            >
-
-                              $
-
-                              {
-                                Number(
-                                  promocion.precioOriginal || 0
-                                ).toFixed(2)
-                              }
-
-                            </span>
-
-
-                            <strong className="text-success">
-
-                              $
-
-                              {
-                                precioFinal.toFixed(2)
-                              }
-
-                            </strong>
-
-
-                            <span className="badge bg-danger ms-2">
-
-                              -
-                              {
-                                Number(
-                                  promocion.descuento || 0
-                                )
-                              }
-                              %
-
-                            </span>
-
-                          </>
-
-                        ) : (
-
-                          <span>
-
-                            $
-
-                            {
-                              precioFinal.toFixed(2)
-                            }
-
-                          </span>
-
-                        )}
-
-                      </div>
-
-
-                      {/* SUBTOTAL */}
-
-                      <p>
-
-                        <strong>
-                          Subtotal:
-                        </strong>
-
-                        {" $"}
-
-                        {
-                          subtotal.toFixed(2)
-                        }
-
-                      </p>
-
-
-                      {/* AHORRO */}
-
-                      {promocion && (
-
-                        <p className="text-success small">
-
-                          <i className="bi bi-tag me-1"></i>
-
-                          Ahorras{" $"}
-
-                          {
-                            (
-                              Number(
-                                promocion.precioOriginal || 0
-                              ) *
-                              cantidad -
-                              subtotal
-                            ).toFixed(2)
-                          }
-
-                        </p>
-
-                      )}
-
-
-                      {/* CANTIDAD */}
-
-                      <div className="carrito-actions mt-2">
-
-
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary btn-sm"
-                          disabled={
-                            item.cantidad <= 1
-                          }
-                          onClick={() =>
-                            handleModificarCantidad(
-                              item.idCarrito,
-
-                              Math.max(
-                                item.cantidad - 1,
-                                1
-                              )
-                            )
-                          }
-                        >
-
-                          -
-
-                        </button>
-
-
-                        <span className="mx-2 fw-bold">
-
-                          {item.cantidad}
-
-                        </span>
-
-
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary btn-sm"
-                          onClick={() =>
-                            handleModificarCantidad(
-                              item.idCarrito,
-                              item.cantidad + 1
-                            )
-                          }
-                        >
-
-                          +
-
-                        </button>
-
-                      </div>
-
-
-                      {/* ACCIONES */}
-
-                      <div className="carrito-actions mt-2">
-
-
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm"
-                          onClick={() =>
-                            handleEliminarDelCarrito(
-                              item.idCarrito
-                            )
-                          }
-                        >
-
-                          Eliminar
-
-                        </button>
-
-
-                        <button
-                          type="button"
-                          className="btn btn-link p-0 ms-3"
-                          aria-label="Favoritos"
-                          title={
-                            esFavorito(
-                              item.idProducto
-                            )
-                              ? "Eliminar de favoritos"
-                              : "Agregar a favoritos"
-                          }
-                          onClick={() =>
-                            toggleFavorito(
-                              item.idProducto
-                            )
-                          }
-                        >
-
-                          <i
-                            className={
-                              esFavorito(
-                                item.idProducto
-                              )
-                                ? "bi bi-heart-fill text-danger"
-                                : "bi bi-heart"
-                            }
-                          ></i>
-
-                          {" Favoritos"}
-
-                        </button>
-
-                      </div>
-
-
-                    </div>
-
-                  </div>
-
-                );
-              }
-            )
-
-          )}
-
-        </div>
-
-
-        {/* ================================================= */}
-        {/* RESUMEN */}
-        {/* ================================================= */}
-
-        <div className="col-md-4">
-
-          <div className="resumen-compra">
-
-            <h4>
-              Resumen
-            </h4>
-
+    <div className="cc-page">
+      <div className="cc-container">
+
+        {/* ENCABEZADO */}
+
+        <header className="cc-header">
+          <div>
+            <span className="cc-eyebrow">
+              CHIRINGUITO CHATARRA
+            </span>
+
+            <h1>
+              <i className="bi bi-cart3"></i>
+              Tu carrito
+            </h1>
 
             <p>
-
-              <strong>
-                Subtotal:
-              </strong>
-
-              {" $"}
-
-              {
-                total.toFixed(2)
-              }
-
+              Revisa tus productos antes de completar
+              la compra.
             </p>
+          </div>
 
+          <Link to="/cliente" className="cc-back-link">
+            <i className="bi bi-arrow-left"></i>
+            Seguir comprando
+          </Link>
+        </header>
 
-            <p>
+        {/* ALERTAS */}
 
-              <strong>
-                Envío:
-              </strong>
-
-              {" "}
-
-              Se calcula al completar
-              la compra
-
-            </p>
-
-
-            <hr />
-
-
-            <p>
-
-              <strong>
-                Total parcial:
-              </strong>
-
-              {" $"}
-
-              {
-                total.toFixed(2)
-              }
-
-            </p>
-
-
-            <small className="text-muted d-block mb-3">
-
-              El total final puede variar según
-              el método y la zona de entrega.
-
-            </small>
-
+        {error && (
+          <div
+            className="cc-alert cc-alert-error"
+            role="alert"
+          >
+            <i className="bi bi-exclamation-triangle"></i>
+            <span>{error}</span>
 
             <button
               type="button"
-              className="btn btn-success w-100"
-              disabled={
-                carrito.length === 0
-              }
-              onClick={() =>
-                setMostrarModal(
-                  true
-                )
-              }
+              onClick={() => setError("")}
+              aria-label="Cerrar error"
             >
-
-              Proceder a la compra
-
+              <i className="bi bi-x-lg"></i>
             </button>
-
           </div>
+        )}
 
+        {mensaje && (
+          <div
+            className="cc-alert cc-alert-success"
+            role="status"
+          >
+            <i className="bi bi-check-circle"></i>
+            <span>{mensaje}</span>
+
+            <button
+              type="button"
+              onClick={() => setMensaje("")}
+              aria-label="Cerrar mensaje"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+        )}
+
+        {resumen.cantidadesInvalidas > 0 && (
+          <div className="cc-alert cc-alert-warning">
+            <i className="bi bi-info-circle"></i>
+            <span>
+              Hay productos agotados, inactivos o con
+              cantidades superiores al stock. Corrige
+              tu carrito antes de continuar.
+            </span>
+          </div>
+        )}
+
+        <div className="cc-layout">
+
+          {/* LISTADO */}
+
+          <section className="cc-main">
+            <div className="cc-section-title">
+              <div>
+                <h2>Productos seleccionados</h2>
+                <p>
+                  {resumen.cantidadProductos} unidades
+                  en {carrito.length} productos
+                </p>
+              </div>
+
+              <span className="cc-count">
+                {carrito.length}
+              </span>
+            </div>
+
+            {carrito.length === 0 ? (
+              <div className="cc-empty">
+                <div className="cc-empty-icon">
+                  <i className="bi bi-bag"></i>
+                </div>
+
+                <h3>Tu carrito está vacío</h3>
+
+                <p>
+                  Descubre productos y agrégalos para
+                  comenzar tu compra.
+                </p>
+
+                <Link to="/cliente" className="cc-primary-link">
+                  <i className="bi bi-grid"></i>
+                  Explorar productos
+                </Link>
+              </div>
+            ) : (
+              <div className="cc-items">
+                {carrito.map(item => {
+                  const producto = item.idProductoNavigation || {};
+                  const promocion = obtenerPromocion(
+                    item.idProducto
+                  );
+
+                  const cantidad = Number(item.cantidad || 0);
+                  const stock = obtenerStock(item);
+                  const precio = obtenerPrecio(item);
+                  const precioNormal = Number(producto.precio || 0);
+
+                  const subtotal = precio * cantidad;
+                  const ahorro = Math.max(
+                    0,
+                    precioNormal - precio
+                  ) * cantidad;
+
+                  const ocupado = procesandoItems.includes(
+                    item.idCarrito
+                  );
+
+                  const agotado = stock <= 0;
+                  const inactivo = producto.activo === false;
+                  const excedido = cantidad > stock;
+
+                  const problema =
+                    agotado || excedido || inactivo;
+
+                  return (
+                    <article
+                      key={item.idCarrito}
+                      className={`carrito-item ${problema ? "cc-item-warning" : ""}`}
+                    >
+                      <div className="cc-item-media">
+                        <ImagenProducto producto={producto} />
+
+                        {promocion && (
+                          <span className="cc-discount-tag">
+                            -{Number(promocion.descuento)}%
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="carrito-info">
+                        <div className="cc-item-heading">
+                          <div>
+                            <span className="cc-product-label">
+                              PRODUCTO
+                            </span>
+
+                            <Link
+                              to={`/cliente/detalles/${item.idProducto}`}
+                              className="cc-product-name"
+                            >
+                              {producto.nombre || "Producto"}
+                            </Link>
+
+                            {producto.sku && (
+                              <span className="cc-sku">
+                                SKU: {producto.sku}
+                              </span>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="cc-remove-icon"
+                            disabled={ocupado || procesandoCheckout}
+                            title="Eliminar del carrito"
+                            aria-label="Eliminar del carrito"
+                            onClick={() =>
+                              handleEliminarDelCarrito(
+                                item.idCarrito
+                              )
+                            }
+                          >
+                            <i className="bi bi-trash3"></i>
+                          </button>
+                        </div>
+
+                        <div className="cc-stock">
+                          {inactivo ? (
+                            <span className="cc-stock-error">
+                              Producto no disponible
+                            </span>
+                          ) : agotado ? (
+                            <span className="cc-stock-error">
+                              Agotado
+                            </span>
+                          ) : excedido ? (
+                            <span className="cc-stock-error">
+                              Stock insuficiente: {stock} disponibles
+                            </span>
+                          ) : (
+                            <span className="cc-stock-ok">
+                              <i className="bi bi-check-circle"></i>
+                              {stock} disponibles
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="cc-pricing">
+                          {promocion ? (
+                            <div className="cc-unit-prices">
+                              <span className="cc-old-price">
+                                {dinero(precioNormal)}
+                              </span>
+
+                              <strong className="cc-new-price">
+                                {dinero(precio)}
+                              </strong>
+
+                              <small>por unidad</small>
+                            </div>
+                          ) : (
+                            <div className="cc-unit-prices">
+                              <strong className="cc-new-price">
+                                {dinero(precio)}
+                              </strong>
+                              <small>por unidad</small>
+                            </div>
+                          )}
+
+                          {ahorro > 0 && (
+                            <span className="cc-saving">
+                              Ahorras {dinero(ahorro)}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="cc-item-bottom">
+                          <div className="cc-quantity-wrapper">
+                            <span>Cantidad</span>
+
+                            <div className="carrito-actions cc-quantity">
+                              <button
+                                type="button"
+                                disabled={
+                                  ocupado ||
+                                  procesandoCheckout ||
+                                  cantidad <= 1 ||
+                                  inactivo
+                                }
+                                onClick={() =>
+                                  handleModificarCantidad(
+                                    item,
+                                    cantidad - 1
+                                  )
+                                }
+                                aria-label="Disminuir cantidad"
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+
+                              <strong>{cantidad}</strong>
+
+                              <button
+                                type="button"
+                                disabled={
+                                  ocupado ||
+                                  procesandoCheckout ||
+                                  cantidad >= stock ||
+                                  inactivo
+                                }
+                                onClick={() =>
+                                  handleModificarCantidad(
+                                    item,
+                                    cantidad + 1
+                                  )
+                                }
+                                aria-label="Aumentar cantidad"
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="cc-item-total">
+                            <span>Subtotal</span>
+                            <strong>{dinero(subtotal)}</strong>
+                          </div>
+                        </div>
+
+                        <div className="cc-item-extra">
+                          <button
+                            type="button"
+                            className="cc-favorite-action"
+                            disabled={procesandoCheckout}
+                            onClick={() =>
+                              toggleFavorito(item.idProducto)
+                            }
+                          >
+                            <i
+                              className={
+                                esFavorito(item.idProducto)
+                                  ? "bi bi-heart-fill"
+                                  : "bi bi-heart"
+                              }
+                            ></i>
+                            {esFavorito(item.idProducto)
+                              ? "En favoritos"
+                              : "Guardar en favoritos"}
+                          </button>
+                        </div>
+
+                        {ocupado && (
+                          <small className="cc-processing">
+                            Actualizando producto...
+                          </small>
+                        )}
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+
+          {/* RESUMEN */}
+
+          <aside className="cc-sidebar">
+            <div className="resumen-compra">
+              <div className="cc-summary-heading">
+                <div className="cc-summary-icon">
+                  <i className="bi bi-receipt"></i>
+                </div>
+                <div>
+                  <h2>Resumen de compra</h2>
+                  <p>Detalle de tu pedido</p>
+                </div>
+              </div>
+
+              <div className="cc-summary-lines">
+                <div>
+                  <span>Productos</span>
+                  <strong>{resumen.cantidadProductos}</strong>
+                </div>
+
+                <div>
+                  <span>Subtotal</span>
+                  <strong>{dinero(resumen.subtotal)}</strong>
+                </div>
+
+                {resumen.ahorro > 0 && (
+                  <div className="cc-summary-discount">
+                    <span>
+                      <i className="bi bi-tag"></i>
+                      Ahorro estimado
+                    </span>
+                    <strong>-{dinero(resumen.ahorro)}</strong>
+                  </div>
+                )}
+
+                <div className="cc-shipping-row">
+                  <span>Envío</span>
+                  <span className="cc-shipping-text">
+                    Por calcular
+                  </span>
+                </div>
+              </div>
+
+              <div className="cc-summary-total">
+                <span>Total parcial</span>
+                <strong>{dinero(resumen.subtotal)}</strong>
+              </div>
+
+              <p className="cc-summary-note">
+                <i className="bi bi-info-circle"></i>
+                El envío se determina al seleccionar
+                el distrito y método de entrega.
+                El servidor confirma el total final.
+              </p>
+
+              <button
+                type="button"
+                className="cc-checkout-btn"
+                disabled={!puedeComprar}
+                onClick={() => setMostrarModal(true)}
+              >
+                <i className="bi bi-lock"></i>
+                Proceder a la compra
+                <i className="bi bi-arrow-right"></i>
+              </button>
+
+              {!puedeComprar && carrito.length > 0 && (
+                <small className="cc-checkout-hint">
+                  Comprueba existencias y cantidades
+                  antes de continuar.
+                </small>
+              )}
+
+              <div className="cc-security">
+                <i className="bi bi-shield-check"></i>
+                <span>
+                  Compra procesada y validada por
+                  nuestro servidor
+                </span>
+              </div>
+            </div>
+
+            <div className="cc-help-card">
+              <i className="bi bi-question-circle"></i>
+              <div>
+                <strong>¿Tienes dudas?</strong>
+                <p>
+                  Revisa tus productos y cantidades
+                  antes de confirmar la compra.
+                </p>
+              </div>
+            </div>
+          </aside>
         </div>
-
-
       </div>
 
-
-      {/* ================================================= */}
-      {/* CHECKOUT */}
-      {/* ================================================= */}
+      {/* MODAL EXISTENTE - CONSERVAMOS CONTRATO */}
 
       {mostrarModal && (
-
         <ModalProcesarVenta
-          onClose={() =>
-            setMostrarModal(
-              false
-            )
-          }
-          onConfirm={
-            handleConfirmarVenta
-          }
-          carrito={
-            carrito
-          }
+          carrito={carrito}
+          onClose={() => {
+            if (!procesandoCheckout) setMostrarModal(false);
+          }}
+          onConfirm={handleConfirmarVenta}
         />
-
       )}
-
-
     </div>
   );
 }
-
 
 export default ClienteCarrito;

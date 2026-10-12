@@ -1,0 +1,15 @@
+ pages/ClientePages/ClienteCarrito.jsx              | 1674 [32m+++++++[m[31m--------[m
+ pages/ClientePages/ClienteFavoritos.jsx            | 1226 [32m++++++[m[31m-----[m
+ .../ClientePagesCss/ClienteCarrito.css             |  854 [32m+++++++[m[31m-[m
+ .../ClientePagesCss/ClienteFavoritos.css           |  947 [32m+++++++++[m
+ .../ClientePagesCss/ClientePedidos.css             | 1706 [32m++++++++[m[31m-------[m
+ .../ClientePagesCss/ClienteProductoDetail.css      |  919 [32m+++++++[m[31m-[m
+ .../ClientePagesCss/ModalProcesarVenta.css         |  832 [32m+++++++[m[31m-[m
+ .../ClientePagesCss/ProductosPorCategoria.css      |  790 [32m+++++++[m
+ pages/ClientePages/ClientePedidos.jsx              | 2241 [32m++++++++[m[31m------------[m
+ pages/ClientePages/ClienteProductoDetalle.jsx      | 1904 [32m++++[m[31m-------------[m
+ pages/ClientePages/ClienteProductosPorCat.jsx      | 1446 [32m++++++[m[31m-------[m
+ pages/ClientePages/ModalProcesarVenta.jsx          | 1766 [32m++++++++[m[31m-------[m
+ services/api.js                                    |  164 [32m+[m[31m-[m
+ services/data.js                                   |   28 [32m+[m[31m-[m
+ 14 files changed, 9869 insertions(+), 6628 deletions(-)

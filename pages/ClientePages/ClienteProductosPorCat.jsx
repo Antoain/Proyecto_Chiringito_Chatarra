@@ -1,11 +1,13 @@
+
 import React, {
   useEffect,
+  useMemo,
   useState
 } from "react";
 
 import {
-  useParams,
   Link,
+  useParams,
   useOutletContext
 } from "react-router-dom";
 
@@ -18,877 +20,883 @@ import {
   obtenerPromocionesActivas
 } from "../../services/data";
 
+import "./ClientePagesCss/ProductosPorCategoria.css";
+
+// =====================================================
+// HELPERS
+// =====================================================
+
+const dinero = valor =>
+  `$${Number(valor || 0).toFixed(2)}`;
+
+const normalizarFavoritos = data =>
+  (Array.isArray(data) ? data : []).map(fav => ({
+    idProducto: fav.idProducto ?? fav.IdProducto,
+    idFavorito: fav.idFavorito ?? fav.IdFavorito
+  }));
+
+function ImagenCategoria({ producto }) {
+  const [fallo, setFallo] = useState(false);
+
+  useEffect(() => {
+    setFallo(false);
+  }, [producto.rutaImagen]);
+
+  if (!producto.rutaImagen || fallo) {
+    return (
+      <div className="cpc-sin-imagen">
+        <i className="bi bi-image"></i>
+        <span>Imagen no disponible</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      className="cpc-imagen"
+      src={producto.rutaImagen}
+      alt={producto.nombre || "Producto"}
+      loading="lazy"
+      onError={() => setFallo(true)}
+    />
+  );
+}
+
+// =====================================================
+// COMPONENTE PRINCIPAL
+// =====================================================
 
 export function ProductosPorCategoria() {
+  const { idCategoria } = useParams();
 
-  const {
-    idCategoria
-  } = useParams();
+  const { busqueda = "" } = useOutletContext() || {};
 
+  const [productos, setProductos] = useState([]);
+  const [favoritos, setFavoritos] = useState([]);
+  const [promociones, setPromociones] = useState([]);
 
-  const {
-    busqueda = ""
-  } = useOutletContext() || {};
+  const [categoriaNombre, setCategoriaNombre] =
+    useState("");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [mensaje, setMensaje] = useState("");
 
-  const [
-    productos,
-    setProductos
-  ] = useState([]);
+  const [filtro, setFiltro] = useState("todos");
+  const [orden, setOrden] = useState("defecto");
+  const [busquedaLocal, setBusquedaLocal] = useState("");
 
-  const [
-    favoritos,
-    setFavoritos
-  ] = useState([]);
+  const [favoritoProcesando, setFavoritoProcesando] =
+    useState(null);
 
-  const [
-    promociones,
-    setPromociones
-  ] = useState([]);
-
-  const [
-    productosFiltrados,
-    setProductosFiltrados
-  ] = useState([]);
-
-  const [
-    categoriaNombre,
-    setCategoriaNombre
-  ] = useState("");
-
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
-
-  const [
-    error,
-    setError
-  ] = useState("");
-
-  const [
-    favoritoProcesando,
-    setFavoritoProcesando
-  ] = useState(null);
-
-
-  const idUsuario =
-    localStorage.getItem(
-      "idUsuario"
-    );
-
+  const idUsuario = localStorage.getItem("idUsuario");
 
   // =====================================================
-  // NORMALIZAR FAVORITOS
-  // =====================================================
-
-  const normalizarFavoritos =
-    data => {
-
-      return (
-        Array.isArray(data)
-          ? data
-          : []
-      ).map(
-        fav => ({
-
-          idProducto:
-            fav.IdProducto ??
-            fav.idProducto,
-
-          idFavorito:
-            fav.IdFavorito ??
-            fav.idFavorito
-        })
-      );
-    };
-
-
-  // =====================================================
-  // CARGAR CATEGORÍA + PRODUCTOS + PROMOCIONES
+  // CARGAR CATEGORÍA Y PRODUCTOS
   // =====================================================
 
   useEffect(() => {
+    let activo = true;
 
-    const fetchDatos =
-      async () => {
+    const cargarDatos = async () => {
+      setLoading(true);
+      setError("");
+      setMensaje("");
+      setProductos([]);
+      setPromociones([]);
+      setCategoriaNombre("");
 
-        try {
+      try {
+        const [
+          resultadoCategoria,
+          resultadoProductos,
+          resultadoPromociones
+        ] = await Promise.allSettled([
+          obtenerCategoriaPorId(idCategoria),
+          obtenerProductosPorCategoria(idCategoria),
+          obtenerPromocionesActivas()
+        ]);
 
-          setLoading(true);
+        if (!activo) return;
 
-          setError("");
+        if (resultadoProductos.status === "rejected") {
+          throw resultadoProductos.reason;
+        }
 
+        const listaProductos = resultadoProductos.value;
 
-          const [
-            categoria,
-            productosData,
-            promocionesData
-          ] = await Promise.all([
-            obtenerCategoriaPorId(
-              idCategoria
-            ),
+        setProductos(
+          Array.isArray(listaProductos)
+            ? listaProductos
+            : []
+        );
 
-            obtenerProductosPorCategoria(
-              idCategoria
-            ),
-
-            obtenerPromocionesActivas()
-          ]);
-
-
-          if (categoria) {
-
-            setCategoriaNombre(
-              categoria.descripcion ||
-              "Desconocida"
-            );
-          }
-
-
-          const listaProductos =
-            Array.isArray(
-              productosData
-            )
-              ? productosData
-              : [];
-
-
-          setProductos(
-            listaProductos
+        if (resultadoCategoria.status === "fulfilled") {
+          setCategoriaNombre(
+            resultadoCategoria.value?.descripcion ||
+            "Productos de la categoría"
           );
+        } else {
+          setCategoriaNombre("Productos de la categoría");
+        }
 
-
-          setProductosFiltrados(
-            listaProductos
-          );
-
-
+        if (resultadoPromociones.status === "fulfilled") {
           setPromociones(
-            Array.isArray(
-              promocionesData
-            )
-              ? promocionesData
+            Array.isArray(resultadoPromociones.value)
+              ? resultadoPromociones.value
               : []
           );
+        } else {
+          // No rompemos el catálogo si fallan promociones.
+          setPromociones([]);
+        }
+      } catch (err) {
+        if (!activo) return;
 
-        } catch (error) {
+        console.error(
+          "Error al cargar categoría:",
+          err
+        );
 
-          console.error(
-            "Error al obtener datos:",
-            error
-          );
-
-
+        if (err?.status === 404) {
+          setProductos([]);
+        } else {
           setError(
-            error.message ||
+            err?.message ||
             "No se pudieron cargar los productos."
           );
-
-        } finally {
-
-          setLoading(false);
         }
-      };
+      } finally {
+        if (activo) setLoading(false);
+      }
+    };
 
+    cargarDatos();
 
-    fetchDatos();
-
+    return () => {
+      activo = false;
+    };
   }, [idCategoria]);
-
 
   // =====================================================
   // CARGAR FAVORITOS
   // =====================================================
 
   useEffect(() => {
+    let activo = true;
 
-    const fetchFavoritos =
-      async () => {
-
-        try {
-
-          const data =
-            await obtenerFavoritosPorCliente();
-
-
-          setFavoritos(
-            normalizarFavoritos(
-              data
-            )
-          );
-
-        } catch (error) {
-
-          console.error(
-            "Error al obtener favoritos:",
-            error
-          );
-
-
-          setFavoritos(
-            []
-          );
-        }
-      };
-
-
-    if (idUsuario) {
-
-      fetchFavoritos();
-    }
-
-  }, [idUsuario]);
-
-
-  // =====================================================
-  // FILTRO DE BÚSQUEDA
-  // =====================================================
-
-  useEffect(() => {
-
-    if (!busqueda.trim()) {
-
-      setProductosFiltrados(
-        productos
-      );
-
+    if (!idUsuario) {
+      setFavoritos([]);
       return;
     }
 
-
-    const texto =
-      busqueda
-        .trim()
-        .toLowerCase();
-
-
-    const filtrados =
-      productos.filter(
-        producto => {
-
-          const contenido =
-            [
-              producto.nombre,
-              producto.descripcion,
-              producto.sku
-            ]
-              .filter(Boolean)
-              .join(" ")
-              .toLowerCase();
-
-
-          return contenido.includes(
-            texto
-          );
-        }
-      );
-
-
-    setProductosFiltrados(
-      filtrados
-    );
-
-  }, [
-    busqueda,
-    productos
-  ]);
-
-
-  // =====================================================
-  // PROMOCIÓN
-  // =====================================================
-
-  const obtenerPromocion =
-    idProducto => {
-
-      return promociones.find(
-        promocion =>
-          Number(
-            promocion.idProducto
-          ) ===
-          Number(
-            idProducto
-          )
-      ) || null;
-    };
-
-
-  // =====================================================
-  // FAVORITO
-  // =====================================================
-
-  const isFavorito =
-    producto => {
-
-      return favoritos.some(
-        fav =>
-          Number(
-            fav.idProducto
-          ) ===
-          Number(
-            producto.idProducto
-          )
-      );
-    };
-
-
-  // =====================================================
-  // TOGGLE FAVORITO
-  // =====================================================
-
-  const toggleFavorito =
-    async producto => {
-
-      const productoId =
-        Number(
-          producto.idProducto
-        );
-
-
-      const favoritoEncontrado =
-        favoritos.find(
-          fav =>
-            Number(
-              fav.idProducto
-            ) ===
-            productoId
-        );
-
-
-      const favoritosAnteriores =
-        [...favoritos];
-
-
+    const cargarFavoritos = async () => {
       try {
-
-        setFavoritoProcesando(
-          productoId
-        );
-
-
-        if (
-          favoritoEncontrado &&
-          favoritoEncontrado.idFavorito
-        ) {
-
-          setFavoritos(
-            prev =>
-              prev.filter(
-                fav =>
-                  Number(
-                    fav.idProducto
-                  ) !==
-                  productoId
-              )
-          );
-
-
-          await eliminarFavorito(
-            favoritoEncontrado.idFavorito
-          );
-
-        } else {
-
-          setFavoritos(
-            prev => [
-              ...prev,
-              {
-                idFavorito: -1,
-                idProducto:
-                  productoId
-              }
-            ]
-          );
-
-
-          await agregarFavorito(
-            productoId
-          );
-        }
-
-
         const data =
           await obtenerFavoritosPorCliente();
 
-
-        setFavoritos(
-          normalizarFavoritos(
-            data
-          )
-        );
-
-      } catch (error) {
-
+        if (activo) {
+          setFavoritos(normalizarFavoritos(data));
+        }
+      } catch (err) {
         console.error(
-          "Error en toggleFavorito:",
-          error
+          "Error al cargar favoritos:",
+          err
         );
 
-
-        setFavoritos(
-          favoritosAnteriores
-        );
-
-      } finally {
-
-        setFavoritoProcesando(
-          null
-        );
+        if (activo) {
+          setFavoritos([]);
+        }
       }
     };
 
+    cargarFavoritos();
+
+    return () => {
+      activo = false;
+    };
+  }, [idUsuario]);
 
   // =====================================================
-  // LOADING
+  // PROMOCIONES
   // =====================================================
 
-  if (loading) {
+  const promocionesPorProducto = useMemo(() => {
+    const mapa = new Map();
 
-    return (
+    promociones.forEach(promo => {
+      mapa.set(
+        Number(promo.idProducto),
+        promo
+      );
+    });
 
-      <div className="container mt-4">
+    return mapa;
+  }, [promociones]);
 
-        <div className="text-center py-5">
-
-          <div className="spinner-border mb-3" />
-
-          <p>
-            Cargando productos...
-          </p>
-
-        </div>
-
-      </div>
+  const obtenerPrecio = producto => {
+    const promo = promocionesPorProducto.get(
+      Number(producto.idProducto)
     );
-  }
 
+    const precioOriginal = Number(
+      promo?.precioOriginal ??
+      producto.precio ??
+      0
+    );
+
+    const precioFinal = Number(
+      promo?.precioFinal ??
+      producto.precio ??
+      0
+    );
+
+    const ahorro = Math.max(
+      0,
+      precioOriginal - precioFinal
+    );
+
+    return {
+      promo,
+      precioOriginal,
+      precioFinal,
+      ahorro
+    };
+  };
+
+  // =====================================================
+  // FILTROS Y ORDEN
+  // =====================================================
+
+  const productosVisibles = useMemo(() => {
+    const texto = String(
+      busquedaLocal || busqueda
+    )
+      .trim()
+      .toLowerCase();
+
+    const filtrados = productos.filter(producto => {
+      const activo =
+        (producto.activo ?? producto.Activo) !== false;
+
+      if (!activo) return false;
+
+      const contenido = [
+        producto.nombre,
+        producto.descripcion,
+        producto.sku,
+        producto.idTiendaNavigation?.nombreNegocio
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      if (texto && !contenido.includes(texto)) {
+        return false;
+      }
+
+      const disponible =
+        Number(producto.stock ?? 0) > 0;
+
+      const tienePromocion =
+        promocionesPorProducto.has(
+          Number(producto.idProducto)
+        );
+
+      if (filtro === "disponibles") {
+        return disponible;
+      }
+
+      if (filtro === "promociones") {
+        return tienePromocion;
+      }
+
+      return true;
+    });
+
+    filtrados.sort((a, b) => {
+      const promoA = promocionesPorProducto.get(
+        Number(a.idProducto)
+      );
+
+      const promoB = promocionesPorProducto.get(
+        Number(b.idProducto)
+      );
+
+      const precioA = Number(
+        promoA?.precioFinal ?? a.precio ?? 0
+      );
+
+      const precioB = Number(
+        promoB?.precioFinal ?? b.precio ?? 0
+      );
+
+      switch (orden) {
+        case "precio-asc":
+          return precioA - precioB;
+
+        case "precio-desc":
+          return precioB - precioA;
+
+        case "nombre":
+          return String(a.nombre || "")
+            .localeCompare(
+              String(b.nombre || ""),
+              "es"
+            );
+
+        default:
+          return 0;
+      }
+    });
+
+    return filtrados;
+  }, [
+    productos,
+    busquedaLocal,
+    busqueda,
+    filtro,
+    orden,
+    promocionesPorProducto
+  ]);
+
+  // =====================================================
+  // ESTADÍSTICAS
+  // =====================================================
+
+  const estadisticas = useMemo(() => {
+    const activos = productos.filter(
+      producto =>
+        (producto.activo ?? producto.Activo) !== false
+    );
+
+    return {
+      total: activos.length,
+
+      disponibles: activos.filter(
+        producto =>
+          Number(producto.stock ?? 0) > 0
+      ).length,
+
+      ofertas: activos.filter(
+        producto =>
+          promocionesPorProducto.has(
+            Number(producto.idProducto)
+          )
+      ).length
+    };
+  }, [productos, promocionesPorProducto]);
+
+  // =====================================================
+  // FAVORITOS
+  // =====================================================
+
+  const esFavorito = idProducto =>
+    favoritos.some(
+      fav =>
+        Number(fav.idProducto) ===
+        Number(idProducto)
+    );
+
+  const toggleFavorito = async producto => {
+    if (!idUsuario) {
+      setMensaje(
+        "Debes iniciar sesión para guardar favoritos."
+      );
+      return;
+    }
+
+    const idProducto = Number(producto.idProducto);
+
+    if (
+      !idProducto ||
+      favoritoProcesando !== null
+    ) {
+      return;
+    }
+
+    setMensaje("");
+
+    const anteriores = [...favoritos];
+
+    const favoritoExistente = favoritos.find(
+      fav =>
+        Number(fav.idProducto) === idProducto
+    );
+
+    setFavoritoProcesando(idProducto);
+
+    try {
+      if (favoritoExistente) {
+        setFavoritos(prev =>
+          prev.filter(
+            fav =>
+              Number(fav.idProducto) !==
+              idProducto
+          )
+        );
+
+        await eliminarFavorito(
+          favoritoExistente.idFavorito
+        );
+      } else {
+        setFavoritos(prev => [
+          ...prev,
+          {
+            idProducto,
+            idFavorito: -1
+          }
+        ]);
+
+        await agregarFavorito(idProducto);
+      }
+
+      const actualizados =
+        await obtenerFavoritosPorCliente();
+
+      setFavoritos(
+        normalizarFavoritos(actualizados)
+      );
+
+      setMensaje(
+        favoritoExistente
+          ? "Producto eliminado de favoritos."
+          : "Producto agregado a favoritos."
+      );
+    } catch (err) {
+      console.error(
+        "Error al actualizar favorito:",
+        err
+      );
+
+      setFavoritos(anteriores);
+
+      setMensaje(
+        err?.message ||
+        "No se pudo actualizar el favorito."
+      );
+    } finally {
+      setFavoritoProcesando(null);
+    }
+  };
 
   // =====================================================
   // RENDER
   // =====================================================
 
   return (
+    <main className="cpc-pagina">
+      <div className="cpc-contenedor">
 
-    <div className="container mt-4">
+        {/* NAVEGACIÓN */}
 
+        <nav
+          className="cpc-migas"
+          aria-label="Navegación de categoría"
+        >
+          <Link to="/cliente">
+            <i className="bi bi-house-door"></i>
+            Inicio
+          </Link>
 
-      <div className="mb-4">
+          <i className="bi bi-chevron-right"></i>
 
-        <h2>
+          <span>
+            {categoriaNombre || "Categoría"}
+          </span>
+        </nav>
 
-          Productos de la categoría:{" "}
+        {/* HERO */}
 
-          {
-            categoriaNombre ||
-            "Desconocida"
-          }
+        <header className="cpc-hero">
+          <div className="cpc-hero-contenido">
+            <span className="cpc-eyebrow">
+              CHIRINGUITO CHATARRA
+            </span>
 
-        </h2>
+            <h1>
+              {categoriaNombre ||
+                "Explora nuestra categoría"}
+            </h1>
 
-
-        <p className="text-muted">
-
-          {
-            productosFiltrados.length
-          }
-
-          {" "}
-
-          {
-            productosFiltrados.length === 1
-              ? "producto disponible"
-              : "productos disponibles"
-          }
-
-        </p>
-
-      </div>
-
-
-      {error && (
-
-        <div className="alert alert-danger">
-
-          {error}
-
-        </div>
-
-      )}
-
-
-      <div className="row g-4">
-
-
-        {productosFiltrados.length === 0 ? (
-
-          <div className="text-center py-5">
-
-            <i
-              className="bi bi-search"
-              style={{
-                fontSize: "3rem",
-                color: "#9ca3af"
-              }}
-            ></i>
-
-
-            <h4 className="mt-3">
-
-              No se encontraron productos
-
-            </h4>
-
-
-            <p className="text-muted">
-
-              {
-                busqueda
-                  ? "Prueba con otro término de búsqueda."
-                  : "No hay productos disponibles en esta categoría."
-              }
-
+            <p>
+              Encuentra productos de distintas tiendas,
+              compara precios y descubre nuevas ofertas.
             </p>
 
+            <div className="cpc-hero-estadisticas">
+              <span>
+                <i className="bi bi-box-seam"></i>
+                <strong>{estadisticas.total}</strong>
+                productos
+              </span>
+
+              <span>
+                <i className="bi bi-check-circle"></i>
+                <strong>
+                  {estadisticas.disponibles}
+                </strong>
+                disponibles
+              </span>
+
+              <span>
+                <i className="bi bi-tags"></i>
+                <strong>{estadisticas.ofertas}</strong>
+                con oferta
+              </span>
+            </div>
           </div>
 
-        ) : (
-
-          productosFiltrados.map(
-            producto => {
-
-              const promocion =
-                obtenerPromocion(
-                  producto.idProducto
-                );
-
-
-              const precioOriginal =
-                Number(
-                  promocion
-                    ?.precioOriginal ??
-                  producto.precio ??
-                  0
-                );
-
-
-              const precioFinal =
-                promocion
-                  ? Number(
-                      promocion.precioFinal ||
-                      0
-                    )
-                  : Number(
-                      producto.precio ||
-                      0
-                    );
-
-
-              const favorito =
-                isFavorito(
-                  producto
-                );
-
-
-              const procesando =
-                favoritoProcesando ===
-                Number(
-                  producto.idProducto
-                );
-
-
-              const stock =
-                Number(
-                  producto.stock ||
-                  0
-                );
-
-
-              return (
-
-                <div
-                  className="col-xl-3 col-lg-4 col-md-6"
-                  key={
-                    producto.idProducto
-                  }
-                >
-
-                  <div className="card h-100">
-
-
-                    {/* ===================================== */}
-                    {/* IMAGEN */}
-                    {/* ===================================== */}
-
-                    <div className="position-relative">
-
-
-                      {producto.rutaImagen ? (
-
-                        <img
-                          src={
-                            producto.rutaImagen
-                          }
-                          className="card-img-top"
-                          alt={
-                            producto.nombre
-                          }
-                          style={{
-                            height: "220px",
-                            objectFit: "cover"
-                          }}
-                        />
-
-                      ) : (
-
-                        <div
-                          className="card-img-top d-flex flex-column align-items-center justify-content-center bg-light"
-                          style={{
-                            height: "220px"
-                          }}
-                        >
-
-                          <i
-                            className="bi bi-image text-muted"
-                            style={{
-                              fontSize: "2rem"
-                            }}
-                          ></i>
-
-
-                          <small className="text-muted mt-2">
-
-                            Sin imagen
-
-                          </small>
-
-                        </div>
-
-                      )}
-
-
-                      {/* DESCUENTO */}
-
-                      {promocion && (
-
-                        <span className="badge bg-danger discount-badge">
-
-                          -
-                          {
-                            Number(
-                              promocion.descuento ||
-                              0
-                            )
-                          }
-                          %
-
-                        </span>
-
-                      )}
-
-
-                      {/* STOCK */}
-
-                      {stock <= 0 && (
-
-                        <span
-                          className="badge bg-secondary position-absolute top-0 end-0 m-2"
-                        >
-
-                          Agotado
-
-                        </span>
-
-                      )}
-
-
-                    </div>
-
-
-                    {/* ===================================== */}
-                    {/* BODY */}
-                    {/* ===================================== */}
-
-                    <div className="card-body d-flex flex-column">
-
-
-                      <h5 className="card-title">
-
-                        {
-                          producto.nombre
-                        }
-
-                      </h5>
-
-
-                      <p className="card-text small text-truncate">
-
-                        {
-                          producto.descripcion ||
-                          "Sin descripción"
-                        }
-
-                      </p>
-
-
-                      <p className="small text-muted mb-2">
-
-                        Stock:{" "}
-
-                        <strong>
-                          {stock}
-                        </strong>
-
-                      </p>
-
-
-                      {/* ===================================== */}
-                      {/* PRECIO */}
-                      {/* ===================================== */}
-
-                      {promocion ? (
-
-                        <div className="mb-3">
-
-                          <small
-                            className="text-muted d-block"
-                            style={{
-                              textDecoration:
-                                "line-through"
-                            }}
-                          >
-
-                            $
-
-                            {
-                              precioOriginal
-                                .toFixed(2)
-                            }
-
-                          </small>
-
-
-                          <strong className="text-success fs-5">
-
-                            $
-
-                            {
-                              precioFinal
-                                .toFixed(2)
-                            }
-
-                          </strong>
-
-
-                          <small className="text-danger d-block">
-
-                            Ahorras{" $"}
-
-                            {
-                              (
-                                precioOriginal -
-                                precioFinal
-                              ).toFixed(2)
-                            }
-
-                          </small>
-
-                        </div>
-
-                      ) : (
-
-                        <p className="h6 text-success mb-3">
-
-                          $
-
-                          {
-                            precioFinal
-                              .toFixed(2)
-                          }
-
-                        </p>
-
-                      )}
-
-
-                      {/* ===================================== */}
-                      {/* ACCIONES */}
-                      {/* ===================================== */}
-
-                      <div className="button-group mt-auto d-flex justify-content-around">
-
-
-                        <button
-                          type="button"
-                          className="btn btn-outline-danger btn-sm"
-                          title={
-                            favorito
-                              ? "Eliminar de favoritos"
-                              : "Agregar a favoritos"
-                          }
-                          disabled={
-                            procesando
-                          }
-                          onClick={() =>
-                            toggleFavorito(
-                              producto
-                            )
-                          }
-                        >
-
-                          {procesando ? (
-
-                            <span className="spinner-border spinner-border-sm"></span>
-
-                          ) : (
-
-                            <i
-                              className={
-                                favorito
-                                  ? "bi bi-heart-fill text-danger"
-                                  : "bi bi-heart"
-                              }
-                            ></i>
-
-                          )}
-
-                        </button>
-
-
-                        <Link
-                          to={
-                            `/cliente/detalles/${producto.idProducto}`
-                          }
-                          className="btn btn-secondary btn-sm"
-                          title="Ver detalles"
-                        >
-
-                          Detalles
-
-                        </Link>
-
-
-                      </div>
-
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              );
-            }
-          )
-
+          <div className="cpc-hero-icono">
+            <i className="bi bi-grid-3x3-gap"></i>
+          </div>
+        </header>
+
+        {/* MENSAJES */}
+
+        {error && (
+          <div
+            className="cpc-alerta cpc-alerta-error"
+            role="alert"
+          >
+            <i className="bi bi-exclamation-circle"></i>
+            <span>{error}</span>
+          </div>
         )}
 
+        {mensaje && (
+          <div
+            className="cpc-alerta cpc-alerta-info"
+            role="status"
+          >
+            <i className="bi bi-info-circle"></i>
 
+            <span>{mensaje}</span>
+
+            <button
+              type="button"
+              onClick={() => setMensaje("")}
+              aria-label="Cerrar mensaje"
+            >
+              <i className="bi bi-x-lg"></i>
+            </button>
+          </div>
+        )}
+
+        {/* CABECERA DEL CATÁLOGO */}
+
+        <section className="cpc-catalogo">
+          <div className="cpc-catalogo-header">
+            <div>
+              <span className="cpc-seccion-etiqueta">
+                CATÁLOGO DE PRODUCTOS
+              </span>
+
+              <h2>
+                Productos de esta categoría
+              </h2>
+
+              <p>
+                {loading
+                  ? "Cargando productos..."
+                  : `${productosVisibles.length} ${
+                      productosVisibles.length === 1
+                        ? "producto encontrado"
+                        : "productos encontrados"
+                    }`}
+              </p>
+            </div>
+          </div>
+
+          {/* FILTROS */}
+
+          <div className="cpc-herramientas">
+            <div className="cpc-buscador">
+              <i className="bi bi-search"></i>
+
+              <input
+                type="search"
+                value={busquedaLocal}
+                onChange={e =>
+                  setBusquedaLocal(e.target.value)
+                }
+                placeholder="Buscar en esta categoría..."
+                aria-label="Buscar productos en la categoría"
+              />
+
+              {busquedaLocal && (
+                <button
+                  type="button"
+                  onClick={() => setBusquedaLocal("")}
+                  aria-label="Limpiar búsqueda"
+                >
+                  <i className="bi bi-x-lg"></i>
+                </button>
+              )}
+            </div>
+
+            <div className="cpc-filtros">
+              <select
+                value={filtro}
+                onChange={e =>
+                  setFiltro(e.target.value)
+                }
+                aria-label="Filtrar productos"
+              >
+                <option value="todos">
+                  Todos los productos
+                </option>
+
+                <option value="disponibles">
+                  Con stock
+                </option>
+
+                <option value="promociones">
+                  Con descuento
+                </option>
+              </select>
+
+              <select
+                value={orden}
+                onChange={e =>
+                  setOrden(e.target.value)
+                }
+                aria-label="Ordenar productos"
+              >
+                <option value="defecto">
+                  Orden original
+                </option>
+
+                <option value="precio-asc">
+                  Menor precio
+                </option>
+
+                <option value="precio-desc">
+                  Mayor precio
+                </option>
+
+                <option value="nombre">
+                  Nombre A-Z
+                </option>
+              </select>
+            </div>
+          </div>
+
+          {/* PRODUCTOS */}
+
+          {loading ? (
+            <div className="cpc-estado">
+              <div
+                className="spinner-border text-primary"
+                role="status"
+              >
+                <span className="visually-hidden">
+                  Cargando...
+                </span>
+              </div>
+
+              <h3>Cargando productos</h3>
+
+              <p>
+                Estamos preparando el catálogo.
+              </p>
+            </div>
+          ) : productosVisibles.length === 0 ? (
+            <div className="cpc-estado">
+              <div className="cpc-estado-icono">
+                <i className="bi bi-search"></i>
+              </div>
+
+              <h3>
+                No encontramos productos
+              </h3>
+
+              <p>
+                {busquedaLocal || busqueda
+                  ? "Prueba con otro término de búsqueda."
+                  : "No hay productos que coincidan con los filtros seleccionados."}
+              </p>
+
+              <button
+                type="button"
+                className="cpc-boton-primario"
+                onClick={() => {
+                  setBusquedaLocal("");
+                  setFiltro("todos");
+                  setOrden("defecto");
+                }}
+              >
+                <i className="bi bi-arrow-clockwise"></i>
+                Limpiar filtros
+              </button>
+            </div>
+          ) : (
+            <div className="cpc-grid">
+              {productosVisibles.map(producto => {
+                const stock = Number(
+                  producto.stock ?? 0
+                );
+
+                const {
+                  promo,
+                  precioOriginal,
+                  precioFinal,
+                  ahorro
+                } = obtenerPrecio(producto);
+
+                const favorito = esFavorito(
+                  producto.idProducto
+                );
+
+                const procesando =
+                  favoritoProcesando ===
+                  Number(producto.idProducto);
+
+                return (
+                  <article
+                    className="cpc-tarjeta"
+                    key={producto.idProducto}
+                  >
+                    <div className="cpc-tarjeta-imagen">
+                      <Link
+                        to={`/cliente/detalles/${producto.idProducto}`}
+                        aria-label={`Ver ${producto.nombre}`}
+                      >
+                        <ImagenCategoria
+                          producto={producto}
+                        />
+                      </Link>
+
+                      {promo && ahorro > 0 && (
+                        <span className="cpc-badge-oferta">
+                          <i className="bi bi-tag-fill"></i>
+                          -{Number(promo.descuento || 0)}%
+                        </span>
+                      )}
+
+                      <span
+                        className={
+                          stock > 0
+                            ? "cpc-badge-stock disponible"
+                            : "cpc-badge-stock agotado"
+                        }
+                      >
+                        {stock > 0
+                          ? "Disponible"
+                          : "Agotado"}
+                      </span>
+
+                      <button
+                        type="button"
+                        className={
+                          favorito
+                            ? "cpc-corazon activo"
+                            : "cpc-corazon"
+                        }
+                        title={
+                          favorito
+                            ? "Eliminar de favoritos"
+                            : "Agregar a favoritos"
+                        }
+                        aria-label={
+                          favorito
+                            ? `Eliminar ${producto.nombre} de favoritos`
+                            : `Agregar ${producto.nombre} a favoritos`
+                        }
+                        disabled={
+                          procesando ||
+                          favoritoProcesando !== null
+                        }
+                        onClick={() =>
+                          toggleFavorito(producto)
+                        }
+                      >
+                        {procesando ? (
+                          <span className="spinner-border spinner-border-sm" />
+                        ) : (
+                          <i
+                            className={
+                              favorito
+                                ? "bi bi-heart-fill"
+                                : "bi bi-heart"
+                            }
+                          ></i>
+                        )}
+                      </button>
+                    </div>
+
+                    <div className="cpc-tarjeta-cuerpo">
+                      <span className="cpc-sku">
+                        {producto.sku
+                          ? `SKU ${producto.sku}`
+                          : `PRODUCTO #${producto.idProducto}`}
+                      </span>
+
+                      <Link
+                        to={`/cliente/detalles/${producto.idProducto}`}
+                        className="cpc-producto-nombre"
+                      >
+                        {producto.nombre}
+                      </Link>
+
+                      <p className="cpc-descripcion">
+                        {producto.descripcion ||
+                          "Sin descripción disponible."}
+                      </p>
+
+                      <div className="cpc-meta">
+                        <span>
+                          <i className="bi bi-box"></i>
+                          Stock: {stock}
+                        </span>
+
+                        {producto.idTiendaNavigation
+                          ?.nombreNegocio && (
+                          <span>
+                            <i className="bi bi-shop"></i>
+                            {
+                              producto.idTiendaNavigation
+                                .nombreNegocio
+                            }
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="cpc-precios">
+                        {ahorro > 0 && (
+                          <span className="cpc-precio-original">
+                            {dinero(precioOriginal)}
+                          </span>
+                        )}
+
+                        <strong className="cpc-precio-final">
+                          {dinero(precioFinal)}
+                        </strong>
+
+                        {ahorro > 0 && (
+                          <span className="cpc-ahorro">
+                            Ahorras {dinero(ahorro)}
+                          </span>
+                        )}
+                      </div>
+
+                      <Link
+                        className="cpc-boton-detalle"
+                        to={`/cliente/detalles/${producto.idProducto}`}
+                      >
+                        Ver producto
+                        <i className="bi bi-arrow-up-right"></i>
+                      </Link>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </section>
       </div>
-
-    </div>
+    </main>
   );
 }
-
 
 export default ProductosPorCategoria;

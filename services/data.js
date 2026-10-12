@@ -1127,18 +1127,28 @@ export const obtenerPromocionesActivas =
 
     try {
 
-      return await apiFetch(
-        "/Promocion/Activas",
-        {},
-        false
-      );
+      const data =
+        await apiFetch(
+          "/Promocion/Activas",
+          {},
+          false
+        );
+
+
+      return Array.isArray(data)
+        ? data
+        : [];
 
     } catch (error) {
 
-      if (error.status === 404) {
-        return [];
-      }
+      console.warn(
+        "No se pudieron cargar las promociones activas:",
+        error
+      );
 
-      throw error;
+
+      // Las promociones son complementarias.
+      // Si fallan, el catálogo debe seguir funcionando.
+      return [];
     }
   };
