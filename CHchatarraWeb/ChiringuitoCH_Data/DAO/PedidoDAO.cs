@@ -664,5 +664,24 @@ namespace ChiringuitoCH_Data.DAO
                 .ToListAsync();
         }
 
+        // ==========================================
+        // - ENTREGAS GLOBALES ADMIN
+        // ==========================================
+
+        public async Task<List<SubPedido>>
+            ObtenerEntregasAdministradorAsync()
+        {
+            return await _context.SubPedidos
+                .AsNoTracking()
+                .Include(sp => sp.EntregaSubPedido)
+                .Include(sp => sp.IdTiendaNavigation)
+                .Include(sp => sp.IdPedidoNavigation)
+                    .ThenInclude(p => p!.IdUsuarioNavigation)
+                .Where(sp => sp.EntregaSubPedido != null)
+                .OrderByDescending(sp =>
+                    sp.EntregaSubPedido!.FechaActualizacion)
+                .ToListAsync();
+        }
+
     }
 }

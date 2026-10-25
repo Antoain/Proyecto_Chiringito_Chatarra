@@ -547,3 +547,73 @@
         padding: 4px;
     }
 }
+
+
+/* ==========================================
+   K.2 - PULIDO RESPONSIVE CLIENTE
+   ========================================== */
+
+.cliente-navbar-container {
+  min-width: 0;
+}
+
+.cliente-nav-actions {
+  min-width: 0;
+}
+
+/* Área táctil cómoda */
+.cliente-category-btn,
+.cliente-user-btn {
+  min-height: 44px;
+}
+
+.cliente-nav-link {
+  transition:
+    background-color .18s ease,
+    color .18s ease;
+}
+
+@media (max-width: 900px) {
+  .cliente-navbar-container {
+    row-gap: 10px;
+  }
+
+  .cliente-nav-actions {
+    min-width: 0;
+  }
+
+  .cliente-search {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .cliente-navbar-container {
+    padding: 9px 10px;
+  }
+
+  .cliente-nav-actions {
+    gap: 2px;
+  }
+
+  .cliente-nav-link {
+    min-width: 0;
+    padding-inline: 4px;
+    text-align: center;
+  }
+
+  .cliente-cart-badge {
+    top: -8px;
+    right: -10px;
+  }
+
+  .cliente-user-info {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cliente-nav-link {
+    transition: none;
+  }
+}

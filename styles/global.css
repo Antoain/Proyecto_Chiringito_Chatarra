@@ -1,0 +1,453 @@
+
+/* =====================================================
+   CHIRINGUITO CHATARRA
+   K.1 - SISTEMA VISUAL GLOBAL
+   Compatible con Bootstrap y CSS existentes
+   ===================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Identidad */
+  --ch-primary: #2563eb;
+  --ch-primary-hover: #1d4ed8;
+  --ch-primary-soft: #eff6ff;
+
+  --ch-success: #15803d;
+  --ch-warning: #b45309;
+  --ch-danger: #dc2626;
+  --ch-info: #0284c7;
+
+  /* Superficies */
+  --ch-bg: #f4f6f8;
+  --ch-surface: #ffffff;
+  --ch-surface-alt: #f8fafc;
+
+  /* Textos */
+  --ch-text: #111827;
+  --ch-text-secondary: #475569;
+  --ch-text-muted: #64748b;
+
+  /* Bordes y sombras */
+  --ch-border: #e2e8f0;
+  --ch-border-strong: #cbd5e1;
+
+  --ch-shadow-sm:
+    0 2px 8px rgba(15, 23, 42, .05);
+
+  --ch-shadow-md:
+    0 8px 28px rgba(15, 23, 42, .08);
+
+  --ch-shadow-lg:
+    0 20px 55px rgba(15, 23, 42, .15);
+
+  /* Radios */
+  --ch-radius-sm: 8px;
+  --ch-radius-md: 12px;
+  --ch-radius-lg: 16px;
+  --ch-radius-xl: 20px;
+
+  /* Espaciado */
+  --ch-space-1: 4px;
+  --ch-space-2: 8px;
+  --ch-space-3: 12px;
+  --ch-space-4: 16px;
+  --ch-space-5: 20px;
+  --ch-space-6: 24px;
+  --ch-space-8: 32px;
+
+  /* Movimiento */
+  --ch-transition:
+    background-color .18s ease,
+    border-color .18s ease,
+    color .18s ease,
+    box-shadow .18s ease,
+    transform .18s ease;
+}
+
+/* =====================================================
+   BASE GLOBAL
+   ===================================================== */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  font-family:
+    "Segoe UI",
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+img {
+  max-width: 100%;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* =====================================================
+   ACCESIBILIDAD
+   ===================================================== */
+
+:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, .55);
+  outline-offset: 3px;
+}
+
+/* Evita bordes dobles en campos que
+   ya ofrecen un estilo de foco propio. */
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Contenido oculto visualmente,
+   pero accesible para lectores de pantalla */
+
+.ch-sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* =====================================================
+   COMPONENTES REUTILIZABLES
+   Clases nuevas: no sustituyen a Bootstrap
+   ===================================================== */
+
+.ch-card {
+  background: var(--ch-surface);
+  border: 1px solid var(--ch-border);
+  border-radius: var(--ch-radius-lg);
+  box-shadow: var(--ch-shadow-sm);
+}
+
+.ch-card-hover {
+  transition: var(--ch-transition);
+}
+
+.ch-card-hover:hover {
+  border-color: #bfdbfe;
+  box-shadow: var(--ch-shadow-md);
+  transform: translateY(-2px);
+}
+
+.ch-btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+
+  min-height: 43px;
+  padding: 10px 16px;
+
+  border: 1px solid transparent;
+  border-radius: var(--ch-radius-sm);
+
+  font-size: .84rem;
+  font-weight: 750;
+  line-height: 1.3;
+  text-decoration: none;
+
+  transition: var(--ch-transition);
+}
+
+.ch-btn-primary {
+  background: var(--ch-primary);
+  color: #fff;
+}
+
+.ch-btn-primary:hover:not(:disabled) {
+  background: var(--ch-primary-hover);
+  color: #fff;
+}
+
+.ch-btn-secondary {
+  background: #fff;
+  border-color: var(--ch-border-strong);
+  color: var(--ch-text-secondary);
+}
+
+.ch-btn-secondary:hover:not(:disabled) {
+  border-color: var(--ch-primary);
+  color: var(--ch-primary);
+}
+
+.ch-btn-danger {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.ch-btn-danger:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.ch-btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* Formulario compartido */
+
+.ch-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ch-label {
+  color: var(--ch-text-secondary);
+  font-size: .79rem;
+  font-weight: 750;
+}
+
+.ch-input {
+  display: block;
+  width: 100%;
+  min-height: 43px;
+  padding: 10px 12px;
+
+  border: 1px solid var(--ch-border-strong);
+  border-radius: var(--ch-radius-sm);
+
+  background: var(--ch-surface);
+  color: var(--ch-text);
+
+  font-size: .84rem;
+  transition: var(--ch-transition);
+}
+
+.ch-input::placeholder {
+  color: #94a3b8;
+}
+
+.ch-input:focus {
+  border-color: var(--ch-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+.ch-input:disabled {
+  background: var(--ch-surface-alt);
+  opacity: .7;
+}
+
+/* Etiquetas */
+
+.ch-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 750;
+}
+
+.ch-pill-success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.ch-pill-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ch-pill-danger {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.ch-pill-info {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Contenedores */
+
+.ch-page-container {
+  width: 100%;
+  max-width: 1500px;
+  margin-inline: auto;
+}
+
+.ch-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  color: var(--ch-text);
+  font-weight: 800;
+}
+
+/* Estado vacío */
+
+.ch-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  min-height: 230px;
+  padding: 28px;
+
+  border: 1px dashed var(--ch-border-strong);
+  border-radius: var(--ch-radius-lg);
+
+  background: var(--ch-surface);
+  color: var(--ch-text-muted);
+  text-align: center;
+}
+
+.ch-empty-state > i {
+  color: #94a3b8;
+  font-size: 2rem;
+}
+
+/* =====================================================
+   UTILIDADES
+   ===================================================== */
+
+.ch-text-muted {
+  color: var(--ch-text-muted);
+}
+
+.ch-text-success {
+  color: var(--ch-success);
+}
+
+.ch-text-danger {
+  color: var(--ch-danger);
+}
+
+.ch-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ch-break-word {
+  overflow-wrap: anywhere;
+}
+
+.ch-shadow-sm {
+  box-shadow: var(--ch-shadow-sm);
+}
+
+.ch-shadow-md {
+  box-shadow: var(--ch-shadow-md);
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+  .ch-page-container {
+    padding-inline: 12px;
+  }
+
+  .ch-btn {
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   MOVIMIENTO REDUCIDO
+   ===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ch-card-hover,
+  .ch-btn,
+  .ch-input {
+    transition: none !important;
+  }
+
+  .ch-card-hover:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================
+    CONTENIDO RESPONSIVE COMPARTIDO
+   ========================================== */
+
+.cliente-content,
+.Vendedor-content,
+.admin-content {
+  width: 100%;
+  min-width: 0;
+}
+
+/* Las tablas anchas pueden desplazarse
+   horizontalmente sin cortar columnas. */
+
+.ch-table-responsive {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Imágenes y contenido multimedia */
+.cliente-content img,
+.Vendedor-content img,
+.admin-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Evita que cadenas largas rompan tarjetas
+   de texto que utilicen esta clase. */
+.ch-wrap-text {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+@media (max-width: 768px) {
+  .ch-table-responsive {
+    border-radius: var(--ch-radius-sm);
+  }
+}

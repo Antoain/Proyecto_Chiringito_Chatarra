@@ -1,15 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
+
 import {
   NavLink,
+  useLocation,
   useNavigate
 } from "react-router-dom";
 
+import { Collapse } from "bootstrap";
 import "./VendedorNavbar.css";
 
 
 export function VendedorNavbar() {
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+useEffect(() => {
+  const menu = document.getElementById("vendedorNavbar");
+
+  if (!menu) return;
+
+  const collapse = Collapse.getInstance(menu);
+
+  if (collapse && menu.classList.contains("show")) {
+    collapse.hide();
+  }
+}, [location.pathname]);
 
   const nombre =
     localStorage.getItem("nombreUsuario") ||

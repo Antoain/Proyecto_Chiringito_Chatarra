@@ -30,6 +30,9 @@ import AdministrarCategorias from './pages/AdminsPages/AdminCategoria';
 import AdministrarTiendas from './pages/AdminsPages/AdminTienda';
 import AdministrarProductos from './pages/AdminsPages/AdminProducto';
 import AdminMineria from './pages/AdminsPages/AdminMineria';
+import AdminPedidos from "./pages/AdminsPages/AdminPedidos";
+import AdminEntregas from "./pages/AdminsPages/AdminEntregas";
+import AdminPromociones from "./pages/AdminsPages/AdminPromociones";
 // Páginas de autenticación
 import LoginPage from './pages/LoginsPages/login';
 import CrearCuenta from './pages/LoginsPages/CrearCuenta';  // Importar la página de registro
@@ -154,9 +157,22 @@ export function App() {
                         element={<AdministrarProductos />}
                     />
                     <Route
+                        path="pedidos"
+                        element={<AdminPedidos />}
+                    />
+                    <Route
                         path="mineria"
                         element={<AdminMineria />}
                     />
+                    <Route
+                        path="entregas"
+                        element={<AdminEntregas />}
+                    />
+                    <Route
+                        path="promociones"
+                        element={<AdminPromociones />}
+                    />
+
                 </Route>
             </Routes>
         </Router>

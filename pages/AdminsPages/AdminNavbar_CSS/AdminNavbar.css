@@ -1,15 +1,573 @@
-.navbar-brand {
 
+/* =====================================================
+   CHIRINGUITO CHATARRA
+   ADMINISTRADOR - NAVBAR + LAYOUT
+   Prefijo: al-
+   ===================================================== */
 
-    font-size: 1.5rem;
-    font-weight: bold;
+.al-layout {
+  --al-sidebar-ancho: 256px;
+  min-height: 100vh;
+  background: #f4f6f8;
+  color: #1f2937;
+}
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.al-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1050;
+
+  display: flex;
+  flex-direction: column;
+
+  width: var(--al-sidebar-ancho);
+  height: 100vh;
+  height: 100dvh;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  background: #111827;
+  color: #e5e7eb;
+
+  box-shadow: 4px 0 22px rgba(15, 23, 42, .08);
+}
+
+.al-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.al-sidebar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+/* MARCA */
+
+.al-sidebar-marca {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  min-height: 84px;
+  padding: 20px;
+
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.al-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: white;
+  text-decoration: none;
+}
+
+.al-logo:hover {
+  color: white;
+}
+
+.al-logo-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  font-size: 1.3rem;
+}
+
+.al-logo-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.al-logo-textos strong {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 850;
+  line-height: 1.1;
+}
+
+.al-logo-textos small {
+  color: #93c5fd;
+  font-size: .59rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.al-sidebar-cerrar {
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  width: 31px;
+  height: 31px;
+
+  border: 0;
+  border-radius: 7px;
+  background: #1f2937;
+  color: white;
+  cursor: pointer;
+}
+
+/* IDENTIDAD DEL PANEL */
+
+.al-sidebar-identidad {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 19px 14px 8px;
+  padding: 13px;
+
+  border: 1px solid rgba(96,165,250,.15);
+  border-radius: 11px;
+  background: rgba(37,99,235,.10);
+}
+
+.al-sidebar-identidad-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+
+  border-radius: 9px;
+  background: rgba(37,99,235,.18);
+  color: #93c5fd;
+}
+
+.al-sidebar-identidad strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #f8fafc;
+  font-size: .75rem;
+}
+
+.al-sidebar-identidad small {
+  color: #94a3b8;
+  font-size: .65rem;
+}
+
+/* NAVEGACIÓN */
+
+.al-nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 25px;
+  padding: 23px 13px;
+}
+
+.al-nav-grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.al-nav-titulo {
+  display: block;
+  padding: 0 13px 9px;
+  color: #64748b;
+  font-size: .62rem;
+  font-weight: 850;
+  letter-spacing: 1.3px;
+}
+
+.al-nav-enlace {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  min-height: 44px;
+  padding: 12px 13px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  color: #cbd5e1;
+  font-size: .79rem;
+  font-weight: 650;
+  text-decoration: none;
+
+  transition:
+    background .18s ease,
+    border-color .18s ease,
+    color .18s ease;
+}
+
+.al-nav-enlace > i:first-child {
+  display: flex;
+  justify-content: center;
+  flex: 0 0 20px;
+  width: 20px;
+  color: #94a3b8;
+  font-size: 1.07rem;
+}
+
+.al-nav-enlace > span {
+  flex: 1;
+}
+
+.al-nav-flecha {
+  color: #64748b;
+  font-size: .66rem;
+  opacity: 0;
+}
+
+.al-nav-enlace:hover {
+  color: white;
+  background: #1f2937;
+}
+
+.al-nav-enlace:hover .al-nav-flecha {
+  opacity: 1;
+}
+
+.al-nav-enlace-activo {
+  border-color: rgba(147,197,253,.16);
+  background: #1e40af;
+  color: white;
+  font-weight: 800;
+}
+
+.al-nav-enlace-activo > i:first-child,
+.al-nav-enlace-activo .al-nav-flecha {
+  color: #dbeafe;
+  opacity: 1;
+}
+
+.al-nav-enlace-activo:hover {
+  background: #1d4ed8;
+}
+
+/* PERFIL Y CIERRE DE SESIÓN */
+
+.al-sidebar-pie {
+  margin-top: auto;
+  padding: 14px;
+  border-top: 1px solid rgba(255,255,255,.09);
+}
+
+.al-perfil {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  margin-bottom: 13px;
+  padding: 9px 5px;
+}
+
+.al-perfil-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 39px;
+  width: 39px;
+  height: 39px;
+
+  border-radius: 11px;
+  background: #334155;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 850;
+}
+
+.al-perfil > div {
+  min-width: 0;
+}
+
+.al-perfil strong {
+  display: block;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: white;
+  font-size: .77rem;
+}
+
+.al-perfil small {
+  display: block;
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: .67rem;
+}
+
+.al-cerrar-sesion {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  width: 100%;
+  padding: 12px 13px;
+
+  border: 1px solid rgba(248,113,113,.2);
+  border-radius: 9px;
+  background: rgba(239,68,68,.08);
+  color: #fca5a5;
+
+  text-align: left;
+  font-size: .76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.al-cerrar-sesion:hover {
+  background: rgba(239,68,68,.17);
+  color: #fecaca;
+}
+
+/* =====================================================
+   CONTENIDO PRINCIPAL
+   ===================================================== */
+
+.al-principal {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 100vh;
+  margin-left: var(--al-sidebar-ancho);
+}
+
+/* TOPBAR */
+
+.al-topbar {
+  position: relative;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  min-height: 79px;
+  padding: 16px 30px;
+
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+}
+
+.al-topbar-izquierda {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.al-menu-boton {
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 9px;
+  background: white;
+  color: #374151;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+
+.al-topbar-titulo > span {
+  display: block;
+  margin-bottom: 5px;
+  color: #94a3b8;
+  font-size: .59rem;
+  font-weight: 850;
+  letter-spacing: 1px;
+}
+
+.al-topbar-titulo > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.al-topbar-titulo > div > i {
+  color: #2563eb;
+  font-size: 1.12rem;
+}
+
+.al-topbar-titulo h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.11rem;
+  font-weight: 850;
+}
+
+.al-topbar-derecha {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.al-topbar-descripcion {
+  color: #94a3b8;
+  font-size: .75rem;
+}
+
+.al-topbar-rol {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+
+  border: 1px solid #bfdbfe;
+  border-radius: 100px;
+
+  background: #eff6ff;
+  color: #1d4ed8;
+
+  font-size: .71rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.al-contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+/* FOOTER */
+
+.al-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 18px 30px;
+  border-top: 1px solid #e5e7eb;
+
+  background: white;
+  color: #94a3b8;
+  font-size: .68rem;
+}
+
+/* =====================================================
+   OVERLAY / MENÚ MÓVIL
+   ===================================================== */
+
+.al-overlay {
+  display: none;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1100px) {
+  .al-layout {
+    --al-sidebar-ancho: 236px;
   }
-  
-  .btn-outline-light {
+
+  .al-topbar {
+    padding: 15px 22px;
+  }
+
+  .al-topbar-descripcion {
+    display: none;
+  }
+}
+
+@media (max-width: 850px) {
+  .al-principal {
+    margin-left: 0;
+  }
+
+  .al-sidebar {
+    z-index: 2200;
+    width: min(285px, 86vw);
+    transform: translateX(-105%);
+    transition: transform .22s ease;
+  }
+
+  .al-sidebar-abierto {
+    transform: translateX(0);
+  }
+
+  .al-sidebar-cerrar,
+  .al-menu-boton {
     display: flex;
-    align-items: center;
-    gap: 8px; /* Espaciado entre el texto y el ícono */
-    transition: all 0.3s ease; /* Transición suave al pasar el ratón */
   }
-  
-    
+
+  .al-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2190;
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+
+    background: rgba(15,23,42,.65);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+  }
+
+  .al-topbar {
+    min-height: 72px;
+  }
+}
+
+@media (max-width: 550px) {
+  .al-topbar {
+    gap: 10px;
+    padding: 13px 15px;
+  }
+
+  .al-topbar-izquierda {
+    gap: 10px;
+  }
+
+  .al-topbar-titulo h2 {
+    font-size: .98rem;
+  }
+
+  .al-topbar-rol {
+    width: 37px;
+    height: 37px;
+    justify-content: center;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .al-topbar-rol i {
+    font-size: 1rem;
+  }
+
+  .al-footer {
+    padding: 14px 16px;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .al-sidebar,
+  .al-nav-enlace {
+    transition: none;
+  }
+}

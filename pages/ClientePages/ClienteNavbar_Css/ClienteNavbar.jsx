@@ -202,12 +202,9 @@ export function ClienteNavbar({
 
             <input
               type="search"
+              aria-label="Buscar productos"
               value={busqueda}
-              onChange={e =>
-                setBusqueda(
-                  e.target.value
-                )
-              }
+              onChange={e => setBusqueda(e.target.value)}
               placeholder="Buscar productos..."
             />
 

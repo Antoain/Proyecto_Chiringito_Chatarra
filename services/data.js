@@ -1152,3 +1152,128 @@ export const obtenerPromocionesActivas =
       return [];
     }
   };
+
+
+
+  // ======================================================
+// SIG ADMINISTRADOR - DASHBOARD CONSOLIDADO
+// ======================================================
+
+export const obtenerDashboardAdministrador = async () => {
+  return apiFetch(
+    "/SIGAdministrador/Dashboard",
+    {},
+    true
+  );
+};
+
+// ======================================================
+// ADMINISTRADOR - CREAR USUARIO
+// ======================================================
+
+export const crearUsuarioAdministrador = async (usuario) => {
+  return apiFetch(
+    "/Usuario/PostUsuario",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        nombres: usuario.nombres.trim(),
+        apellidos: usuario.apellidos.trim(),
+        correo: usuario.correo.trim(),
+        clave: usuario.clave,
+        rol: usuario.rol
+      })
+    },
+    true
+  );
+};
+
+// ======================================================
+//  ADMINISTRADOR: PEDIDOS GLOBALES
+// ======================================================
+
+export const obtenerTodosLosPedidosAdmin = async () => {
+  try {
+    return await apiFetch(
+      "/Pedido/TodosLosPedidos",
+      {},
+      true
+    );
+  } catch (error) {
+    // El controlador devuelve 404 cuando no hay pedidos.
+    if (error.status === 404) {
+      return [];
+    }
+
+    throw error;
+  }
+};
+
+// ======================================================
+// SUPERVISIÓN GLOBAL DE ENTREGAS
+// ======================================================
+
+export const obtenerEntregasAdministrador = async () => {
+  return apiFetch(
+    "/Pedido/EntregasAdministrador",
+    {},
+    true
+  );
+};
+
+
+// ======================================================
+// ADMIN: SUPERVISIÓN DE PROMOCIONES
+// ======================================================
+
+export const obtenerPromocionesAdministrador = async () => {
+  return apiFetch(
+    "/Promocion/TodasAdministrador",
+    {},
+    true
+  );
+};
+
+// ======================================================
+//  MINERÍA DE DATOS ADMINISTRADOR
+// ======================================================
+
+export const obtenerClientesMineria = async () => {
+  return apiFetch("/Mineria/Clientes", {}, true);
+};
+
+export const verificarMineria = async () => {
+  return apiFetch("/Mineria/Health", {}, true);
+};
+
+export const obtenerRecurrenciaCliente = async (id) => {
+  return apiFetch(
+    `/Mineria/Recurrencia/${id}`,
+    {},
+    true
+  );
+};
+
+export const obtenerSegmentoCliente = async (id) => {
+  return apiFetch(
+    `/Mineria/Segmento/${id}`,
+    {},
+    true
+  );
+};
+
+export const obtenerRecomendacionesCliente = async (id) => {
+  return apiFetch(
+    `/Mineria/Recomendaciones/${id}`,
+    {},
+    true
+  );
+};
+
+export const obtenerComportamientoCliente = async (id) => {
+  return apiFetch(
+    `/Mineria/Comportamiento/${id}`,
+    {},
+    true
+  );
+};

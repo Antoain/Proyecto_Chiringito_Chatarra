@@ -116,6 +116,28 @@ namespace WebAPICh.Controllers
                 });
             }
 
+            if (usuario.Rol != "Cliente" &&
+                usuario.Rol != "Vendedor" &&
+                usuario.Rol != "Administrador")
+            {
+                return BadRequest(new
+                {
+                    mensaje = "El rol indicado no es válido."
+                });
+            }
+
+            var existente = await _usuarioDAO
+                .ObtenerUsuarioPorCorreoAsync(usuario.Correo);
+
+            if (existente != null)
+            {
+                return Conflict(new
+                {
+                    mensaje = "Ya existe un usuario con ese correo."
+                });
+            }
+
+
             usuario.Clave = _authService.HashPassword(
                 usuario,
                 usuario.Clave
@@ -143,23 +165,25 @@ namespace WebAPICh.Controllers
         // PUT: Editar usuario
         [Authorize]
         [HttpPut("Editar")]
-        public async Task<IActionResult> PutUsuario(int id, [FromBody] Usuario usuario)
+        public async Task<IActionResult> PutUsuario(
+    [FromQuery] int id,
+    [FromBody] ActualizarUsuarioDTO datos)
         {
-            if (id != usuario.IdUsuario)
+            if (datos == null || id != datos.IdUsuario)
             {
                 return BadRequest(new
                 {
-                    mensaje = "El ID en la URL no coincide con el ID del usuario enviado."
+                    mensaje = "Los datos del usuario no coinciden."
                 });
             }
 
             var idUsuarioClaim =
                 User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var rolUsuarioActual =
+            var rolActual =
                 User.FindFirst(ClaimTypes.Role)?.Value;
 
-            if (!int.TryParse(idUsuarioClaim, out int idUsuarioToken))
+            if (!int.TryParse(idUsuarioClaim, out int idToken))
             {
                 return Unauthorized(new
                 {
@@ -167,64 +191,56 @@ namespace WebAPICh.Controllers
                 });
             }
 
-            // Un usuario normal solo puede editar su propia cuenta.
-            if (rolUsuarioActual != "Administrador" &&
-                idUsuarioToken != id)
+            if (rolActual != "Administrador" && idToken != id)
             {
-                return StatusCode(403, new
-                {
-                    mensaje = "No tiene permiso para modificar este usuario."
-                });
+                return Forbid();
             }
 
-            var usuarioExistente =
+            var usuario =
                 await _usuarioDAO.ObtenerUsuarioPorIdAsync(id);
 
-            if (usuarioExistente == null)
+            if (usuario == null)
             {
                 return NotFound(new
                 {
-                    mensaje = "El usuario especificado no existe."
+                    mensaje = "Usuario no encontrado."
                 });
             }
 
-            usuarioExistente.Nombres =
-                !string.IsNullOrWhiteSpace(usuario.Nombres)
-                    ? usuario.Nombres
-                    : usuarioExistente.Nombres;
-
-            usuarioExistente.Apellidos =
-                !string.IsNullOrWhiteSpace(usuario.Apellidos)
-                    ? usuario.Apellidos
-                    : usuarioExistente.Apellidos;
-
-            usuarioExistente.Correo =
-                !string.IsNullOrWhiteSpace(usuario.Correo)
-                    ? usuario.Correo
-                    : usuarioExistente.Correo;
-
-            // SOLO el Administrador puede cambiar roles.
-            if (rolUsuarioActual == "Administrador" &&
-                !string.IsNullOrWhiteSpace(usuario.Rol))
+            if (!string.IsNullOrWhiteSpace(datos.Nombres))
             {
-                if (usuario.Rol != "Cliente" &&
-                    usuario.Rol != "Vendedor" &&
-                    usuario.Rol != "Administrador")
+                usuario.Nombres = datos.Nombres.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(datos.Apellidos))
+            {
+                usuario.Apellidos = datos.Apellidos.Trim();
+            }
+
+            if (!string.IsNullOrWhiteSpace(datos.Correo))
+            {
+                usuario.Correo = datos.Correo.Trim();
+            }
+
+            // Solo Administrador puede cambiar roles.
+            if (rolActual == "Administrador" &&
+                !string.IsNullOrWhiteSpace(datos.Rol))
+            {
+                if (datos.Rol != "Cliente" &&
+                    datos.Rol != "Vendedor" &&
+                    datos.Rol != "Administrador")
                 {
                     return BadRequest(new
                     {
-                        mensaje = "Rol no válido."
+                        mensaje = "El rol indicado no es válido."
                     });
                 }
 
-                usuarioExistente.Rol = usuario.Rol;
+                usuario.Rol = datos.Rol;
             }
 
-            // La contraseña no se modifica aquí.
-
-            await _usuarioDAO.ActualizarUsuarioAsync(
-                usuarioExistente
-            );
+            // La contraseña se conserva intacta.
+            await _usuarioDAO.ActualizarUsuarioAsync(usuario);
 
             return Ok(new
             {
@@ -239,6 +255,27 @@ namespace WebAPICh.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
+
+            var claim = User.FindFirst(
+                ClaimTypes.NameIdentifier
+            )?.Value;
+
+            if (!int.TryParse(claim, out int idAdministrador))
+            {
+                return Unauthorized(new
+                {
+                    mensaje = "No fue posible identificar al administrador."
+                });
+            }
+
+            if (idAdministrador == id)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "No puedes eliminar tu propia cuenta administrativa."
+                });
+            }
+
             var usuario =
                 await _usuarioDAO.ObtenerUsuarioPorIdAsync(id);
 

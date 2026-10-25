@@ -244,5 +244,25 @@ namespace ChiringuitoCH_Data.DAO
 
                 .ToListAsync();
         }
+
+
+        // ==========================================
+        // PROMOCIONES GLOBALES ADMIN
+        // ==========================================
+
+        public async Task<List<Promocione>>
+            ObtenerTodasAdministradorAsync()
+        {
+            return await _context.Promociones
+                .AsNoTracking()
+                .Include(p => p.IdProductoNavigation)
+                    .ThenInclude(producto =>
+                        producto!.IdTiendaNavigation)
+                .Include(p => p.IdTiendaNavigation)
+                .OrderByDescending(p => p.FechaInicio)
+                .ThenByDescending(p => p.IdPromocion)
+                .ToListAsync();
+        }
+
     }
 }

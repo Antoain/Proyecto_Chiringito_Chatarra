@@ -766,5 +766,68 @@ namespace WebAPICh.Controllers
 
             return Ok(resultado);
         }
+
+
+        // ==========================================
+        // SUPERVISIÓN GLOBAL ADMIN
+        // ==========================================
+
+        [Authorize(Roles = "Administrador")]
+        [HttpGet("TodasAdministrador")]
+        public async Task<IActionResult>
+            TodasAdministrador()
+        {
+            var promociones =
+                await _promocionDAO.ObtenerTodasAdministradorAsync();
+
+            var resultado = promociones.Select(p =>
+            {
+                var producto = p.IdProductoNavigation;
+
+                var tienda =
+                    producto?.IdTiendaNavigation
+                    ?? p.IdTiendaNavigation;
+
+                decimal? precioOriginal = producto?.Precio;
+
+                decimal? precioFinal =
+                    precioOriginal.HasValue &&
+                    p.Descuento.HasValue
+                        ? Math.Round(
+                            precioOriginal.Value *
+                            (1m - p.Descuento.Value / 100m),
+                            2)
+                        : null;
+
+                return new
+                {
+                    p.IdPromocion,
+                    p.Titulo,
+                    p.Descripcion,
+                    p.Descuento,
+                    p.FechaInicio,
+                    p.FechaFin,
+                    p.IdProducto,
+                    p.IdTienda,
+                    p.IdEvento,
+
+                    NombreProducto =
+                        producto?.Nombre ?? "Sin producto",
+
+                    ProductoActivo = producto?.Activo,
+
+                    NombreTienda =
+                        tienda?.NombreNegocio ?? "Sin tienda",
+
+                    IdTiendaReal = tienda?.IdTienda,
+
+                    PrecioOriginal = precioOriginal,
+                    PrecioFinal = precioFinal
+                };
+            }).ToList();
+
+            return Ok(resultado);
+        }
+
     }
 }

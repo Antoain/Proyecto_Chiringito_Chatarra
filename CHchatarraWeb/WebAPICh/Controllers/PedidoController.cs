@@ -2204,6 +2204,51 @@ namespace WebAPICh.Controllers
             return Ok(resultado);
         }
 
+        // ==========================================
+        // ENTREGAS GLOBALES ADMIN
+        // ==========================================
+
+        [Authorize(Roles = "Administrador")]
+        [HttpGet("EntregasAdministrador")]
+        public async Task<IActionResult> EntregasAdministrador()
+        {
+            var subPedidos =
+                await _pedidoDAO.ObtenerEntregasAdministradorAsync();
+
+            var resultado = subPedidos.Select(sp => new
+            {
+                idSubPedido = sp.IdSubPedido,
+                idPedido = sp.IdPedido,
+                idTienda = sp.IdTienda,
+
+                tienda = sp.IdTiendaNavigation?.NombreNegocio
+                    ?? "Tienda no disponible",
+
+                cliente = sp.IdPedidoNavigation?.IdUsuarioNavigation == null
+                    ? "Cliente no disponible"
+                    : (
+                        sp.IdPedidoNavigation.IdUsuarioNavigation.Nombres +
+                        " " +
+                        sp.IdPedidoNavigation.IdUsuarioNavigation.Apellidos
+                      ),
+
+                correoCliente =
+                    sp.IdPedidoNavigation?.IdUsuarioNavigation?.Correo,
+
+                estadoSubPedido = sp.Estado,
+
+                metodoEntrega = sp.EntregaSubPedido!.MetodoEntrega,
+                estadoEntrega = sp.EntregaSubPedido.EstadoEntrega,
+                proveedorEntrega = sp.EntregaSubPedido.ProveedorEntrega,
+                codigoSeguimiento = sp.EntregaSubPedido.CodigoSeguimiento,
+                fechaCreacion = sp.EntregaSubPedido.FechaCreacion,
+                fechaActualizacion = sp.EntregaSubPedido.FechaActualizacion,
+                fechaEntrega = sp.EntregaSubPedido.FechaEntrega
+            }).ToList();
+
+            return Ok(resultado);
+        }
+
 
 
 

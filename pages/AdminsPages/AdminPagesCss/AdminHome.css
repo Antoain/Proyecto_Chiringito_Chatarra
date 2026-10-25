@@ -1,32 +1,726 @@
-.admin-home {
-  height: 94vh; /* Ocupa toda la altura de la pantalla */
-  background-image: url('https://i.postimg.cc/hjZHNRRN/imagen-2025-04-17-173805045.png'); /* URL de la imagen de fondo */
-  background-size: cover; /* Escala la imagen para que cubra todo el fondo */
-  background-position: center; /* Centra la imagen */
-  display: flex; /* Habilita el uso de flexbox para centrar el contenido */
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente */
-  color: white; /* Texto blanco para resaltar sobre el fondo */
-  text-align: center; /* Centra el texto */
-  overflow: hidden; /* Asegura que no haya desbordamiento */
+
+/* =====================================================
+   CHIRINGUITO CHATARRA
+   J.1 - DASHBOARD ADMINISTRADOR SIG
+   Prefijo: adm-
+   ===================================================== */
+
+.adm-pagina {
+  min-height: 100vh;
+  padding: 30px 22px 75px;
+  background: #f4f6f8;
+  color: #1f2937;
 }
 
-.welcome-message {
-  background-color: rgba(0, 0, 0, 0.7); /* Fondo negro con 70% de opacidad */
-  padding: 20px 40px; /* Espaciado interno */
-  border-radius: 10px; /* Bordes redondeados */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra suave */
-  z-index: 1; /* Asegura que el texto esté encima */
+.adm-contenedor {
+  max-width: 1500px;
+  margin: 0 auto;
 }
 
-.welcome-message h1 {
-  font-size: 3rem; /* Tamaño del título */
-  margin-bottom: 1rem; /* Espaciado inferior */
+/* ENCABEZADO */
+
+.adm-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
 }
 
-.welcome-message p {
-  font-size: 1.5rem; /* Tamaño del subtítulo */
-  margin: 0; /* Remover márgenes predeterminados */
+.adm-eyebrow,
+.adm-panel-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: 1.3px;
 }
 
-  
+.adm-header h1 {
+  margin: 0 0 7px;
+  color: #111827;
+  font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+  font-weight: 800;
+}
+
+.adm-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+
+.adm-header-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.adm-boton-primario,
+.adm-boton-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 11px 15px;
+  border-radius: 9px;
+  font-size: .75rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.adm-boton-primario {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+.adm-boton-primario:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.adm-boton-primario:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+.adm-boton-secundario {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+}
+
+.adm-boton-secundario:hover {
+  border-color: #93c5fd;
+  color: #2563eb;
+}
+
+@keyframes adm-rotar {
+  to { transform: rotate(360deg); }
+}
+
+.adm-girando {
+  animation: adm-rotar 1s linear infinite;
+}
+
+/* ERRORES */
+
+.adm-error {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 17px;
+  margin-bottom: 22px;
+  border: 1px solid #fecaca;
+  border-radius: 11px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: .78rem;
+}
+
+.adm-error > span {
+  flex: 1;
+}
+
+.adm-error button {
+  padding: 7px 11px;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  background: #fff;
+  color: #991b1b;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* KPIs */
+
+.adm-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+  margin-bottom: 23px;
+}
+
+.adm-kpi {
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(15,23,42,.035);
+}
+
+.adm-kpi-superior {
+  margin-bottom: 14px;
+}
+
+.adm-kpi-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 11px;
+  font-size: 1.2rem;
+}
+
+.adm-kpi-icono.azul {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.adm-kpi-icono.verde {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.adm-kpi-icono.morado {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.adm-kpi-icono.naranja {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.adm-kpi-icono.rojo {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.adm-kpi-etiqueta {
+  display: block;
+  margin-bottom: 7px;
+  color: #64748b;
+  font-size: .74rem;
+}
+
+.adm-kpi-valor {
+  display: block;
+  color: #111827;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-weight: 850;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.adm-kpi-detalle {
+  display: block;
+  margin-top: 10px;
+  color: #94a3b8;
+  font-size: .67rem;
+  line-height: 1.5;
+}
+
+/* PANELES */
+
+.adm-panel {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(15,23,42,.035);
+}
+
+.adm-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 19px;
+}
+
+.adm-panel-header h2 {
+  margin: 0 0 5px;
+  color: #111827;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.adm-panel-header p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: .72rem;
+  line-height: 1.5;
+}
+
+.adm-panel-etiqueta {
+  padding: 7px 10px;
+  border-radius: 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: .68rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.adm-grid-principal {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.adm-grid-inferior {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: stretch;
+  gap: 20px;
+  margin-bottom: 23px;
+}
+
+/* GRÁFICOS */
+
+.adm-grafico {
+  width: 100%;
+  height: 315px;
+  min-height: 315px;
+}
+
+.adm-grafico-dona {
+  position: relative;
+  height: 260px;
+  min-height: 260px;
+}
+
+.adm-grafico-barras {
+  height: 315px;
+}
+
+.adm-dona-centro {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.adm-dona-centro strong {
+  color: #111827;
+  font-size: 1.7rem;
+  font-weight: 850;
+}
+
+.adm-dona-centro span {
+  color: #64748b;
+  font-size: .69rem;
+}
+
+.adm-tooltip {
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: white;
+  color: #334155;
+  font-size: .73rem;
+  box-shadow: 0 7px 25px rgba(0,0,0,.09);
+}
+
+.adm-tooltip > strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.adm-tooltip > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 5px;
+}
+
+.adm-tooltip-dot {
+  display: inline-block;
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.adm-leyenda {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.adm-leyenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: .71rem;
+}
+
+.adm-leyenda i {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+}
+
+.adm-leyenda-azul {
+  background: #2563eb;
+}
+
+.adm-leyenda-verde {
+  background: #16a34a;
+}
+
+/* LEYENDA DE ENTREGAS */
+
+.adm-entregas-leyenda {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 15px;
+  margin-top: 10px;
+}
+
+.adm-entregas-leyenda > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.adm-entregas-leyenda > div > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  color: #64748b;
+  font-size: .68rem;
+}
+
+.adm-entregas-leyenda i {
+  display: inline-block;
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.adm-entregas-leyenda strong {
+  color: #334155;
+  font-size: .75rem;
+}
+
+/* RANKING */
+
+.adm-ranking {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 15px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.adm-ranking-item:last-child {
+  border-bottom: 0;
+}
+
+.adm-ranking-puesto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: .81rem;
+  font-weight: 850;
+}
+
+.adm-ranking-item > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.adm-ranking-item > div strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #111827;
+  font-size: .76rem;
+  overflow-wrap: anywhere;
+}
+
+.adm-ranking-item > div small {
+  color: #94a3b8;
+  font-size: .66rem;
+}
+
+.adm-ranking-monto {
+  color: #166534;
+  font-size: .79rem;
+  white-space: nowrap;
+}
+
+/* INDICADORES DE ENTREGA */
+
+.adm-logistica {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+  margin-bottom: 27px;
+}
+
+.adm-logistica > div {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid #bfdbfe;
+  border-radius: 13px;
+  background: #eff6ff;
+}
+
+.adm-logistica-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 43px;
+  width: 43px;
+  height: 43px;
+  border-radius: 11px;
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 1.2rem;
+}
+
+.adm-logistica > div > div {
+  min-width: 0;
+}
+
+.adm-logistica small {
+  display: block;
+  margin-bottom: 6px;
+  color: #64748b;
+  font-size: .63rem;
+  font-weight: 750;
+  letter-spacing: .3px;
+}
+
+.adm-logistica strong {
+  display: block;
+  color: #1e3a8a;
+  font-size: 1.17rem;
+  font-weight: 850;
+  overflow-wrap: anywhere;
+}
+
+/* ACCESOS */
+
+.adm-accesos {
+  padding: 23px;
+  border: 1px solid #e5e7eb;
+  border-radius: 15px;
+  background: white;
+}
+
+.adm-accesos h2 {
+  margin: 0 0 5px;
+  color: #111827;
+  font-size: 1.08rem;
+  font-weight: 800;
+}
+
+.adm-accesos p {
+  margin: 0 0 20px;
+  color: #64748b;
+  font-size: .76rem;
+}
+
+.adm-accesos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.adm-accesos-grid a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  color: #374151;
+  background: #f8fafc;
+  font-size: .76rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.adm-accesos-grid a:hover {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.adm-accesos-grid a > i:first-child {
+  color: #2563eb;
+  font-size: 1.17rem;
+}
+
+.adm-accesos-grid a > i:last-child {
+  margin-left: auto;
+  color: #94a3b8;
+}
+
+/* VACÍO / CARGA */
+
+.adm-sin-datos,
+.adm-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 280px;
+  padding: 30px 16px;
+  text-align: center;
+}
+
+.adm-sin-datos > i {
+  font-size: 2rem;
+  color: #94a3b8;
+}
+
+.adm-sin-datos strong {
+  color: #374151;
+  font-size: .85rem;
+}
+
+.adm-sin-datos span {
+  color: #94a3b8;
+  font-size: .74rem;
+}
+
+.adm-cargando {
+  min-height: 60vh;
+}
+
+.adm-cargando h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 1.15rem;
+}
+
+.adm-cargando p {
+  margin: 0;
+  color: #64748b;
+  font-size: .82rem;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .adm-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .adm-grid-principal,
+  .adm-grid-inferior {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .adm-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .adm-logistica {
+    grid-template-columns: 1fr;
+  }
+
+  .adm-accesos-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 550px) {
+  .adm-pagina {
+    padding: 20px 12px 45px;
+  }
+
+  .adm-header-acciones {
+    width: 100%;
+  }
+
+  .adm-header-acciones > * {
+    flex: 1;
+  }
+
+  .adm-kpis {
+    gap: 10px;
+  }
+
+  .adm-kpi {
+    padding: 15px;
+  }
+
+  .adm-kpi-valor {
+    font-size: 1.2rem;
+  }
+
+  .adm-kpi-etiqueta {
+    font-size: .69rem;
+  }
+
+  .adm-panel {
+    padding: 16px;
+  }
+
+  .adm-grafico {
+    height: 270px;
+    min-height: 270px;
+  }
+
+  .adm-grafico-dona {
+    height: 250px;
+    min-height: 250px;
+  }
+
+  .adm-entregas-leyenda {
+    grid-template-columns: 1fr;
+  }
+
+  .adm-ranking-item {
+    flex-wrap: wrap;
+  }
+
+  .adm-ranking-monto {
+    margin-left: 46px;
+  }
+
+  .adm-accesos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .adm-girando {
+    animation: none;
+  }
+}
